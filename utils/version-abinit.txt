@@ -1,0 +1,4 @@
+ab_exec_xeon=/home/narzate/share_new/abinit-4.6.5/abinis
+ab_exec_itanium=/home/narzate/share_new/abinit-4.6.5/abinis.itanium
+ab_exec_quad=/homeib/prog/QUAD/abinit-7.0.5/abinit/bin/abinit
+ab_exec_hexa=/home/prog/HEXA/abinit-7.0.5/abinit/bin/abinit 
