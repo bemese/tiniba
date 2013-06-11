@@ -1,0 +1,17 @@
+tiniba:
+
+urgent:
+ ☐ get rid of all bash parts that need interaction after initial command
+ ☐ integrate first commands so it can run automatically after that
+ ☐ implement version control on your own account and then try to sell it to... unenlightened colleagues.
+
+ mid-term:
+ ☐ rewrite ALL bash scripts
+ ☐ consolidate all bash programs into one
+ ☐ write and standardize optical responses to be run after matrix calculations
+
+ long-term:
+ ☐ completely rewrite everything
+ ☐ possibly make the switch to python instead of fortran?
+ ☐ rework TINIBA so it plugs in directly to any version of ABINIT installed
+ ☐ package and distribute
