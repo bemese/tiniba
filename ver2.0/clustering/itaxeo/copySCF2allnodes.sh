@@ -1,7 +1,7 @@
 #!/bin/bash
 ##2 Julio at 23:54 hrs.
 ##FUNCTION:
-##copy SCF to dir in .machines_pmn 
+##copy SCF to dir in .machines_pmn
 ##CHILDREN:
 ##ineedsplitWFSCF.sh
 RED='\e[0;31m'
@@ -28,7 +28,7 @@ function StopMe {
 function CheckHost {
     ping -c 1 $1 >& /dev/null;
 }
-##================================= 
+##=================================
 declare -a MACHINESpmn
 declare -a WHEREWORKREMOTE
 declare -a WHEREWORKLOCAL
@@ -38,7 +38,7 @@ USER=$USER
 BASEDIR=`dirname $PWD`
 CASO=`basename $PWD`
 PARENT=`basename $BASEDIR`
-WORKZPACE="workspace" 
+WORKZPACE="workspace"
 WFSCFLOCAL=$CASO'o_DS1_WFK'
 WFSCFREMOTE=$CASO'i_DS1_WFK'
 DIRSCF=$CASO'_scf'
@@ -48,14 +48,14 @@ FILE2COPY=$1
 ANFITRION=`hostname`
 WHERE="$HOME/tiniba/$ver/clustering/itaxeo"
 
-rm -f killme 
+rm -f killme
 if [ ! -e "$WHERE/ineedsplitWFSCF.sh" ];then
     printf "\tWhere is your FILE: ineedsplitWFSCF.sh \n"
     printf "\tthe path actual is: "
     printf "$WHERE\n"
     touch -f killme
     StopMe
-fi 
+fi
 
 ##===CHECK IF .machines file exist==================== !!
 if [ ! -e .machines_pmn ]
@@ -92,7 +92,7 @@ for ((hh=0;hh<=($NOMACHINESpmn-1); hh++));do
     DIRQ=${WHEREWORKREMOTE[$hh]}
     BASE=`dirname $DIRQ`
     DIRE=`basename $DIRQ`
-    printf "\t[$REMOTESERVER]:$BASE/${BLUE}$DIRE${NC}"          
+    printf "\t[$REMOTESERVER]:$BASE/${BLUE}$DIRE${NC}"
     EXISTE=`ssh $REMOTESERVER 'test -d '$DIRQ'; echo $?'`
     if [ $EXISTE -eq 0 ] ;then
         printf " [${GREEN}exist${NC}]\n"
@@ -165,12 +165,12 @@ TIMER1=`date`
 rm -f killme
 rm -f tmp
 Line
-printf "\t${CYAN}Copying started at: $TIMER1 ${NC}\n"    
+printf "\t${CYAN}Copying started at: $TIMER1 ${NC}\n"
 Line
 TMP=`md5sum "$PWD/$DIRSCF/$WFSCFLOCAL"`
 echo $TMP>tmp
 MD5LOCAL=`awk '{print $1}' tmp`
-rm -f tmp  
+rm -f tmp
 ##===============================================
 for ((hh=0;hh<=($NOMACHINESpmn-1); hh++));do
     let "HHSU=$hh+1"
@@ -178,7 +178,7 @@ for ((hh=0;hh<=($NOMACHINESpmn-1); hh++));do
     ADONDECOPY=${WHEREWORKREMOTE[$hh]}
 # bms: if we are in the same node, copy from the node insted of copying from the original source
     let "ant=$hh-1"
-    if [ "$ant" == "-1" ] 
+    if [ "$ant" == "-1" ]
     then
 	anterior="void"
 	backcopy="void"
@@ -188,7 +188,7 @@ for ((hh=0;hh<=($NOMACHINESpmn-1); hh++));do
     fi
 ##
 ###---------------------------
-#  
+#
     if [[ "$REMOTESERVER" == "itanium"* ]]; then
         MAQUINA501=$REMOTESERVER
         MAQUINA500=$anterior
@@ -204,21 +204,38 @@ for ((hh=0;hh<=($NOMACHINESpmn-1); hh++));do
             MAQUINA501=$REMOTESERVER
             MAQUINA500=$anterior
             SWITCHNAME="Not using myrinet"
-        fi              
+        fi
     fi
     #
     if [[ "$REMOTESERVER" == "quad"* ]]; then
-        
+
         if [ $ANFITRION == "quad01" ];then
             MAQUINA501=$REMOTESERVER"ib"
             MAQUINA500=$anterior"ib"
             SWITCHNAME="Using infiniband"
+		if [ -e $TINIBAC/.badQUADS ]; then
+		aux=`grep quad $TINIBAC/.badQUADS`
+		if [ -n "$aux" ]; then
+		for damaged_quad in `cat $TINIBAC/.badQUADS`; do
+			damaged_quad=$damaged_quad"ib"
+	    		if [ $MAQUINA501 == "$damaged_quad" ];then
+				#echo
+				MAQUINA501=$REMOTESERVER
+				#echo MAQUINA501=$MAQUINA501
+				MAQUINA500=$anterior
+				#echo MAQUINA500=$MAQUINA500
+				SWITCHNAME="Using TCPIP. Infiniband connection damaged for $MAQUINA501."
+			fi
+		done
+		fi
+		fi
+
         else
             MAQUINA501=$REMOTESERVER
             MAQUINA500=$anterior
             SWITCHNAME="Not using infiniband"
-        fi        
-    fi 
+        fi
+    fi
     #
     if [[ "$REMOTESERVER" == "hexa"* ]]; then
         if [[ $ANFITRION == "hexa"* ]];then
@@ -230,9 +247,9 @@ for ((hh=0;hh<=($NOMACHINESpmn-1); hh++));do
             MAQUINA501=$REMOTESERVER
             MAQUINA500=$anterior
             SWITCHNAME="Not using infiniband"
-        fi        
+        fi
 #	printf "\taqui: $MAQUINA501 $MAQUINA500\n"
-    fi 
+    fi
     ##---------------------------
     SALIDAeq=1
     SALIDAneq=1
@@ -254,15 +271,15 @@ for ((hh=0;hh<=($NOMACHINESpmn-1); hh++));do
 	    fi
 	    echo $TMP1>>tmp1
 	    MD5REMOTE=`awk '{print $1}' tmp1`
-	    rm -f tmp1  
-	fi 
-	if [ $EXISTE -ne 0 ] ;then ##no existe      
+	    rm -f tmp1
+	fi
+	if [ $EXISTE -ne 0 ] ;then ##no existe
 	    if [ "$INEEDSPLIT" -eq 0 ];then
 		$WHERE/ineedsplitWFSCF.sh
 		let "INEEDSPLIT+=1"
 		printf "\tSplitting and copying $DIRSCF/$WFSCFLOCAL\n"
 		printf "\tcould take a while...!!\n"
-            fi 
+            fi
 # bms: if we are in the same node, copy from the node insted of copying from the original source
 	    flaga=yes
 	    if [ "$MAQUINA501" == "$MAQUINA500" ]
@@ -338,9 +355,9 @@ for ((hh=0;hh<=($NOMACHINESpmn-1); hh++));do
 	    fi
 	    echo $TMP1>>tmp1
 	    MD5REMOTE=`awk '{print $1}' tmp1`
-	    rm -f tmp1  
+	    rm -f tmp1
       #-------------
-	fi  ##no existe 
+	fi  ##no existe
 ##################
 	if [ "$MD5REMOTE" == "$MD5LOCAL" ];then
 	    SALIDAeq=2
@@ -351,7 +368,7 @@ for ((hh=0;hh<=($NOMACHINESpmn-1); hh++));do
 		printf "\t$MAQUINA501:$ADONDECOPY/$WFSCFREMOTE\n"
 	    fi
 	    printf "\t[${GREEN}identical${NC}]\n"
-	    
+
 	else
       ## I need to copy again but first erase
 	    if [ "$ontoy" == "medusa" ]
@@ -360,7 +377,7 @@ for ((hh=0;hh<=($NOMACHINESpmn-1); hh++));do
 	    else
 		printf "\t$MAQUINA501:$ADONDECOPY/$WFSCFREMOTE\n"
 	    fi
-	    printf "\t[${RED}Not Identical${NC}] $SALIDAneq\n" 
+	    printf "\t[${RED}Not Identical${NC}] $SALIDAneq\n"
 	    let "INTEN=INTENTOS-2"
             if [ $SALIDAneq -eq $INTEN ];then
 		MAQUINA501=$REMOTESERVER
@@ -383,9 +400,9 @@ for ((hh=0;hh<=($NOMACHINESpmn-1); hh++));do
               # exit 1
             fi
 	    let "SALIDAneq+=1"
-	    ssh $MAQUINA501 "cd $ADONDECOPY;rm -f $WFSCFREMOTE;rm -f $WFSCFLOCAL.block00;rm -f $WFSCFLOCAL.block01;rm -f $WFSCFLOCAL.block02;rm -f $WFSCFLOCAL.block03"  
-	fi 
-    done ##until  
+	    ssh $MAQUINA501 "cd $ADONDECOPY;rm -f $WFSCFREMOTE;rm -f $WFSCFLOCAL.block00;rm -f $WFSCFLOCAL.block01;rm -f $WFSCFLOCAL.block02;rm -f $WFSCFLOCAL.block03"
+	fi
+    done ##until
     sleep .1
 done ## for
   ##--------------------------
@@ -401,6 +418,6 @@ TMIN1=$(echo "scale=9; $ELTIME/3600" | bc)
 printf "\ttotal time:   $TMIN min. \n"
 printf "\t              $TMIN1 Hrs. \n"
 Line
-rm -rf $PWD/$DIRSCF/$WFSCFLOCAL.block* #erase all children Local   
+rm -rf $PWD/$DIRSCF/$WFSCFLOCAL.block* #erase all children Local
 ##StopMe
 ##nothing under here

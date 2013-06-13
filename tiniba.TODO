@@ -9,6 +9,7 @@ urgent:
  ☐ rewrite ALL bash scripts
  ☐ consolidate all bash programs into one
  ☐ write and standardize optical responses to be run after matrix calculations
+ ☐ add repositories for ALL produced .xyz files and pseudopotentials
 
  long-term:
  ☐ completely rewrite everything
