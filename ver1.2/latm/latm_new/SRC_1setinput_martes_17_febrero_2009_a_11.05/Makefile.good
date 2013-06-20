@@ -1,0 +1,34 @@
+#FC = pgf90
+#FC = ifc
+#FC = ifort
+FC = lf95
+#OPTS = -O -C
+#OPTS = -w -C -Vaxlib -static
+#OPTS =  --ap --chk --chkglobal --li --trap
+OPTS = -O3
+MODS = constants.o inparams.o arrays.o functions.o file_control.o symmetry_operations.o
+CRYSOBJS = wurtzite.o zincblende.o
+#OBJS = ${MODS} ${CRYSOBJS} datafiles.o integrands.o set_input.o
+OBJS = ${MODS} integrands.o set_input.o
+set_input : ${OBJS}
+	${FC} ${OPTS} -o set_input ${OBJS}
+	mv set_input ../set_input
+constants.o : constants.f90
+	${FC} ${OPTS} -c constants.f90
+inparams.o : inparams.f90 constants.f90
+	${FC} ${OPTS} -c inparams.f90
+symmetry_operations.o : symmetry_operations.f90
+	${FC} ${OPTS} -c symmetry_operations.f90
+arrays.o : arrays.f90 inparams.f90
+	${FC} ${OPTS} -c arrays.f90
+file_control.o : file_control.f90
+	${FC} ${OPTS} -c file_control.f90
+functions.o : functions.f90 arrays.f90
+	${FC} ${OPTS} -c functions.f90
+integrands.o : integrands.f90
+	${FC} ${OPTS} -c integrands.f90
+set_input.o : set_input.f90
+	${FC} ${OPTS} -c set_input.f90
+all : ${ALL}
+clean :
+	rm *.o *.mod
