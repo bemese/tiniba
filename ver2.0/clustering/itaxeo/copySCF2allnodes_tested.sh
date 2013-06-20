@@ -213,23 +213,6 @@ for ((hh=0;hh<=($NOMACHINESpmn-1); hh++));do
             MAQUINA501=$REMOTESERVER"ib"
             MAQUINA500=$anterior"ib"
             SWITCHNAME="Using infiniband"
-		if [ -e $TINIBAC/.badQUADS ]; then
-		aux=`grep quad $TINIBAC/.badQUADS`
-		if [ -n "$aux" ]; then
-		for damaged_quad in `cat $TINIBAC/.badQUADS`; do
-			damaged_quad=$damaged_quad"ib"
-	    		if [ $MAQUINA501 == "$damaged_quad" ];then
-				#echo
-				MAQUINA501=$REMOTESERVER
-				#echo MAQUINA501=$MAQUINA501
-				MAQUINA500=$anterior
-				#echo MAQUINA500=$MAQUINA500
-				SWITCHNAME="Using TCPIP. Infiniband connection damaged for $MAQUINA501."
-			fi
-		done
-		fi
-		fi
-
         else
             MAQUINA501=$REMOTESERVER
             MAQUINA500=$anterior
