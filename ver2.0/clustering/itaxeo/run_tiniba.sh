@@ -101,8 +101,11 @@ rm -f finished*
 where=$HOME/tiniba/$ver/clustering/itaxeo
 cual=all_nodes.sh
 host=$HOSTNAME
+
 weigth1=2
 weigth2=2
+echo $weigth1 > .peso1
+echo $weigth2 > .peso2
 
 function depuranodos {
 #
