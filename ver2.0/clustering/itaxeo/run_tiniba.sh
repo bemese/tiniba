@@ -304,6 +304,11 @@ if [ "$#" -eq 0 ]
     Line
     exit 1
 fi
+
+#################################################################################################
+################################### INICIANDO CORRECCION ########################################
+#################################################################################################
+
 ########################## general RUN
 ### set up of the input data
 wf="false"       #w
@@ -319,7 +324,8 @@ wfcheck="false" #b
 ### reads from the input line
 ### r: => reads 'data' from '-r data'
 ### v  => if set then is true otherwise is false, i.e. -v => v case is true
-while getopts “:hr:k:N:x:wmepdclsnbg:G:” OPTION
+
+while getopts “:hr:k:N:x:wmepdclsnb” OPTION 
 do
      case $OPTION in
          h)
@@ -365,12 +371,12 @@ do
          n)
              lsccp="true"
              ;;
-         g)
-             weigth1="$OPTARG"
-             ;;
-         G)
-             weigth2=$OPTARG
-             ;;
+         # g)
+         #     weigth1="$OPTARG"
+         #     ;;
+         # G)
+         #     weigth2=$OPTARG
+         #     ;;
          b)
              wfcheck="true"
              ;;
@@ -383,74 +389,83 @@ done
 # string with the chosen options
 moptions="$em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp"
 # checks that the input parameters are correct
-# first that -r has the correct value
+# first that -r has the correct weigth1
 #
-if [[ $action != "run" ]] && [[ $action != "setkp" ]] && [[ $action != "erase" ]] && [[ $action != "erasescf" ]]
-then
-    Line
-    printf "\tFor -r chose either ${RED}run, setkp, erase${NC} or ${RED}erasescf${NC}\n"
-    Line
-    exit 1
-fi
-########################## set k-points:begin #####################################
-if [ $action == 'setkp' ] 
-    then
-## 
-    if [[ -z $Nk ]] || [[ -z $weigth1 ]] || [[ -z $weigth2 ]]
-    then
-	Line
-	printf "either -k ${RED}Nk${NC}, -g ${RED}xeon/itanium${NC} or -G ${RED}xeon/quad${NC} weigths are not defined\n"
-	Line
-	exit 1
-    fi    
-##
-## this selects the nodes that are working
-    depuranodos
-#    printf "\taqui\n"
 
-##
-    Nkl=$Nk # Nk is read from the input line
-    Line
-    echo -e "The optimization for weigth = ${BLUE} $weigth ${NC}is:"
-    $where/arrange_machines_quad.pl $case.klist_$Nkl $numberOfNodes_pmn $weigth1 $weigth2
-    echo -e "Please choose an option, or choose any other option to continue"
-    echo -e "1. Choose another weigth       2. Exit to ${RED}run${NC} the full script"
-    option=`$where/get_value.pl`
-    echo $weigth1  > .peso1 #itanium/xeon
-    echo $weigth2  > .peso2 #quad/xeon
-    if [ $option == "2" ] 
-	then 
-#rm unecesary files
-	rm -f startpoint.txt
-	rm -f endpoint.txt
-	rm -f klist_length.txt
-	rm -f hoy
-	exit 1
-    fi
-    while [ $option == "1" ]
-    do
-	Line
-	echo "Please insert the new weigth:"
-	weigth=`$where/get_value.pl`
-	echo -e "The optimization for weigth = ${BLUE} $weigth ${NC}is:"
-	$where/arrange_machines.pl $case.klist_$Nkl $numberOfNodes_pmn $weigth
-	echo -e "Please choose an option, or choose any other option to continue"
-	echo -e "1. Choose another weigth       2. Exit to ${RED}run${NC} the full"
-	option=`$where/get_value.pl`
-	echo $weigth1 > .peso1
-	echo $weigth2 > .peso2
-	if [ $option == "2" ] 
-	then 
-	    exit 1
-	fi
-    done
-#rm unecesary files
-    rm -f startpoint.txt
-    rm -f endpoint.txt
-    rm -f klist_length.txt
-    rm -f hoy
-    exit 1
+value=2
+weigth2=4
+
+if [[ $action != "run" ]] && [[ $action != "setkp" ]] && [[ $action != "erase" ]] && [[ $action != "erasescf" ]]
+    then
+        Line
+        printf "\tFor -r chose either ${RED}run, setkp, erase${NC} or ${RED}erasescf${NC}\n"
+        Line
+        exit 1
 fi
+    
+########################## set k-points:begin #####################################
+if [ $action == 'setkp' ]; then
+
+    if [[ $Nk == "" ]]; then
+        Line
+        # printf "either -k ${RED}Nk${NC}, -g ${RED}xeon/itanium${NC} or -G ${RED}xeon/quad${NC} weigths are not defined\n"
+        printf "For the option ${RED} setkp ${NC} you need to type:  \n     run_tiniba -r setkp -k ${RED}Nk${NC} \n"
+        printf "and type te value for ${RED}Nk${NC} \n "
+        Line 
+        printf "\n"
+        exit 1
+    fi
+
+    ## this selects the nodes that are working
+        depuranodos
+    #    printf "\taqui\n"
+
+    ##
+        Nkl=$Nk # Nk is read from the input line
+        Line
+        echo -e "The work will be divided as follows: "
+        $where/arrange_machines_quad.pl $case.klist_$Nkl $numberOfNodes_pmn $weigth1 $weigth2
+        # echo -e "Please choose an option, or choose any other option to continue"
+        # echo -e "1. Choose another weigth       2. Exit to ${RED}run${NC} the full script"
+        # option=`$where/get_value.pl`
+        # echo $weigth1  > .peso1 #itanium/xeon
+        # echo $weigth2  > .peso2 #quad/xeon
+
+    #     if [ $option == "2" ];then 
+    # #rm unecesary files
+    # 	rm -f startpoint.txt
+    # 	rm -f endpoint.txt
+    # 	rm -f klist_length.txt
+    # 	rm -f hoy
+    # 	exit 1
+    #     fi
+    #     while [ $option == "1" ]
+    #     do
+    # 	Line
+    # 	echo "Please insert the new weigth:"
+    # 	weigth=`$where/get_value.pl`
+    # 	echo -e "The optimization for weigth = ${BLUE} $weigth ${NC}is:"
+    # 	$where/arrange_machines.pl $case.klist_$Nkl $numberOfNodes_pmn $weigth
+    # 	echo -e "Please choose an option, or choose any other option to continue"
+    # 	echo -e "1. Choose another weigth       2. Exit to ${RED}run${NC} the full"
+    # 	option=`$where/get_value.pl`
+    # 	echo $weigth1 > .peso1
+    # 	echo $weigth2 > .peso2
+    # 	if [ $option == "2" ] 
+    # 	then 
+    # 	    exit 1
+    # 	fi
+    #     done
+
+    #rm unecesary files
+        rm -f startpoint.txt
+        rm -f endpoint.txt
+        rm -f klist_length.txt
+        rm -f hoy
+        exit 1
+fi
+
+
 ########################## set k-points: end #####################################
 ########################## erase: begin #####################################
 if [ $action == 'erase' ] 

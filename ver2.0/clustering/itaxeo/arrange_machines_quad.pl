@@ -170,18 +170,18 @@ $HASTA=$SEEMSNPITAN+$SEEMSNPXEON+$TMP;
 }
 $NKPTCAL=$NPKGIVENXEON+$NPKGIVENITAN+$NPKGIVENQUAD;
 ##=====================SHOW INFO
-printf "\t============================================\n";
-printf "\tThis choice is equivalent to running in: ";
-printf "$SEEMSNOMAQUINAS cpus XEON\n";
-printf "\tList of Kpoints  = $KLISTFILE \n";
-printf "\t============================================\n";
-printf "\t           XEON    ITANIUM   QUAD/HEXA TOTAL\n";
-printf "\tCPUS       $NPXEON\t   $NPITAN\t";
-printf "     $NPQUAD\t     \t$NOMAQUINAS\n";
-printf "\tKpoints    $NPKGIVENXEON\t   $NPKGIVENITAN\t";
-printf "     $NPKGIVENQUAD     \t$NKPTCAL\n";
-printf "\tWeight     1\t   $PESOI\t     $PESOQ   \t0\n";
-printf "\t============================================\n";
+# printf "\t============================================\n";
+# printf "\tThis choice is equivalent to running in: ";
+# printf "$SEEMSNOMAQUINAS cpus XEON\n";
+# printf "\tList of Kpoints  = $KLISTFILE \n";
+# printf "\t============================================\n";
+# printf "\t           XEON    ITANIUM   QUAD/HEXA TOTAL\n";
+# printf "\tCPUS       $NPXEON\t   $NPITAN\t";
+# printf "     $NPQUAD\t     \t$NOMAQUINAS\n";
+# printf "\tKpoints    $NPKGIVENXEON\t   $NPKGIVENITAN\t";
+# printf "     $NPKGIVENQUAD     \t$NKPTCAL\n";
+# printf "\tWeight     1\t   $PESOI\t     $PESOQ   \t0\n";
+# printf "\t============================================\n";
 ##########################################
 ########ABOVE HERE YOU distribute only k points 
 
