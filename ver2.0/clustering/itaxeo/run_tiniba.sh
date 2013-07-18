@@ -392,8 +392,8 @@ moptions="$em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp"
 # first that -r has the correct weigth1
 #
 
-value=2
-weigth2=4
+weigth1=2
+weigth2=2
 
 if [[ $action != "run" ]] && [[ $action != "setkp" ]] && [[ $action != "erase" ]] && [[ $action != "erasescf" ]]
     then
