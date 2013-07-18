@@ -1,9 +1,9 @@
 tiniba:
 
 urgent:
- ☐ get rid of all bash parts that need interaction after initial command
- ☐ integrate first commands so it can run automatically after that
- ☐ implement version control on your own account and then try to sell it to... unenlightened colleagues.
+ ✔ get rid of all bash parts that need interaction after initial command @done (13-07-18 11:47)
+ ✔ integrate first commands so it can run automatically after that @done (13-07-18 11:48)
+ ✔ implement version control on your own account and then try to sell it to... unenlightened colleagues. @done (13-07-18 11:48)
 
  mid-term:
  ☐ rewrite ALL bash scripts
