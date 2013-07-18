@@ -101,6 +101,9 @@ rm -f finished*
 where=$HOME/tiniba/$ver/clustering/itaxeo
 cual=all_nodes.sh
 host=$HOSTNAME
+weigth1=2
+weigth2=2
+
 function depuranodos {
 #
 # checks that the nodes are working, otherwise it eliminates
@@ -391,9 +394,6 @@ moptions="$em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp"
 # checks that the input parameters are correct
 # first that -r has the correct weigth1
 #
-
-weigth1=2
-weigth2=2
 
 if [[ $action != "run" ]] && [[ $action != "setkp" ]] && [[ $action != "erase" ]] && [[ $action != "erasescf" ]]
     then
