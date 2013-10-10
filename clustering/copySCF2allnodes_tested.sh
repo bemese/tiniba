@@ -15,7 +15,7 @@ NC='\e[0m' # No Color
 ## global
 ontoy=`hostname`
 # reads TINIBA version from version-tiniba.txt
-source version-tiniba.txt
+# source version-tiniba.txt
 #
 ##=========FUNCTIONS===============
 function Line {
