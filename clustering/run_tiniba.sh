@@ -98,7 +98,7 @@ rm -f error
 rm -f finished*
 rm -f finished*
 #
-where=$TINIBA/clustering/
+where=$TINIBA/clustering
 cual=all_nodes.sh
 host=$HOSTNAME
 

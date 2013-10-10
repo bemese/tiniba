@@ -46,7 +46,7 @@ INTENTOS=4
 INEEDSPLIT=0
 FILE2COPY=$1
 ANFITRION=`hostname`
-WHERE="$TINIBA/clustering/"
+WHERE="$TINIBA/clustering"
 
 rm -f killme 
 if [ ! -e "$WHERE/ineedsplitWFSCF.sh" ];then

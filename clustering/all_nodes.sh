@@ -27,7 +27,7 @@ function Line {
       exit 127    
        }
 # Main, set up diectories, loop over number of jobs, call eachnode, and clean up.
-trunc_dir=$TINIBA/clustering/
+trunc_dir=$TINIBA/clustering
 ######################################### RUN below
 if [ $1 == '1' ]
 then
@@ -48,7 +48,7 @@ then
     wfcheck=${15}
     options="$rho $em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp $wfcheck"
 ## executables
-    allexec=$TINIBA/clustering/
+    allexec=$TINIBA/clustering
     mme_exec_xeon=$TINIBA/matrix_elements/rpmns_new_xeon
     mme_exec_itanium=$TINIBA/matrix_elements/rpmns_new_itanium
 ## reads abinit executables from version-abinit.txt
