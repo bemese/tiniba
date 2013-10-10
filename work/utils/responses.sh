@@ -25,6 +25,8 @@ exec=`$TINIBA/utils/cual_node.sh`
 eminw=0
 emaxw=20
 stepsw=2001
+#emaxw=3
+#stepsw=601
 #sicw=0
 
 #toldef=0.015 ## zeta 
@@ -37,9 +39,8 @@ toldef=0.03  ## original
 declare -a scases
 where=$TINIBA/utils
 where_latm=$TINIBA/latm
-#where_latm=/home/jl/abinit_shells/latm_new
 where_smear=$TINIBA/smear
-where_trunc=$TINIBA/clustering
+where_trunc=$TINIBA/clustering/itaxeo
 laheylib="env LD_LIBRARY_PATH=/usr/local/lf9562/lib"
 dir=$PWD
 case=`echo $PWD | awk -F / '{print$NF}'`
@@ -54,7 +55,8 @@ Nmax=$Nband
          exit 127
        fi
        if [ "$ESPINsetUp" -eq "1" ] || [ "$ESPINsetUp" -eq "2" ] ;then
-         printf "\tESPINsetUp= $ESPINsetUp ok \n"
+	   nada=0
+#         printf "\tESPINsetUp= $ESPINsetUp ok \n"
        else 
          printf "spin has to be 1 or 2 ...\n"
          exit 127 
@@ -95,9 +97,12 @@ for inode in `cat .machines_latm`
   do
   latm_node=$inode
 done
-
-used_node=`$where_trunc/trunc.sh $latm_node`
-
+if [ "$inode" == "medusa" ]
+then
+    used_node=$inode
+else
+    used_node=`$where_trunc/trunc.sh $latm_node`
+fi
 # echo ${#nodes[@]}
 
 ####################################################################
@@ -105,7 +110,7 @@ used_node=`$where_trunc/trunc.sh $latm_node`
     grep -n 'occ ' $case'_check'/$case.out > hoyj
     iocc=`awk -F: '{print $1}' hoyj`
 
-    grep -n 'prtvol' $case'_check'/$case.out > hoyj
+    grep -n 'prtvol ' $case'_check'/$case.out > hoyj
     iprtvol=`awk -F: '{print $1}' hoyj`
 
     awk 'NR=='$iocc',NR=='$iprtvol'' $case'_check'/$case.out > hoyj2
@@ -133,53 +138,89 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 	echo -e Check/Change ${blue}tolerance${NC} value of ${RED}$toldef${NC}
 	Line
 	echo -e "There are ${RED}$Nmax${NC} bands, so choose Nv=${RED}$Nvf${NC} and up to Nc=${RED}$Nct${NC} "
-####################################################################
-	echo %%%%%%%%%%%% run:
-	echo -e " ${BLUE}layer/total${RED} '_case${NC}'${BLUE}, scissors, Nv, Nc,${BLUE} response # ${blue} and up to 5 tensor components${NC}"
-	echo %%%%%%%%%%%%
+	Line
+	printf "responses.sh -w [${red}layer${NC} or ${red}total${NC}] -m [_${red}case${NC}] -s [${red}scissors${NC}] -o [${red}1${NC}-full or ${red}2${NC}-vc] -v [${red}Nv${NC}] -c [${red}Nc${NC}] -r [response${red}#${NC}] -t [tensor ${red}\"ijk ...\" ${NC}]\n"
+	Line
 	echo you have the following options:
 	echo
 	ls pmn*
 	echo
 #	echo You can use the following k-points files:
 #	ls *klist*
-	echo %%%%%%%%%%%%
+	Line
 	exit 1
     fi
-########### shell strats:
+# gets options
+while getopts ":w:m:s:o:v:c:r:t:" OPTION
+do
+     case $OPTION in
+         w)
+	     lt=$OPTARG
+             ;;
+         m)
+             caso=$OPTARG
+             pfix=$OPTARG
+             ;;
+         s)
+             tijera=$OPTARG
+             ;;
+         o)
+             opt=$OPTARG
+             ;;
+         v)
+             Nv=$OPTARG
+             ;;
+         c)
+             Nc=$OPTARG
+             ;;
+         r)
+             response=$OPTARG
+             ;;
+         t)
+             scases=($OPTARG) #the parenthesis () are so it reads an array 
+             ;;
+         ?)
+             printf "\t${RED}error${NC}\n"
+             exit
+             ;;
+     esac
+done
+## starts the overall time
+TIMESTARTALLI=`date`
+### shell starts:
+# data for option=1 from all valence bands Nv to 1...Nc conduction bands
+#          option=2 from a given valence band  to a given conduction band
+	rm -f opt.dat
+	echo $opt $Nv $Nc > opt.dat
 ###
-    if [ $1 == 'layer' -o $1 == 'total' ]
+    if [ $lt == 'layer' -o $lt == 'total' ]
 	then
-	caso=$2
 	echo $caso > chispas
 	Nk=`awk -F _ '{print $1}' chispas`
 	rm chispas
-	pfix=$2
-	tijera=$3
-	Nv=$4
-	Nc=$5
-	response=$6
-## tensor components given only once
-	scases=($7 $8 $9 ${10} ${11})
-	n_responses=$(( $# - 6 ))
+
+	n_responses=${#scases[@]}
 	aux='nada' # nada is fine
-	if [ $1 == 'layer' ]
+	if [ $lt == 'layer' ]
 	    then
 # get correct last_name for eigenvalues
 	    echo $caso > chispas
 	    last_name=`awk -F _ '{print $3}' chispas`
+
 	    pfixe=$Nk'_'$last_name
 	    rm chispas
 #
 	    cspin='me_csccp_'
-	    Snn='cSmmd_'
+#	    rhomm='me_rhomm_'
+	    rhomm='me_rhoccp_'
 	    cal='me_cpmn_'
 	    cur='me_cpnn_'
 	    aux='nada' # nada is fine
 	else
 	    spin='me_sccp_'
-	    pfixe=$2
+	    pfixe=$pfix
 	fi
+
 ### name of the response
 	if [ -z $response ]
 	    then
@@ -210,7 +251,7 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 	fi
 #
 # various checkups for consistency
-	if [[ ${#scases} == 0 ]]
+	if [[ ${#scases[@]} == 0 ]]
 	then
 	    Line
 	    echo -e "No tensor componentss were provided please provide at least one"
@@ -218,24 +259,25 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 	    exit 1
 	fi
 #
-	if [ $1 == 'total' ]
+	if [ $lt == 'total' ]
 	then
-	    if [[ $response = 24 || $response = 25 ]]
+	    if [[ $response = 24 || $response = 25 || $response = 29 || $response = 44 || $response = 45 ]]
 	    then
 		Line
-		echo -e "${BLUE}$sname${NC} is not total, chose a ${RED} total response${NC}"
+		printf "\t${BLUE}$sname${NC} is not total, chose a ${RED} total response${NC}\n"
 		Line
 		exit 1
 	    fi
 	fi
 #
 #
-	if [ $1 == 'layer' ]
+	if [ $lt == 'layer' ]
 	    then
-	    if [[ $response != 24 && $response != 25 && $response != 17 && $response != 26  && $response != 27 && $response != 29 ]]
+	    if [[ $response != 24 && $response != 25 && $response != 29 && $response != 44 && $response != 45 ]]
 		then
 		Line
-		echo -e "${BLUE}$sname${NC} is not layered, chose a ${RED} layered response${NC}"
+		printf "\t${BLUE}$sname${NC} is not layered, chose a ${RED} layered response${NC}\n"
+		touch fallo
 		Line
 		exit 1
 	    fi
@@ -266,9 +308,9 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 ##        
 	sicw=$tijera
 	$where/scissors.sh eigen_$pfixe 0
-	Line
-	echo -e LDA shift of $sicw
-	Line
+#	Line
+#	echo -e LDA shift of $sicw
+#	Line
 	Delta=$sicw
 	echo $Delta > fort.69
 ##### spectra.params file
@@ -276,14 +318,14 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 	num=${#scases[@]}
 	echo $num                                  > spectra.params_$pfix
 	j='0'
+#	Line
+#	echo -e pfix for eigenvalues and pmn: $pfixe
+#	if [ $lt == 'layer' ]
+#	then
+#	    echo -e pfix for caligraphic matrix elements: $pfix
+#	fi
 	Line
-	echo -e pfix for eigenvalues and pmn: $pfixe
-	if [ $1 == 'layer' ]
-	then
-	    echo -e pfix for caligraphic matrix elements: $pfix
-	fi
-	Line
-	echo -e running respone num=${RED}$response${NC} for the following cases:
+	printf "\trunning respone num=${RED}$response${NC} for the following cases:\n"
 	for i in ${scases[@]}
 	  do
 	  a=${scases[$j]}
@@ -293,17 +335,18 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 	  j=`expr $j + 1`
 	  file=`expr $j + 50`
 ## writes to screen
-	  echo $response "$sname.$a.dat_$pfix" $file T   
-	  echo $xyz123 
+	  printf "\t$sname.$a.dat_$pfix\n"
+#	  echo $xyz123 
 ## writes to file
 	  echo $response "$sname.$a.dat_$pfix" $file T   >> spectra.params_$pfix
 	  echo $xyz123 >> spectra.params_$pfix
 	done
 #####
 	echo \&INDATA > tmp_$pfix
-	echo nVal= $Nv, >> tmp_$pfix
+##### We use $Nvf for the total number of valence bands!!!
+	echo nVal= $Nvf, >> tmp_$pfix
 	echo nMax= $Nmax, >> tmp_$pfix
-	echo nVal_tetra= $Nv, >> tmp_$pfix
+	echo nVal_tetra= $Nvf, >> tmp_$pfix
 ##############################################################
 #### could be to any value of conduction bands               #   
 #### if Nc=$Nmax - $Nv all conduction bands are being used   #
@@ -326,8 +369,8 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 	echo withSO= .true., >> tmp_$pfix        
       fi
 ### added 10 de diciembre de 2008 at 15:30
-	Line
-	echo -e with ${RED}Spin-Orbit${NC}
+#	Line
+	printf "\twith ${RED}Spin-Orbit${NC}\n"
 	if [ ! -r  $ene$pfixe ] 
 	    then
 	    Line
@@ -351,7 +394,7 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 	echo rmn_data_filename= \""rmn.d_$pfix"\", >> tmp_$pfix
 # for spin-related calculations
 #
-		if [[ $response == '41' || $response == '17' ]]
+		if [[ $response == '41' || $response == '29' ]]
 		then
 		    if [ ! -r $spin$pfix ] 
 		    then
@@ -363,21 +406,21 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 # the smn_data_filename file is the same for bulk or layer
 		    echo smn_data_filename= \""$spin$pfix"\", >> tmp_$pfix
 		fi
-# so far below is not needed
-#	    if [ -e $Snn$pfix ]
-#		then
-#		echo snn_data_filename= \""$Snn$pfix"\", >> tmp_$pfix
-#	    fi
+# ndot calculation
+		if [ -e $rhomm$pfix ]
+		    then
+		    echo rhomm_data_filename= \""$rhomm$pfix"\", >> tmp_$pfix
+		fi
 ### layered calculation
-	    if [ $1 == 'layer' ] 
+	    if [ $lt == 'layer' ] 
 	    then
 #
-		if [ $response == '24' ]
+		if [[ $response == '24' || $response == '44' || $response == '45' ]]
 		then
 		    if [ ! -r $cal$pfix ] 
 		    then
 			Line
-			echo WARNING NO $cal$pfix for layer linear response
+			echo WARNING NO $cal$pfix for layer response
 			Line
 			exit 1
 		    fi
@@ -410,7 +453,7 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 		fi
 #
 	    fi
-### end: if [ $1 == 'layer' ] 
+### end: if [ $lt == 'layer' ] 
 ### continue
 	    echo der_data_filename= \""der.d_$pfix"\", >> tmp_$pfix
 	    echo tet_list_filename= \""tetrahedra_$Nk"\", >> tmp_$pfix
@@ -440,47 +483,56 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 	Line
 	exit 1
     fi
+
     energy_steps=`grep energy_steps tmp_$pfix | awk -F= '{print $2}'`
-    Line
+
+#    Line
     if [ $used_node  == 'node' ]
     then
-#rsh $latm_node "cd $dir;$laheylib $where/latm_new/set_input tmp_$pfix spectra.params_$pfix " 
-	echo run $where_latm/set_input_32b only once at $latm_node
-	echo rsh $latm_node "cd $dir; $where_latm/set_input_32b tmp_$pfix spectra.params_$pfix "
-	rsh $latm_node "cd $dir; $where_latm/set_input_32b tmp_$pfix spectra.params_$pfix "
-    elif [ $used_node  == 'itanium' ]
+	printf "\tRUNING: $where_latm/set_input_32b [$latm_node]\n"
+	echo ssh $latm_node "cd $dir; $where_latm/set_input_32b tmp_$pfix spectra.params_$pfix "
+	ssh $latm_node "cd $dir; $where_latm/set_input_32b tmp_$pfix spectra.params_$pfix "
+    elif [[ $used_node  == 'medusa' || $used_node  == 'hexa' ]]
     then
-#rsh $latm_node "cd $dir;$laheylib $where/latm_new/set_input_64b tmp_$pfix spectra.params_$pfix " 
-	echo run $where_latm/set_input_64b only once at $latm_node
-	rsh $latm_node "cd $dir; $where_latm/set_input_64b tmp_$pfix spectra.params_$pfix "
+	printf "\tRUNING: $where_latm/set_input_hexa [$latm_node]\n"
+#	ssh $latm_node "cd $dir; $where_latm/set_input_64b tmp_$pfix spectra.params_$pfix "
+	$where_latm/set_input_hexa tmp_$pfix spectra.params_$pfix 
+   elif [ $used_node  == 'itanium' ]
+    then
+	printf "\tRUNING: $where_latm/set_input_64b [$latm_node]\n"
+	ssh $latm_node "cd $dir; $where_latm/set_input_64b tmp_$pfix spectra.params_$pfix "
     elif [ $used_node  == 'quad' ];then
 	CORRE="$where_latm/set_input_quad"
 	if [ ! -e $CORRE ];then 
 	    printf "\t $CORRE \n"
-	    printf "\t Doesnt exits ... press any key to continue... \n"
+	    printf "\t Does not exits ... press any key to continue... \n"
 	    read -p ""
 	fi  
 	Line
-	Line
-	printf "\t $where_latm/set_input_quad tmp_$pfix  spectra.params_$pfix [$latm_node]\n"
-	Line
+#	printf "\t $where_latm/set_input_quad tmp_$pfix  spectra.params_$pfix [$latm_node]\n"
+	printf "\tRUNING: $where_latm/set_input_quad [$latm_node]\n"
 	Line
         cp  tmp_$pfix input1set
         cp  spectra.params_$pfix input2set
-#echo rsh $latm_node "cd $dir; $where_latm/set_input_quad tmp_$pfix spectra.params_$pfix "
-	rsh $latm_node "cd $dir; $where_latm/set_input_quad tmp_$pfix spectra.params_$pfix "
-#	rsh $latm_node "cd $dir; /home/jl/abinit_shells/latm_new/set_input_quad tmp_$pfix spectra.params_$pfix "
+	ssh $latm_node "cd $dir; $where_latm/set_input_quad tmp_$pfix spectra.params_$pfix "
     else
 	echo -e "$RED  $used_node $NC is not a valid option "
 	echo  Please run again
 	exit 1
     fi
     Line
-    printf "\tthe integrand has been calculated\n"
+    TIMEENDALLI=`date`
+    TIME1=`date --date="$TIMESTARTALLI" +%s`
+    TIME2=`date --date="$TIMEENDALLI" +%s`
+    ELTIME=$[ $TIME2 - $TIME1 ]
+    TMIN=$(echo "scale=9; $ELTIME/60" | bc)
+    TMIN1=$(echo "scale=9; $ELTIME/3600" | bc)
+    printf "\tThe integrand has been calculated in $TMIN min\n"
+
 #### to only calculate the integrand uncomment the next line
 #    exit 1
 ####
-    printf "\tthe integrand will be integrated\n"
+    printf "\tThe integrand will be integrated\n"
     Line
 ######## run for each ij component
     diez='10'
@@ -491,26 +543,33 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 	i=`expr $i + 1`
 	sed s/Integrand_$pfix/$sname.$ij.dat_$pfix/ tmp_$pfix > tmp1_$pfix
 	sed s/Spectrum_$pfix/$sname.$ij.$spe'_'$pfix/ tmp1_$pfix > tmp2_$pfix
-	grep -v $aux tmp2_$pfix > tmp_$ij'_'$pfix
-	rm -f $sname.$ij.$spe'_'$pfix $sname.$ij.kk.$spe'_'$pfix hoy_$ij'_'$pfix
-	used_node=`$where_trunc/trunc.sh ${nodes[$i]}`
+	grep -v $aux tmp2_$pfix > int_$ij'_'$pfix
+#	rm -f $sname.$ij.$spe'_'$pfix $sname.$ij.kk.$spe'_'$pfix hoy_$ij'_'$pfix
+	if [ "${nodes[$i]}" == "medusa" ]
+	then
+	    used_node=${nodes[$i]}
+	else
+	    used_node=`$where_trunc/trunc.sh ${nodes[$i]}`
+	fi
 	if [ $used_node == 'node' ]
 	then
-	    rsh ${nodes[$i]} "cd $dir;$laheylib  $where_latm/tetra_method_32b tmp_$ij'_'$pfix > hoy_$ij'_'$pfix" &
+	    ssh ${nodes[$i]} "cd $dir;$laheylib  $where_latm/tetra_method_32b int_$ij'_'$pfix > hoy_$ij'_'$pfix" &
+	elif [[ $used_node == 'medusa' ||  $used_node == 'hexa' ]]
+	then
+	    $where_latm/tetra_method_hexa int_$ij'_'$pfix > hoy_$ij'_'$pfix &
 	elif [ $used_node == 'itanium' ]
 	then
-	    rsh ${nodes[$i]} "cd $dir;$laheylib  $where_latm/tetra_method_64b tmp_$ij'_'$pfix > hoy_$ij'_'$pfix" &
+	    ssh ${nodes[$i]} "cd $dir;$laheylib  $where_latm/tetra_method_64b int_$ij'_'$pfix > hoy_$ij'_'$pfix" &
 	elif [ $used_node == 'quad' ]
 	then
-	
-    printf "\t$where_latm/tetra_method_quad tmp_$ij_$pfix > hoy_$ij_$pfix\n"
-    rsh ${nodes[$i]} "cd $dir;$laheylib  $where_latm/tetra_method_quad tmp_$ij'_'$pfix > hoy_$ij'_'$pfix" &
+#	    printf "\t$where_latm/tetra_method_quad int_$ij_$pfix > hoy_$ij_$pfix\n"
+	    ssh ${nodes[$i]} "cd $dir;$laheylib  $where_latm/tetra_method_quad int_$ij'_'$pfix > hoy_$ij'_'$pfix" &
 	else
 	    echo -e "$RED ${nodes[$i]} $NC is not a valid option in .machines_res "
 	    echo please run again
 	    exit 1
 	fi
-	printf "\t${red}run${NC} $case for $ij_$pfix at ${RED}${nodes[$i]}${NC}\n"
+	printf "\t${red}run${NC} $ij at ${RED}${nodes[$i]}${NC}\n"
 # label for responses
 	label=$label'_'$ij
     done
@@ -519,8 +578,6 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 #exit 1
 ########
     for ij in ${scases[@]}
-    
-# 	for ij in `echo $scases`
     do
 	if [ ! -e $sname.$ij.$spe'_'$pfix ]
 	then
@@ -539,7 +596,7 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 	    fi
 #	    echo 2nd $int $energy_steps
 	done
-	printf "\t${blue}$ij_$pfix ${red}done for $case${NC}\n"
+	printf "\t${blue}$ij ${red}done${NC}\n"
     done
     Line
     printf  "\t${blue}all $case nodes done for $pfix${NC}\n"
@@ -548,15 +605,16 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 ## kk
 	for ij in ${scases[@]}
 	do
-            if [[ $response == '17' || $response == '25' || $response == '3' || $response == '41' || $response == '29' ]]
+            if [[ $response == '17' || $response == '25' || $response == '3' || $response == '41' || $response == '29' || $response == '26' || $response == '27' ]]
 	    then
+# ndot is  real => no need for KK
 # zeta is purely imaginary => no need for KK
 		printf "\t${red}no need for KK $ij${NC}\n"
 		awk '{print $1}' $sname.$ij.$spe'_'$pfix > bc1_$pfix
 		awk '{print $2,$3}' $sname.$ij.$spe'_'$pfix > bc$ij'_'$pfix
 		echo bc$ij'_'$pfix >> chido 
 	    else
-		echo -e ${red}KK for $ij${NC}
+		printf "\t${red}KK for $ij${NC}\n"
 #                      printf "\t Doing kk \n" 
 		$TINIBA/kk/rkramer_$exec 1 $sname.$ij.$spe'_'$pfix $sname.$ij.kk.$spe'_'$pfix >> hoy_$ij'_'$pfix
 		awk '{print $1}' $sname.$ij.kk.$spe'_'$pfix > bc1_$pfix
@@ -564,6 +622,7 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 		echo bc$ij'_'$pfix >> chido 
 	    fi
 	done
+#exit 1
 ## pasting
 	filename=chido
 	declare -a array1
@@ -571,8 +630,20 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 	file1=$sname.$label
 	paste bc1_$pfix `echo ${array1[@]}` > $file1
 ################# Smearing a la Fred ##################		
+###%%%###@@@@ I bet the daring young soul to get the files names to a modicum minimum 
 	if [ 1 == 1 ];then
+	    ap=$label'_'$pfix'_'
+	    am='scissor_'$tijera'_'
 	    label=$label'_'$pfix'_Nc_'$Nc
+	    if [ $opt == '1' ]
+	    then
+		ultimo='Nc_'$Nc
+	    fi
+	    if [ $opt == '2' ]
+	    then
+		ultimo='vc_'$Nv'_'$Nc
+	    fi
+#
 	    file2=$sname.sm$label
 	    label2='_scissor_'$tijera
 #		$where_smear/smear 1 $file1 $file2 > hoy                     #smearing
@@ -585,9 +656,11 @@ used_node=`$where_trunc/trunc.sh $latm_node`
                 printf "\t Ctrl C to Stop\n"
                 read -p ""
             fi  
-	    $where_smear/rsmear2_$exec 1 $file1 $file2 > hoy                     #smearing
-	    file3=$sname.kk$label$label2
-	    file4=$file2$label2
+	    $where_smear/rsmear2_$exec 1 $file1 $file2 > hoy     #smearing
+#	    file3=$sname.kk$label$label2
+#	    file4=$file2$label2
+	    file3=$sname.kk$ap$am$ultimo
+	    file4=$sname.sm$ap$am$ultimo
 	    if [ "$response" -ne "25" ];then
 		mv $file1  res/$file3
 		mv $file2  res/$file4
@@ -595,14 +668,14 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 		printf "\tOutput:\n"
 		if [ -e  "res/$file3" ];then
 		    printf "\t${BLUE}res/${GREEN}$file3${NC}\n"
-		    if [[ $response -eq "21" || $response -eq "22" ]]
+		    if [[ $response -eq "21" || $response -eq "22" || $response -eq "42" || $response -eq "43" || $response -eq "44" || $response -eq "45" ]]
 		    then
 			echo $file3 > $response.kk.dat
 		    fi
 		fi
 		if [ -e "res/$file4" ];then
 		    printf "\t${BLUE}res/${GREEN}$file4${NC}\n"
-		    if [[ $response -eq "21" || $response -eq "22" ]]
+		    if [[ $response -eq "21" || $response -eq "22" || $response -eq "42" || $response -eq "43" || $response -eq "44" || $response -eq "45" ]]
 		    then
 			echo $file4 > $response.sm.dat
 		    fi
@@ -672,5 +745,6 @@ used_node=`$where_trunc/trunc.sh $latm_node`
         rm -rf tmp* endWELL*		
         rm -rf hoy*
 	rm -f energys.d* fort* fromSmear halfene*
-	rm -f input*set response_type tijeras spectra*
-	
+	rm -f input*set  tijeras spectra*
+	rm -f  response_type 
+	rm -f int_*

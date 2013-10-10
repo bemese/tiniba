@@ -39,7 +39,7 @@ where=$TINIBA/utils
 where_latm=$TINIBA/latm
 #where_latm=/home/jl/abinit_shells/latm_new
 where_smear=$TINIBA/smear
-where_trunc=$TINIBA/clustering
+where_trunc=$TINIBA/clustering/itaxeo
 laheylib="env LD_LIBRARY_PATH=/usr/local/lf9562/lib"
 dir=$PWD
 case=`echo $PWD | awk -F / '{print$NF}'`

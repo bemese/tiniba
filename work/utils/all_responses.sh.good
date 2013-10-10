@@ -36,7 +36,7 @@ toldef=0.03  ## original
 
 ##
 declare -a scases
-where_trunc=$TINIBA/clustering
+where_trunc=$TINIBA/clustering/itaxeo
 dir=$PWD
 case=`echo $PWD | awk -F / '{print$NF}'`
 latm="latm_new"
@@ -140,7 +140,7 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 	echo -e "There are ${RED}$Nmax${NC} bands, so choose Nv=${RED}$Nvf${NC} and up to Nc=${RED}$Nct${NC} "
 ####################################################################
 	Line
-	printf "all_responses.sh [${red}layer/total${NC}] [_${red}case${NC}] [${red}scissors${NC}] [${red}Nv${NC}] [${red}Nc${NC}] [response${red}#${NC}] [${red}up to 5 tensor components${NC}]\n"
+	printf "all_responses.sh -w [${red}layer${NC} or ${red}total${NC}] -m [_${red}case${NC}] -s [${red}scissors${NC}] -o [${red}1${NC}-full or ${red}2${NC}-vc] -v [${red}Nv${NC}] -c [${red}Nc${NC}] -r [response${red}#${NC}] -t [tensor ${red}\"ijk ...\" ${NC}]\n"
 	Line
 	echo you have the following options:
 	ls me_pmn*
@@ -154,32 +154,64 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 	Line
 	exit 1
     fi
-    if [ $1 == 'layer' -o $1 == 'total' ]
+# gets options
+while getopts ":w:m:s:o:v:c:r:t:" OPTION
+do
+     case $OPTION in
+         w)
+	     lt=$OPTARG
+             ;;
+         m)
+             caso=$OPTARG
+             pfix=$OPTARG
+             ;;
+         s)
+             tijera=$OPTARG
+             ;;
+         o)
+             option=$OPTARG
+             ;;
+         v)
+             Nv=$OPTARG
+             ;;
+         c)
+             Nc=$OPTARG
+             ;;
+         r)
+             response=$OPTARG
+             ;;
+         t)
+             scases=($OPTARG) #the parenthesis () are so it reads an array 
+             ;;
+         ?)
+             printf "\t${RED}error${NC}\n"
+             exit
+             ;;
+     esac
+done
+    if [ $lt == 'layer' -o $lt == 'total' ]
 	then
-	caso=$2
 	echo $caso > chispas
 	Nk=`awk -F _ '{print $1}' chispas`
 	rm chispas
-	pfix=$2
-	tijera=$3
-	Nv=$4
-	Nc=$5
-	response=$6
-## tensor components given only once
-	scases=($7 $8 $9 ${10} ${11})
-#	echo num of components: ${#scases[@]} ${scases[@]}
-#	echo $exec $1 $caso $tijera $Nv $Nc $response  ${scases[@]}
+#
 	if [ $response -eq "21" ]
 	then
 	    Line
 	    echo -e ${RED}'Calculating shg1 and shg2'${NC}
 	    Line
+#
 	    response=21
-	    echo $exec $1 $caso $tijera $Nv $Nc $response  ${scases[@]}
-	    $exec $1 $caso $tijera $Nv $Nc $response  ${scases[@]}
+	    echo $exec -w $lt -m $caso -s $tijera -o $option -v $Nv -c $Nc -r $response  -t \"${scases[@]}\" > mtita
+	    chmod +x mtita
+	    mtita
+	    rm mtita
+#
 	    response=22
-	    echo $exec $1 $caso $tijera $Nv $Nc $response  ${scases[@]}
-	    $exec $1 $caso $tijera $Nv $Nc $response  ${scases[@]}
+	    echo $exec -w $lt -m $caso -s $tijera -o $option -v $Nv -c $Nc -r $response  -t \"${scases[@]}\" > mtita
+	    chmod +x mtita
+	    mtita
+	    rm mtita
 # puts shg1 and shg2 into one file
 # kk
 	    f1w=`awk '{print $1}' 21.kk.dat`
@@ -207,7 +239,9 @@ used_node=`$where_trunc/trunc.sh $latm_node`
 	    Line
 	    echo -e ${RED}'Calculating other than shg1 and shg2'${NC}
 	    Line
-	    echo $exec $1 $caso $tijera $Nv $Nc $response  ${scases[@]}
-	    $exec $1 $caso $tijera $Nv $Nc $response  ${scases[@]}
+	    echo $exec -w $lt -m $caso -s $tijera -o $option -v $Nv -c $Nc -r $response  -t \"${scases[@]}\" > mtita
+	    chmod +x mtita
+	    mtita
+	    rm mtita
 	fi
     fi

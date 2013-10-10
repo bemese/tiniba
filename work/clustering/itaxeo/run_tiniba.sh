@@ -13,7 +13,7 @@ CYAN='\e[1;36m'
 NC='\e[0m' # No Color
 ## Functions
 # reads TINIBA version from version-tiniba.txt
-# source version-tiniba.txt
+source version-tiniba.txt
 #
 ## rho
 function lrho {
@@ -98,7 +98,7 @@ rm -f error
 rm -f finished*
 rm -f finished*
 #
-where=$TINIBA/clustering
+where=$HOME/tiniba/$ver/clustering/itaxeo
 cual=all_nodes.sh
 host=$HOSTNAME
 
@@ -124,7 +124,7 @@ then
     Line
     printf "\tSCF  to be run on the Quads\n"
     Line
-    $TINIBA/utils/infiniband-quad.sh .machines_scf.quad
+    $HOME/tiniba/$ver/utils/infiniband-quad.sh .machines_scf.quad
     mv .machines_scf.quad .machines_scf.original
 elif [ "$nodin" == "hexa" ]
 then
@@ -132,14 +132,14 @@ then
     Line
     printf "\tSCF  to be run on the Hexas\n"
     Line
-    $TINIBA/utils/infiniband-hexa.sh .machines_scf.hexa
+    $HOME/tiniba/$ver/utils/infiniband-hexa.sh .machines_scf.hexa
     mv .machines_scf.hexa .machines_scf.original
 else
     Line
     printf "\tSCF not to be run on the Quads or Hexas\n"
     Line
 fi
-$TINIBA/utils/createRemoteDir.sh
+$HOME/tiniba/$ver/utils/createRemoteDir.sh
 }
 
 if [ "$host" == "medusa" ]; then
@@ -290,7 +290,7 @@ if [ "$#" -eq 0 ]
     then
 	echo -e ${RED} "*********No .acell.d file exists, is this a bulk calculation??**********"${NC}
     fi
-    $TINIBA/utils/check_coord.sh
+    $HOME/tiniba/$ver/utils/check_coord.sh
     echo -e "${BLUE} The following sets of k-points are available:${NC}"
     ls $case.klist*
     Line

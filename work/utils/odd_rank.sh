@@ -12,7 +12,7 @@ cyan='\e[0;36m'
 CYAN='\e[1;36m'
 NC='\e[0m' # No Color
 ##
-where=$TINIBA/utils
+where=$HOME/tiniba/ver2.0/utils
 ##
 case=`echo $PWD | awk -F / '{print$NF}'`
 dir=$PWD

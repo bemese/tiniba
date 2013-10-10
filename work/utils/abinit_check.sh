@@ -22,13 +22,13 @@ host=`hostname`
 case=`echo $PWD | awk -F / '{print$NF}'`
 dir=$PWD
 # reads abinit executables from version-abinit.txt
-# source version-abinit.txt
+source version-abinit.txt
 #
 # reads TINIBA version from version-tiniba.txt
-# source version-tiniba.txt
+source version-tiniba.txt
 #
-where=$TINIBA/utils
-whereset=$TINIBA/clustering
+where=$HOME/tiniba/$ver/utils
+whereset=$HOME/tiniba/$ver/clustering/itaxeo
 if [[ ! -e .machines_pmn.original || ! -e .machines_scf.original ]]
     then
     Line

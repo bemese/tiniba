@@ -11,7 +11,7 @@ MAG='\e[0;35m'
 NC='\e[0m' # No Color
 #
 # reads TINIBA version from version-tiniba.txt
-# source version-tiniba.txt
+source version-tiniba.txt
 #
 # displays the chosen options 
 #
@@ -58,7 +58,7 @@ function Line {
 ##
 quien=`whoami`
 # runs a given job in a given node
-trunc_dir=$TINIBA/clustering
+trunc_dir=$HOME/tiniba/$ver/clustering/itaxeo
 # input from all_nodes.sh
 node=$1
 input=$2
@@ -109,19 +109,19 @@ nodo=`$trunc_dir/trunc.sh $node`
 ##
 if [ $nodo = 'node' ]
 then
-    rpmns_exec=$TINIBA/matrix_elements/rpmns.xeon
+    rpmns_exec=$HOME/tiniba/$ver/matrix_elements/rpmns.xeon
 fi
 if [ $nodo = 'itanium' ]
 then
-    rpmns_exec=$TINIBA/matrix_elements/rpmns.itanium
+    rpmns_exec=$HOME/tiniba/$ver/matrix_elements/rpmns.itanium
 fi
 if [ $nodo = 'quad' ]
 then
-    rpmns_exec=$TINIBA/matrix_elements/rpmns.quad
+    rpmns_exec=$HOME/tiniba/$ver/matrix_elements/rpmns.quad
 fi
 if [ $nodo = 'hexa' ]
 then
-    rpmns_exec=$TINIBA/matrix_elements/rpmns.hexa
+    rpmns_exec=$HOME/tiniba/$ver/matrix_elements/rpmns.hexa
 fi
 ##
 if [ ! -d $input ]

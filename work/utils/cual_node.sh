@@ -20,7 +20,7 @@ host=`hostname`
 if [ $host == medusa ]; then
     echo hexa
 else
-    exec=`$TINIBA/clustering/trunc.sh $host`
+    exec=`$TINIBA/clustering/itaxeo/trunc.sh $host`
     echo $exec
 fi
 ##
