@@ -10,14 +10,14 @@ CYAN='\e[1;36m'
 NC='\e[0m' # No Color
 ##
 # reads TINIBA version from version-tiniba.txt
-source version-tiniba.txt
+# source version-tiniba.txt
 #
 ##
 function Line {
     printf "\t${BLUE}=============================${NC}\n"
 }
 ##
-trunc_dir=$HOME/tiniba/$ver/clustering/itaxeo
+trunc_dir=$TINIBA/clustering/
 declare -a nodeArray_scf
 nodeArray_scf=(`cat .machines_scf`)
 nodo=`$trunc_dir/trunc.sh ${nodeArray_scf[0]}`
@@ -65,7 +65,7 @@ if [ $serialp == '2' ]
     then
 	cd $diro
 	rm -f finished_scf       
-	/home/$USER/tiniba/$ver/clustering/itaxeo/runSCF_19_Octubre_2009.sh 2          
+	$TINIBA/clustering/runSCF_19_Octubre_2009.sh 2          
     fi
 fi
 #

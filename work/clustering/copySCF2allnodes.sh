@@ -15,7 +15,7 @@ NC='\e[0m' # No Color
 ## global
 ontoy=`hostname`
 # reads TINIBA version from version-tiniba.txt
-source version-tiniba.txt
+# source version-tiniba.txt
 #
 ##=========FUNCTIONS===============
 function Line {
@@ -46,7 +46,7 @@ INTENTOS=4
 INEEDSPLIT=0
 FILE2COPY=$1
 ANFITRION=`hostname`
-WHERE="$HOME/tiniba/$ver/clustering/itaxeo"
+WHERE="$TINIBA/clustering/"
 
 rm -f killme 
 if [ ! -e "$WHERE/ineedsplitWFSCF.sh" ];then

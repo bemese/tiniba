@@ -8,7 +8,7 @@ cyan='\e[0;36m'
 CYAN='\e[1;36m'
 NC='\e[0m' # No Color
 # reads TINIBA version from version-tiniba.txt
-source version-tiniba.txt
+# source version-tiniba.txt
 #
 ##
     function Line {
@@ -18,7 +18,7 @@ source version-tiniba.txt
 clear
 ##
 case=`echo $PWD | awk -F / '{print$NF}'`
-where=$HOME/tiniba/$ver/utils/programs_layer
+where=$TINIBA/utils/programs_layer
 xredcart=`grep -x xred setUpAbinit_$case.in` 
 xcartjl=`grep -x xcart setUpAbinit_$case.in` 
 ## sort the coordinates along z

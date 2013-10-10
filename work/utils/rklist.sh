@@ -15,9 +15,9 @@
 ##====== DEFINITIONS ===========   
 clear       
 # reads TINIBA version from version-tiniba.txt
-source version-tiniba.txt
+# source version-tiniba.txt
 #
-     WHERE=$HOME/tiniba/$ver/src_ibz
+     WHERE=$TINIBA/src_ibz
 #     printf "\t${BLUE}`dirname $0`/${GREEN}`basename $0`${NC}\n "
      #### great idea jl jajaja september 30 2007
        BASEDIR=`dirname $PWD`
