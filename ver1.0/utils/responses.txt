@@ -1,0 +1,10 @@
+1 : chi1 : linear response
+24 : calChi1 : layer linear response 
+3 : eta2 : bulk injection current
+25 : calEta2 : layer injection current
+41 : zeta : bulk spin injection 
+29 : calZeta : layer spin injection
+21 : shg1 : does 1-w and 2-w 
+22 : shg2
+26 : ndotccp : carrier injection
+27 : ndotvv : carrier injection

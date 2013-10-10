@@ -1,0 +1,2 @@
+#ifort -o rkcart2dlatt kcart2dlatt.f90 3by3matrices.o 
+ifort -o rkcart2dlatt_quad kcart2dlatt.f90 3by3matrices.o 

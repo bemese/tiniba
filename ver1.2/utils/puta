@@ -1,0 +1,68 @@
+#!/bin/bash
+##
+red='\e[0;31m'
+RED='\e[1;31m'
+blue='\e[0;34m'
+BLUE='\e[1;34m'
+cyan='\e[0;36m'
+CYAN='\e[1;36m'
+NC='\e[0m' # No Color
+##
+case=`basename $PWD`
+espin=`grep nspinor $case'_check'/$case.out | awk -F= '{print $4}' | awk '{print $1}'`
+ecut=`grep ecut setUpAbinit_$case.in  |  awk '{print $2}'`
+printf "\t$espin $ecut\n"
+if [ $espin == '1' ]
+then
+    ospin='nospin'
+else
+    ospin='spin'
+fi
+last_name='_'$ecut'-'$ospin
+##
+    function Line {
+	printf "\t${BLUE}=============================${NC}\n"
+    }
+##
+clear
+##
+if [ "$#" -eq 0 ]
+    then
+    Line
+    printf "\truns any calculation for 4 cuadrants\n"
+    printf "\tkz>0\n"
+    printf "\tkx>0,ky>0=>c1,kx<0,ky>0=>c2,kx<0,ky<0=>c3,kx>0,ky<0=>c4\n"
+    printf "\tusage:\n"
+    printf "\t Edit 4cuadrants-me.sh with the options you want to use, then:\n"
+    printf "\t${blue}4cuadrants-me.sh${NC} [${red}Nk${NC}]\n"
+    Line
+    exit 1
+fi
+if [ ! "$#" -eq 0 ]
+    then
+    Nk=$1
+    cual=$case.klist_$Nk
+# generates the kpoints for the four cuadrants
+# c1
+    cp $cual $cual.c1
+# c2
+    awk '{print -$1,$2,$3}' $cual > $cual.c2 
+# c3
+    awk '{print -$1,-$2,$3}' $cual > $cual.c3 
+# c4
+    awk '{print $1,-$2,$3}' $cual > $cual.c4 
+# runs for each set of k-points
+    cases=(c1 c2 c3 c4)
+    for c in ${cases[@]}
+    do
+    printf "\t runing for $c $Nk$last_name\n"
+    cp $cual.$c $cual
+    run_tiniba.sh -r run -k $Nk -N 2 -x 2 -w -e -p -l
+    mv eigen_$Nk$last_name eigen_$Nk$last_name.$c
+    mv pmn_$Nk$last_name pmn_$Nk$last_name.$c
+    mv cpmmd_$Nk'_'1$last_name cpmmd_$Nk'_'1$last_name.$c
+    mv cpmmd_$Nk'_'2$last_name cpmmd_$Nk'_'2$last_name.$c
+    done
+# return to the original k-points
+    cp $cual.c1 $cual
+fi
