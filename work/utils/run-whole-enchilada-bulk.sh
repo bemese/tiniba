@@ -74,7 +74,7 @@ then
 	natmat
 	kt=27720
         # gets the k-points distributed among the processors 
-	echo run_tiniba.sh -r setkp -k $kt -g 2 -G 2 > natmat
+	echo run_tiniba.sh -r setkp -k $kt > natmat
 	natmat
         #  gets the wave function
  	echo run_tiniba.sh -r run -k $kt -N 0 -x 2 -w > natmat
