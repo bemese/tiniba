@@ -13,6 +13,6 @@ urgent:
 
  long-term:
  ☐ completely rewrite everything
- ☐ possibly make the switch to python instead of fortran?
+ ☐ possibly make the switch to c/c++ instead of fortran?
  ☐ rework TINIBA so it plugs in directly to any version of ABINIT installed
  ☐ package and distribute
