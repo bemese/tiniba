@@ -26,7 +26,7 @@ source version-abinit.txt
 #
 #
 where=$HOME/tiniba/utils
-whereset=$HOME/tiniba/clustering/itaxeo
+whereset=$HOME/tiniba/clustering
 if [[ ! -e .machines_pmn.original || ! -e .machines_scf.original ]]
     then
     Line

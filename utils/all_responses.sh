@@ -41,7 +41,7 @@ toldef=0.03  ## original
 
 ##
 declare -a scases
-where_trunc=$TINIBA/clustering/itaxeo
+where_trunc=$TINIBA/clustering
 dir=$PWD
 case=`echo $PWD | awk -F / '{print$NF}'`
     latm="latm_new"

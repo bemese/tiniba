@@ -56,7 +56,7 @@ function Line {
 ##
 quien=`whoami`
 # runs a given job in a given node
-trunc_dir=$HOME/tiniba/clustering/itaxeo
+trunc_dir=$HOME/tiniba/clustering
 # input from all_nodes.sh
 node=$1
 input=$2

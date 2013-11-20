@@ -96,7 +96,7 @@ rm -f error
 rm -f finished*
 rm -f finished*
 #
-where=$HOME/tiniba/clustering/itaxeo
+where=$HOME/tiniba/clustering
 cual=all_nodes.sh
 host=$HOSTNAME
 
