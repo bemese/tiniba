@@ -13,8 +13,6 @@ CYAN='\e[1;36m'
 NC='\e[0m' # No Color
 ## global variables
 ontoy=`hostname`
-# reads TINIBA version from version-tiniba.txt
-source version-tiniba.txt
 #
 ##====== FUNCTIONS ============ 
 ## Line

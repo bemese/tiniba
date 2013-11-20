@@ -10,8 +10,6 @@ GREEN='\e[0;32m'
 MAG='\e[0;35m'
 NC='\e[0m' # No Color
 #
-# reads TINIBA version from version-tiniba.txt
-source version-tiniba.txt
 #
 # displays the chosen options 
 #

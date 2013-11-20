@@ -24,8 +24,6 @@ dir=$PWD
 # reads abinit executables from version-abinit.txt
 source version-abinit.txt
 #
-# reads TINIBA version from version-tiniba.txt
-source version-tiniba.txt
 #
 where=$HOME/tiniba/utils
 whereset=$HOME/tiniba/clustering/itaxeo

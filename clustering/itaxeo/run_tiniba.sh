@@ -12,8 +12,6 @@ cyan='\e[0;36m'
 CYAN='\e[1;36m'
 NC='\e[0m' # No Color
 ## Functions
-# reads TINIBA version from version-tiniba.txt
-source version-tiniba.txt
 #
 ## rho
 function lrho {
