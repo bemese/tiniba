@@ -165,10 +165,8 @@ the shells without having to give all
 the route include in the file
  \verb=.bashrc=:
 \begin{verbatim}
-export TINIBA=$HOME/tiniba/verN.M/
-export TINIBAC=$TINIBA/clustering 
-export TINIBAU=$TINIBA/utils
-export PATH=$PATH:$TINIBAC:$TINIBAU:.
+export TINIBA=$HOME/tiniba
+export PATH="$HOME/tiniba:$PATH"
 \end{verbatim}
 Remember to read \verb=.bashrc= into the shell, or exit and enter the
 shell anew.
@@ -184,14 +182,14 @@ shell anew.
 
 Here a list of usefull scripts:
 \begin{itemize}
-\item \verb=$TINIBAC/=\textcolor{darkgreen}{run\_tiniba.sh}
-\item \verb=$TINIBAU/=\textcolor{darkgreen}{checkMountQuads.sh}
-\item \verb=$TINIBAU/=\textcolor{darkgreen}{createRemoteDir.sh}
-\item \verb=$TINIBAU/=\textcolor{darkgreen}{limpiaSetUpAbinit.pl}
-\item \verb=$TINIBAU/=\textcolor{darkgreen}{alive.sh}
-\item \verb=$TINIBAU/=\textcolor{darkgreen}{apagarMedusa$_{-}0$.sh}
-\item \verb=$TINIBAU/=\textcolor{darkgreen}{MakeMakefile2010.PL}
-\item \verb=$TINIBAU/=\textcolor{darkgreen}{compiler.sh}
+\item \verb=./clustering/=\textcolor{darkgreen}{run\_tiniba.sh}
+\item \verb=./utils/=\textcolor{darkgreen}{checkMountQuads.sh}
+\item \verb=./utils/=\textcolor{darkgreen}{createRemoteDir.sh}
+\item \verb=./utils/=\textcolor{darkgreen}{limpiaSetUpAbinit.pl}
+\item \verb=./utils/=\textcolor{darkgreen}{alive.sh}
+\item \verb=./utils/=\textcolor{darkgreen}{apagarMedusa$_{-}0$.sh}
+\item \verb=./utils/=\textcolor{darkgreen}{MakeMakefile2010.PL}
+\item \verb=./utils/=\textcolor{darkgreen}{compiler.sh}
 
 Here are some useful commands to check the running jobs:
 \item \verb=cluster_exec -N QUADS ps -u usrname=
@@ -744,9 +742,9 @@ since the rank is 3 and 3$^3$=27
 When you finish, you have to compile in the \verb=master=, then you can make use of the 
 advanced tool MakeMakefile.PL (no one uses it) :
 \begin{enumerate}
-\item \verb=$TINIBAU/=\textcolor{darkgreen}{MakeMakefile2010.PL}
+\item \verb=./utils/=\textcolor{darkgreen}{MakeMakefile2010.PL}
 \item
-  \verb=$TINIBAU/=\textcolor{darkgreen}{compiler.sh}\\
+  \verb=./utils/=\textcolor{darkgreen}{compiler.sh}\\
 and follow instructions$\ldots$ the executable is in the previous directory.
 \end{enumerate}
 % \begin{verbatim}
