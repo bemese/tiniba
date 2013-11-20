@@ -15,7 +15,7 @@
 ##====== DEFINITIONS ===========   
 clear       
 #
-     WHERE=$HOME/tiniba/src_ibz
+     WHERE=$TINIBA/src_ibz
 #     printf "\t${BLUE}`dirname $0`/${GREEN}`basename $0`${NC}\n "
      #### great idea jl jajaja september 30 2007
        BASEDIR=`dirname $PWD`

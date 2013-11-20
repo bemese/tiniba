@@ -56,7 +56,7 @@ function Line {
 ##
 quien=`whoami`
 # runs a given job in a given node
-trunc_dir=$HOME/tiniba/clustering
+trunc_dir=$TINIBA/clustering
 # input from all_nodes.sh
 node=$1
 input=$2
@@ -107,19 +107,19 @@ nodo=`$trunc_dir/trunc.sh $node`
 ##
 if [ $nodo = 'node' ]
 then
-    rpmns_exec=$HOME/tiniba/matrix_elements/rpmns.xeon
+    rpmns_exec=$TINIBA/matrix_elements/rpmns.xeon
 fi
 if [ $nodo = 'itanium' ]
 then
-    rpmns_exec=$HOME/tiniba/matrix_elements/rpmns.itanium
+    rpmns_exec=$TINIBA/matrix_elements/rpmns.itanium
 fi
 if [ $nodo = 'quad' ]
 then
-    rpmns_exec=$HOME/tiniba/matrix_elements/rpmns.quad
+    rpmns_exec=$TINIBA/matrix_elements/rpmns.quad
 fi
 if [ $nodo = 'hexa' ]
 then
-    rpmns_exec=$HOME/tiniba/matrix_elements/rpmns.hexa
+    rpmns_exec=$TINIBA/matrix_elements/rpmns.hexa
 fi
 ##
 if [ ! -d $input ]

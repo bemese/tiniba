@@ -16,7 +16,7 @@ NC='\e[0m' # No Color
 clear
 ##
 case=`echo $PWD | awk -F / '{print$NF}'`
-where=$HOME/tiniba/utils/programs_layer
+where=$TINIBA/utils/programs_layer
 xredcart=`grep -x xred setUpAbinit_$case.in` 
 xcartjl=`grep -x xcart setUpAbinit_$case.in` 
 ## sort the coordinates along z

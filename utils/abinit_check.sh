@@ -25,8 +25,8 @@ dir=$PWD
 source version-abinit.txt
 #
 #
-where=$HOME/tiniba/utils
-whereset=$HOME/tiniba/clustering
+where=$TINIBA/utils
+whereset=$TINIBA/clustering
 if [[ ! -e .machines_pmn.original || ! -e .machines_scf.original ]]
     then
     Line

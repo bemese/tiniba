@@ -15,7 +15,7 @@ function Line {
     printf "\t${BLUE}=============================${NC}\n"
 }
 ##
-trunc_dir=$HOME/tiniba/clustering
+trunc_dir=$TINIBA/clustering
 declare -a nodeArray_scf
 nodeArray_scf=(`cat .machines_scf`)
 nodo=`$trunc_dir/trunc.sh ${nodeArray_scf[0]}`

@@ -138,11 +138,11 @@ Maybe you can find him in the coffe break, around 12:00 A.M.
 \begin{itemize}
 
 \item Copy the latest version of TINIBA$^\reg$ from \\
-\verb=/home/bms/tiniba/tiniba/tiniba-verN.M.tar.gz=
+\verb=/home/bms/tiniba/tiniba/tiniba.tar.gz=
 
-\item Install TINIBA$^\reg$ in \verb=$HOME/tiniba/=
+\item Install TINIBA$^\reg$ in \verb=$$TINIBA$$/=
 \begin{itemize}
-\item  \verb=$HOME/tiniba/ > tar -xvf tiniba-verN.M.tar.gz =
+\item  \verb=$$TINIBA$$/ > tar -xvf tiniba.tar.gz =
 \end{itemize}
 \item
 Make sure that the TINIBA$^\reg$ version you may want to use is set
@@ -165,8 +165,8 @@ the shells without having to give all
 the route include in the file
  \verb=.bashrc=:
 \begin{verbatim}
-export TINIBA=$HOME/tiniba
-export PATH="$HOME/tiniba:$PATH"
+export TINIBA=$$TINIBA$$
+export PATH="$$TINIBA$$:$PATH"
 \end{verbatim}
 Remember to read \verb=.bashrc= into the shell, or exit and enter the
 shell anew.
@@ -1505,18 +1505,18 @@ LAST MODIFICATION: by BMS on \date{\today }
 %
 \item Compiling IBZ: executable \verb=ibz.medusa= or \verb=ibz.quad=
 \begin{itemize}
-\item[XEON:] \verb=$HOME/tiniba/verN.M/src_ibz> make clean -f Makefile_xeon= 
-\verb=$HOME/tiniba/verN.M/src_ibz> make -f Makefile_xeon= 
+\item[XEON:] \verb=$$TINIBA$$/src_ibz> make clean -f Makefile_xeon= 
+\verb=$$TINIBA$$/src_ibz> make -f Makefile_xeon= 
 \item[QUAD:]\verb=ssh quad01=
 
-\verb=$HOME/tiniba/verN.M/src_ibz> make clean -f Makefile_quad= 
-\verb=$HOME/tiniba/verN.M/src_ibz> make -f Makefile_quad= 
+\verb=$$TINIBA$$/src_ibz> make clean -f Makefile_quad= 
+\verb=$$TINIBA$$/src_ibz> make -f Makefile_quad= 
 \end{itemize}
 %
 \item Compiling matrix elements: executable \verb=rpmns.itanium= or
   \verb=rpmns.quad= or \verb=rpmns.xeon=
 \begin{itemize}
-\item \verb=$TINIBA/verN.M/matrix_elements/ver3.0> compilerRPMNS.sh=\\
+\item \verb=$TINIBA/matrix_elements/ver3.0> compilerRPMNS.sh=\\
 Follow instructions to compile in the three plataforms.
 \end{itemize}
 %
