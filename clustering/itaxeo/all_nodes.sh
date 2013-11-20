@@ -27,7 +27,7 @@ function Line {
       exit 127    
        }
 # Main, set up diectories, loop over number of jobs, call eachnode, and clean up.
-trunc_dir=$HOME/tiniba/$ver/clustering/itaxeo
+trunc_dir=$HOME/tiniba/clustering/itaxeo
 ######################################### RUN below
 if [ $1 == '1' ]
 then
@@ -48,9 +48,9 @@ then
     wfcheck=${15}
     options="$rho $em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp $wfcheck"
 ## executables
-    allexec=$HOME/tiniba/$ver/clustering/itaxeo
-    mme_exec_xeon=$HOME/tiniba/$ver/matrix_elements/rpmns_new_xeon
-    mme_exec_itanium=$HOME/tiniba/$ver/matrix_elements/rpmns_new_itanium
+    allexec=$HOME/tiniba/clustering/itaxeo
+    mme_exec_xeon=$HOME/tiniba/matrix_elements/rpmns_new_xeon
+    mme_exec_itanium=$HOME/tiniba/matrix_elements/rpmns_new_itanium
 ## reads abinit executables from version-abinit.txt
 source version-abinit.txt
 ##

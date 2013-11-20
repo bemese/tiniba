@@ -18,7 +18,7 @@ source version-tiniba.txt
 clear
 ##
 case=`echo $PWD | awk -F / '{print$NF}'`
-where=$HOME/tiniba/$ver/utils/programs_layer
+where=$HOME/tiniba/utils/programs_layer
 xredcart=`grep -x xred setUpAbinit_$case.in` 
 xcartjl=`grep -x xcart setUpAbinit_$case.in` 
 ## sort the coordinates along z

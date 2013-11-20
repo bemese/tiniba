@@ -98,7 +98,7 @@ rm -f error
 rm -f finished*
 rm -f finished*
 #
-where=$HOME/tiniba/$ver/clustering/itaxeo
+where=$HOME/tiniba/clustering/itaxeo
 cual=all_nodes.sh
 host=$HOSTNAME
 
@@ -124,7 +124,7 @@ then
     Line
     printf "\tSCF  to be run on the Quads\n"
     Line
-    $HOME/tiniba/$ver/utils/infiniband-quad.sh .machines_scf.quad
+    $HOME/tiniba/utils/infiniband-quad.sh .machines_scf.quad
     mv .machines_scf.quad .machines_scf.original
 elif [ "$nodin" == "hexa" ]
 then
@@ -132,14 +132,14 @@ then
     Line
     printf "\tSCF  to be run on the Hexas\n"
     Line
-    $HOME/tiniba/$ver/utils/infiniband-hexa.sh .machines_scf.hexa
+    $HOME/tiniba/utils/infiniband-hexa.sh .machines_scf.hexa
     mv .machines_scf.hexa .machines_scf.original
 else
     Line
     printf "\tSCF not to be run on the Quads or Hexas\n"
     Line
 fi
-$HOME/tiniba/$ver/utils/createRemoteDir.sh
+$HOME/tiniba/utils/createRemoteDir.sh
 }
 
 if [ "$host" == "medusa" ]; then
@@ -290,7 +290,7 @@ if [ "$#" -eq 0 ]
     then
 	echo -e ${RED} "*********No .acell.d file exists, is this a bulk calculation??**********"${NC}
     fi
-    $HOME/tiniba/$ver/utils/check_coord.sh
+    $HOME/tiniba/utils/check_coord.sh
     echo -e "${BLUE} The following sets of k-points are available:${NC}"
     ls $case.klist*
     Line
