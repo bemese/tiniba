@@ -254,11 +254,13 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 		rcp mtita $adondi"ib":/data/$quien/workspace/$case/.
 		qui=$ontoi"ib"
 		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
+#		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;mv mtita mtita1"
 		ssh $adondi "rcp /data/$quien/workspace/$case/21* $qui:$aqui/."
 	    else
 		mtita
 		rm mtita
 	    fi
+#	    mv mtita mmtita1 
 #
 	    Line
 	    printf "\t${RED}shg2${NC}\n"
@@ -272,17 +274,21 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 		rcp mtita $adondi"ib":/data/$quien/workspace/$case/.
 		qui=$ontoi"ib"
 		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
+#		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;mv mtita mtita2"
 		ssh $adondi "rcp /data/$quien/workspace/$case/22* $qui:$aqui/."
 	    else
 		mtita
-		rm mtita
+	       rm mtita
 	    fi
+#		mv mtita mmtita2 
 #
 	    if [ -e 'fallo' ]
 	    then
 		rm fallo
 		exit 1
 	    fi
+################ este agrege
+#             exit 1
 # puts shg1 and shg2 into one file
 # kk
 	    f1w=`awk '{print $1}' 21.kk.dat`
@@ -307,6 +313,8 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	    rm 21* 22*
 	    rm -f res/shg2L.kk* res/shg2L.sm*
 	    rm -f res/shg1L.kk* res/shg1L.sm*
+#####   Agrege esto para borrar los archivos de /data
+##            ssh $adondi "rm -r /data/$quien/workspace/$case"
 #
 	fi
 #
@@ -388,13 +396,18 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	    rm -f res/shg1C.kk* res/shg1C.sm*
 #
 	fi
+##########################################
+
+
+
+##################################
 # SHG Velocity Gauge
 	if [ $response -eq "42" ]
 	then
 	    Line
 	    printf "\t${RED}Calculating Velocity Gauge shg1 and shg2${NC}\n"
 	    Line
-#
+#  second harmonic 1 omega
 	    Line
 	    printf "\t${RED}shg1${NC}\n"
 	    Line
@@ -412,7 +425,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 		mtita
 		rm mtita
 	    fi
-#
+#   second harmonic 2 omega
 	    Line
 	    printf "\t${RED}shg2${NC}\n"
 	    Line
@@ -437,6 +450,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 		exit 1
 	    fi
 # puts shg1 and shg2 into one file
+#          exit 1
 # kk
 	    f1w=`awk '{print $1}' 42.kk.dat`
 	    f2w=`awk '{print $1}' 43.kk.dat`
@@ -481,7 +495,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	if [[ "$adondi" == "medusa" || "$adondi" == "hexa"* ]]
 	then
 	    printf "\tErasing files at $adondi:/data/$quien/workspace/$case\n"
-	    ssh $adondi "rm -rf /data/$quien/workspace/$case"
+#	    ssh $adondi "rm -rf /data/$quien/workspace/$case"
 	fi
 	TIMEENDALL=`date`
 	printf "\t--------------------------------------------------\n"
@@ -498,6 +512,9 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	printf "\t               $TMIN1 Hrs. \n"
 	printf "\t--------------------------------------------------\n"
 ###
+#####   Agrege esto para borrar los archivos de /data
+            ssh $adondi "rm -r /data/$quien/workspace/$case"
+#        
 	Line
 	gracias
 	Line

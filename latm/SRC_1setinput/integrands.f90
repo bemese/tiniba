@@ -9,7 +9,6 @@ MODULE integrands
   USE inparams, ONLY : spectrum_info
   USE arrays, ONLY: momMatElem, posMatElem, derMatElem, Delta, energy, band
   USE arrays, ONLY: calMomMatElem
-  USE arrays, ONLY: efe
   USE arrays, ONLY: spiMatElem
   USE arrays, ONLY: calDelta
 !  USE arrays, ONLY: genderiv
@@ -1799,7 +1798,7 @@ CONTAINS
 !    write(*,*)'*********'
 
 !!! the following tolerance seems to be irrelevant
-    tolSHGt=0.d0
+    tolSHGt=3.0d-02
 !!!
     T3(1:3,1:3,1:3) = reshape( spectrum_info(i_spectra)%transformation_elements(1:27), (/3,3,3/))    
     DO v = 1, nVal
@@ -1828,8 +1827,8 @@ CONTAINS
                    end do
 
 !!! these terms come from the scissors operator in the velocity-gauge
-                   psym1=(efe(v,c,da,db)*momMatElem(dc,c,v)&
-                        +efe(v,c,da,dc)*momMatElem(db,c,v))/2.
+                   psym1=-(conjg(efe(c,v,da,db))*momMatElem(dc,c,v)&
+                        +conjg(efe(c,v,da,dc))*momMatElem(db,c,v))/2.
                    tmp=tmp-T3(da,db,dc)*real(psym1)/omegacv**3
 !!!
                 END DO
@@ -1875,7 +1874,7 @@ CONTAINS
 !    write(*,*)'*********'
 
 !!! the following tolerance seems to be irrelevant
-    tolSHGt=0.d0
+    tolSHGt=3.d-02
 !!!
     T3(1:3,1:3,1:3) = reshape( spectrum_info(i_spectra)%transformation_elements(1:27), (/3,3,3/))    
 
@@ -1947,17 +1946,17 @@ CONTAINS
     
     INTEGER :: v,c,l
     INTEGER :: da, db, dc
-    COMPLEX(DPC) :: psym1,psym2
+    COMPLEX(DPC) :: psym1,psym2,primero,segundo
     REAL(DP) :: omegacv,omegalv,omegacl
     REAL(DP) :: omegacvcl,omegacvlv
-    REAL(DP) :: T3(3,3,3),tmp
+    REAL(DP) :: T3(3,3,3),tmp,tol
 !    write(*,*)'*********'
 !    write(*,*)'@intergands.f90-shg1L: Length gauge'
 !    write(*,*)'*********'
 
 !!!
     T3(1:3,1:3,1:3) = reshape( spectrum_info(i_spectra)%transformation_elements(1:27), (/3,3,3/))    
-
+    tol = 0.03   ! agrege
     DO v = 1, nVal
        DO c = nVal+1, nMax
           omegacv=band(c) - band(v)
@@ -1969,8 +1968,12 @@ CONTAINS
                       if((l.ne.v).and.(l.ne.c))then
                          omegacl=band(c)-band(l)
                          omegacvcl=(2.*omegacv-omegacl)
+                         IF ((omegacvcl.ge.0.d0).and.(omegacvcl.le.tol))    omegacvcl=omegacvcl+tol ! agrege
+                         IF ((omegacvcl.le.0.d0).and.(omegacvcl.ge.(-tol))) omegacvcl=omegacvcl-tol ! agrege
                          omegalv=band(l)-band(v)
                          omegacvlv=(2.*omegacv-omegalv)
+                         IF ((omegacvlv.ge.0.d0).and.(omegacvlv.le.tol))    omegacvlv=omegacvlv+tol   !agrege
+                         IF ((omegacvlv.le.0.d0).and.(omegacvlv.ge.(-tol))) omegacvlv=omegacvlv-tol    !agrege
                          psym1=(posMatElem(db,c,v)*posMatElem(dc,v,l)+posMatElem(dc,c,v)*posMatElem(db,v,l))/2.
                          psym2=(posMatElem(dc,l,c)*posMatElem(db,c,v)+posMatElem(db,l,c)*posMatElem(dc,c,v))/2.
                          tmp=tmp+T3(da,db,dc)*( real(-omegacl*posMatElem(da,l,c)*psym1)/(omegacv*omegacvcl) &
@@ -2010,7 +2013,7 @@ CONTAINS
 !!!##############
 !!!
 !!! This computes the integrand of the imaginary part of
-!!! the nonlinear response tensor for the 1-omega term
+!!! the nonlinear response tensor for the 2-omega term
 !!! using the length-gauge correctly scissored according to
 !!! shg-layer.tex \ref{imchie2wn,imchi2wn}, i.e. Eq. (100,102)
 !!!
@@ -2020,16 +2023,16 @@ CONTAINS
     INTEGER :: v,c,cp,vp
     INTEGER :: da, db,  dc
 
-    COMPLEX(DPC) :: psym,psym1
+    COMPLEX(DPC) :: psym,psym1,primero,segundo
     REAL(DP) :: omegacv,omegacpv,omegacvp,omegacpvcv,omegacvpcv
-    REAL(DP) :: T3(3,3,3),tmp
+    REAL(DP) :: T3(3,3,3),tmp,tol
 !    write(*,*)'*********'
 !    write(*,*)'@intergands.f90-shg2L: Length gauge'
 !    write(*,*)'*********'
 
 !!!
     T3(1:3,1:3,1:3) = reshape( spectrum_info(i_spectra)%transformation_elements(1:27), (/3,3,3/))    
-
+    tol = 0.03     ! agrege
     DO v = 1, nVal
        DO c = nVal+1, nMax
           omegacv=band(c) - band(v)
@@ -2042,6 +2045,8 @@ CONTAINS
                       if((vp.ne.v).and.(vp.ne.c))then
                          omegacvp=band(c) - band(vp)
                          omegacvpcv=(2.*omegacvp-omegacv)
+                         IF ((omegacvpcv.ge.0.d0).and.(omegacvpcv.le.tol))    omegacvpcv=omegacvpcv+tol ! agrege
+                         IF ((omegacvpcv.le.0.d0).and.(omegacvpcv.ge.(-tol))) omegacvpcv=omegacvpcv-tol ! agrege
                          psym=(posMatElem(db,c,vp)*posMatElem(dc,vp,v)+posMatElem(dc,c,vp)*posMatElem(db,vp,v))/2.
                          tmp=tmp+4.*T3(da,db,dc)*real(posMatElem(da,v,c)*psym)/omegacvpcv
                       end if
@@ -2051,8 +2056,10 @@ CONTAINS
                       if((cp.ne.v).and.(cp.ne.c))then
                          omegacpv=band(cp) - band(v)
                          omegacpvcv=(2.*omegacpv-omegacv)
+                         IF ((omegacpvcv.ge.0.d0).and.(omegacpvcv.le.tol))    omegacpvcv=omegacpvcv+tol  ! agrege
+                         IF ((omegacpvcv.le.0.d0).and.(omegacpvcv.ge.(-tol))) omegacpvcv=omegacpvcv-tol  ! agrege
                          psym=(posMatElem(db,c,cp)*posMatElem(dc,cp,v)+posMatElem(dc,c,cp)*posMatElem(db,cp,v))/2.
-                         tmp=tmp-4.*T3(da,db,dc)*real(posMatElem(da,v,c)*psym)/omegacpvcv
+                         tmp=tmp-4.*T3(da,db,dc)*real(posMatElem(da,v,c)*psym)/omegacpvcv                          
                       end if
                    end do
 !!! 
@@ -2093,16 +2100,17 @@ CONTAINS
     
     INTEGER :: v,c,l
     INTEGER :: da, db, dc
-    COMPLEX(DPC) :: psym1,psym2
+    COMPLEX(DPC) :: psym1,psym2,primero,segundo
     REAL(DP) :: omegacv,omegalv,omegacl
     REAL(DP) :: omegacvcl,omegacvlv
-    REAL(DP) :: T3(3,3,3),tmp
+    REAL(DP) :: T3(3,3,3),tmp,tol
 !    write(*,*)'*********'
 !    write(*,*)'@intergands.f90-shg1C: Layer-Length gauge'
 !    write(*,*)'*********'
 
 !!!
     T3(1:3,1:3,1:3) = reshape( spectrum_info(i_spectra)%transformation_elements(1:27), (/3,3,3/))    
+    tol = 0.03  !agrege
 
     DO v = 1, nVal
        DO c = nVal+1, nMax
@@ -2115,8 +2123,12 @@ CONTAINS
                       if((l.ne.v).and.(l.ne.c))then
                          omegacl=band(c)-band(l)
                          omegacvcl=(2.*omegacv-omegacl)
+                         IF ((omegacvcl.ge.0.d0).and.(omegacvcl.le.tol))    omegacvcl=omegacvcl+tol ! agrege
+                         IF ((omegacvcl.le.0.d0).and.(omegacvcl.ge.(-tol))) omegacvcl=omegacvcl-tol ! agrege
                          omegalv=band(l)-band(v)
                          omegacvlv=(2.*omegacv-omegalv)
+                         IF ((omegacvlv.ge.0.d0).and.(omegacvlv.le.tol))    omegacvlv=omegacvlv+tol ! agrege
+                         IF ((omegacvlv.le.0.d0).and.(omegacvlv.ge.(-tol))) omegacvlv=omegacvlv-tol ! agrege
                          psym1=(posMatElem(db,c,v)*posMatElem(dc,v,l)+posMatElem(dc,c,v)*posMatElem(db,v,l))/2.
                          psym2=(posMatElem(dc,l,c)*posMatElem(db,c,v)+posMatElem(db,l,c)*posMatElem(dc,c,v))/2.
                          tmp=tmp+T3(da,db,dc)*( real(-omegacl*calPosMatElem(da,l,c)*psym1)/(omegacv*omegacvcl) &
@@ -2168,13 +2180,14 @@ CONTAINS
 
     COMPLEX(DPC) :: psym,psym1
     REAL(DP) :: omegacv,omegacpv,omegacvp,omegacpvcv,omegacvpcv
-    REAL(DP) :: T3(3,3,3),tmp
+    REAL(DP) :: T3(3,3,3),tmp,tol
 !    write(*,*)'*********'
 !    write(*,*)'@intergands.f90-shg2C: Layer-Length gauge'
 !    write(*,*)'*********'
 
 !!!
     T3(1:3,1:3,1:3) = reshape( spectrum_info(i_spectra)%transformation_elements(1:27), (/3,3,3/))    
+    tol = 0.03 ! agrege
 
     DO v = 1, nVal
        DO c = nVal+1, nMax
@@ -2188,7 +2201,9 @@ CONTAINS
                       if((vp.ne.v).and.(vp.ne.c))then
                          omegacvp=band(c) - band(vp)
                          omegacvpcv=(2.*omegacvp-omegacv)
-                         psym=(posMatElem(db,c,vp)*posMatElem(dc,vp,v)+posMatElem(dc,c,vp)*posMatElem(db,vp,v))/2.
+                         IF ((omegacvpcv.ge.0.d0).and.(omegacvpcv.le.tol))    omegacvpcv=omegacvpcv+tol ! agrege
+                         IF ((omegacvpcv.le.0.d0).and.(omegacvpcv.ge.(-tol))) omegacvpcv=omegacvpcv-tol ! agrege 
+                        psym=(posMatElem(db,c,vp)*posMatElem(dc,vp,v)+posMatElem(dc,c,vp)*posMatElem(db,vp,v))/2.
                          tmp=tmp+4.*T3(da,db,dc)*real(calPosMatElem(da,v,c)*psym)/omegacvpcv
                       end if
                    end do
@@ -2197,6 +2212,8 @@ CONTAINS
                       if((cp.ne.v).and.(cp.ne.c))then
                          omegacpv=band(cp) - band(v)
                          omegacpvcv=(2.*omegacpv-omegacv)
+                         IF ((omegacpvcv.ge.0.d0).and.(omegacpvcv.le.tol))    omegacpvcv=omegacpvcv+tol ! agrege
+                         IF ((omegacpvcv.le.0.d0).and.(omegacpvcv.ge.(-tol))) omegacpvcv=omegacpvcv-tol ! agrege
                          psym=(posMatElem(db,c,cp)*posMatElem(dc,cp,v)+posMatElem(dc,c,cp)*posMatElem(db,cp,v))/2.
                          tmp=tmp-4.*T3(da,db,dc)*real(calPosMatElem(da,v,c)*psym)/omegacpvcv
                       end if
@@ -2226,32 +2243,32 @@ CONTAINS
   END SUBROUTINE shg2C
 !!!######################
   
-!!$!!!##################
-!!$    COMPLEX FUNCTION efe(c,v,i,j)
-!!$!!!##################
-!!$    implicit none
-!!$    REAL(DP) :: scissors
-!!$    COMPLEX(DPC) :: ci
-!!$    integer :: c,v,i,j,vp,cp
-!!$    ci=cmplx(0.d0,1.d0)
-!!$!!! reads the scissors correction Delta    
-!!$    read(69,*)scissors
-!!$    close(69)
-!!$    efe=cmplx(0.d0,0.d0)
-!!$    do vp=1,nVal
-!!$       if (vp.ne.v) then
-!!$          efe=efe+posMatElem(j,c,vp)*posMatElem(i,vp,v)
-!!$       end if
-!!$    end do
-!!$    do cp=nVal+1,nMax
-!!$       if (cp.ne.c) then
-!!$          efe=efe-posMatElem(i,c,cp)*posMatElem(j,cp,v)
-!!$       end if
-!!$    end do
-!!$    efe=-scissors*(ci*efe+derMatElem(j,i,c,v)) 
-!!$!!!##################
-!!$  end FUNCTION efe
-!!$!!!##################
+!!!##################
+    COMPLEX FUNCTION efe(c,v,i,j)
+!!!##################
+    implicit none
+    REAL(DP) :: scissors
+    COMPLEX(DPC) :: ci
+    integer :: c,v,i,j,vp,cp
+    ci=cmplx(0.d0,1.d0)
+!!! reads the scissors correction Delta    
+    read(69,*)scissors
+    close(69)
+    efe=cmplx(0.d0,0.d0)
+    do vp=1,nVal
+       if (vp.ne.v) then
+          efe=efe+posMatElem(j,c,vp)*posMatElem(i,vp,v)
+       end if
+    end do
+    do cp=nVal+1,nMax
+       if (cp.ne.c) then
+          efe=efe-posMatElem(i,c,cp)*posMatElem(j,cp,v)
+       end if
+    end do
+    efe=-scissors*(ci*efe+derMatElem(j,i,c,v)) 
+!!!##################
+  end FUNCTION efe
+!!!##################
 
 !!!##################
   SUBROUTINE Leo
