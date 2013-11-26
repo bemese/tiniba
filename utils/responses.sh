@@ -230,9 +230,8 @@ TIMESTARTALLI=`date`
 	else
 	    echo  "awk -F : '{if(\$1==$response) print \$2}' $where/responses.txt" > cthoy
 	chmod +x cthoy
-	#sname=`cthoy`
-	#sname=`echo $sname | sed 's/ //g'`
-	sname=chi1
+	sname=`cthoy`
+	sname=`echo $sname | sed 's/ //g'`
 	#rm cthoy
 	fi
 
