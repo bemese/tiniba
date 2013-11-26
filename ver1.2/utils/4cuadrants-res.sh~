@@ -1,0 +1,79 @@
+#!/bin/bash
+##
+red='\e[0;31m'
+RED='\e[1;31m'
+blue='\e[0;34m'
+BLUE='\e[1;34m'
+cyan='\e[0;36m'
+CYAN='\e[1;36m'
+NC='\e[0m' # No Color
+##
+case=`basename $PWD`
+espin=`grep nspinor $case'_check'/$case.out | awk -F= '{print $4}' | awk '{print $1}'`
+ecut=`grep ecut setUpAbinit_$case.in  |  awk '{print $2}'`
+printf "\t$espin $ecut\n"
+if [ $espin == '1' ]
+then
+    ospin='nospin'
+else
+    ospin='spin'
+fi
+last_name='_'$ecut'-'$ospin
+##
+    function Line {
+	printf "\t${BLUE}=============================${NC}\n"
+    }
+##
+clear
+##
+if [ "$#" -eq 0 ]
+    then
+    Line
+    printf "\truns any response for 4 cuadrants\n"
+    printf "\tkz>0\n"
+    printf "\tkx>0,ky>0=>c1,kx<0,ky>0=>c2,kx<0,ky<0=>c3,kx>0,ky<0=>c4\n"
+    printf "\tusage:\n"
+    printf "\t Edit 4cuadrants-res.sh with the options you want to use, then:\n"
+    printf "\t${blue}4cuadrants-res.sh${NC} [${red}Nk${NC}]\n"
+    Line
+    exit 1
+fi
+if [ ! "$#" -eq 0 ]
+    then
+    Nk=$1
+    cual=$case.klist_$Nk
+# runs for each set of k-points
+    cases=(c1 c2 c3 c4)
+    for c in ${cases[@]}
+    do
+    printf "\t runing for $c $Nk$last_name\n"
+    ln -fs  eigen_$Nk$last_name.$c eigen_$Nk$last_name
+    ln -fs pmn_$Nk$last_name.$c pmn_$Nk$last_name 
+# calculates the total response
+    if [ 1 == 1 ]
+    then
+	comp=yyz
+	res=eta2
+	resn=3
+	Nv=4
+	Nc=16
+	all_responses.sh total $Nk$last_name 0 $Nv $Nc $resn yyz
+	mv res/$res.sm_$comp'_'$Nk$last_name'_Nc_'$Nc'_scissor_0' res/$res.sm_$comp'_'$Nk$last_name'_Nc_'$Nc'_scissor_0'.$c
+    fi
+# calculates the surface response
+    if [ 1 == 2 ]
+	then
+	comp=yyx
+	res=calEta2
+	layers=(1 2 3 4 5 6)
+	for L in ${layers[@]}
+	do
+	    ln -fs cpmmd_$Nk'_'$L$last_name.$c cpmmd_$Nk'_'$L$last_name 
+	    all_responses.sh layer $Nk'_'$L$last_name 0 24 24 25 yyx
+	    mv res/$res.sm_$comp'_'$Nk'_'$L$last_name'_Nc_24_scissor_0' res/$res.sm_$comp'_'$Nk'_'$L$last_name'_Nc_24_scissor_0'.$c
+	done
+    fi
+#
+    done
+# return to the original k-points
+fi

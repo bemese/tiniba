@@ -1,0 +1,29 @@
+SRC = tetra_method_two_bands.f90 globals.f90 piksort.f90 inparams.f90
+OBJS = constants.o inparams.o globals.o piksort.o tetra_method_two_bands.o
+MODSRC = globals.f90 inparams.f90 constants.f90
+#FC=/opt/intel/fce/9.1.036/bin/ifort
+FC=ifort
+OPT = -O3
+tetra_method_two_bands : ${OBJS}
+	${FC} ${OPT} ${SAFE} -o tetra_method_two_bands $(OBJS)
+	mv tetra_method_two_bands ../tetra_method_two_bands.itan
+
+constants.o : constants.f90
+	${FC} ${OPT} ${SAFE} -c constants.f90
+
+inparams.o : inparams.f90 constants.o
+	${FC} ${OPT} ${SAFE} -c inparams.f90
+
+globals.o : globals.f90 inparams.o
+	${FC} ${OPT} ${SAFE} -c globals.f90
+
+piksort.o : piksort.f90
+	${FC} ${OPT} ${SAFE} -c piksort.f90
+
+tetra_method_two_bands.o : tetra_method_two_bands.f90 globals.o
+	${FC} ${OPT} ${SAFE} -c tetra_method_two_bands.f90
+
+clean :
+	rm -f *.o
+
+all : ${OBJS} tetra_method_two_bands
