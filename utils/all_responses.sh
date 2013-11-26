@@ -257,7 +257,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 #		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;mv mtita mtita1"
 		ssh $adondi "rcp /data/$quien/workspace/$case/21* $qui:$aqui/."
 	    else
-		mtita
+		./mtita
 		rm mtita
 	    fi
 #	    mv mtita mmtita1 
@@ -277,7 +277,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 #		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;mv mtita mtita2"
 		ssh $adondi "rcp /data/$quien/workspace/$case/22* $qui:$aqui/."
 	    else
-		mtita
+		./mtita
 	       rm mtita
 	    fi
 #		mv mtita mmtita2 
@@ -341,7 +341,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 #		mtita
 #		rm mtita
 	    else
-		mtita
+		./mtita
 		rm mtita
 	    fi
 #
@@ -358,7 +358,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 		qui=$ontoi"ib"
 		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
 		ssh $adondi "rcp /data/$quien/workspace/$case/45* $qui:$aqui/."
-#		mtita
+#		./mtita
 #		rm mtita
 	    else
 		mtita
@@ -422,7 +422,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
 		ssh $adondi "rcp /data/$quien/workspace/$case/42* $qui:$aqui/."
 	    else
-		mtita
+		./mtita
 		rm mtita
 	    fi
 #   second harmonic 2 omega
@@ -440,7 +440,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
 		ssh $adondi "rcp /data/$quien/workspace/$case/43* $qui:$aqui/."
 	    else
-		mtita
+		./mtita
 		rm mtita
 	    fi
 #

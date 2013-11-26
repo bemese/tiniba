@@ -746,5 +746,5 @@ TIMESTARTALLI=`date`
         rm -rf hoy*
 	rm -f energys.d* fort* fromSmear halfene*
 	rm -f input*set  tijeras spectra*
-	rm -f  response_type 
+	rm -f response_type 
 	rm -f int_*
