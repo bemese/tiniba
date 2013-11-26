@@ -1,0 +1,1603 @@
+\documentclass[12pt,leqno]{article}
+%% JL Cabellos at agosto 2010
+\usepackage{amsmath,amssymb,amsfonts} % Typical maths resource packages
+\usepackage{graphics}                 % Packages to allow inclusion
+\usepackage{color}
+\usepackage[spanish,english]{babel}
+\usepackage{verbatim}
+\usepackage{graphicx}
+%\selectlanguage{english}
+\selectlanguage{spanish}
+\input{/Users/bms/util/definitions}
+%%%
+\def\ver{2.0}
+\def\reg{\textsuperscript{\textregistered}}
+%%%
+\def\runcual{RUN}
+\spanishdecimal{.}
+% \usepackage[pdftex,colorlinks=true,
+%                       pdfpagemode=UseOutlines,
+%                       pdfstartview=FitV,
+%                       linkcolor=blue,
+%                       citecolor=blue,
+%                       urlcolor=blue,
+%           ]{hyperref}
+\usepackage[backref,pdffitwindow,colorlinks,linkcolor={blue}]{hyperref}
+
+\numberwithin{equation}{section}
+\parindent10pt  
+\parskip10pt                          % make block paragraphs
+%\raggedright                         % do not right justify
+\definecolor{myred}{rgb}{.3,.7,.7}
+\DeclareFixedFont{\xviisfb}{OT1}{cmss}{m}{n}{15}
+\DeclareFixedFont{\cabellos}{OT1}{cmss}{m}{n}{11}
+\DeclareFixedFont{\viiisf}{OT1}{cmss}{m}{n}{7}
+\def\cual{lightblue}
+\def\bala{{\tiny\color{\cual}$\bullet$\color{black}}}
+\definecolor{blue577}{rgb}{.5,.75,.75}
+ \definecolor{darkblue}{rgb}{0,0,.6}
+ \definecolor{darkgreen}{rgb}{0,.6,0}
+ \definecolor{lightblue}{rgb}{0,1,1}
+ \definecolor{Lightblue}{rgb}{.8,1,1}
+ \definecolor{orange}{rgb}{1,.5,0}
+ \definecolor{gray}{gray}{.5}  % 0:black   1: white
+ \definecolor{lightgray}{gray}{.75}
+%%%%%%%%%%%%%%%%%555
+%%%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+%\fancyhead[LC]{\thepage}
+%\fancyhead[LR]{\thepage} %%% pon the page number en el lado derecho
+
+%\textwidth 16cm 
+
+\lhead{\href{http://aida.cio.mx}{\cabellos{Tiniba: the tutorials}}}
+
+\title{
+\vspace{-50pt}
+\begin{center}
+\includegraphics[scale=0.5]{logo-cio-nuevo.jpg}  
+%%%%%\includegraphics[scale=0.60]{logo_oficial_low.pdf}%\hspace{1cm}
+%\includegraphics[scale=.35]{concyteg.jpg}   \\
+%\text{\Large{\textbf{Centro de Investigaciones en \'{O}ptica, A.C.}} }\\
+\vspace{10pt}
+%\text{\small{Lomas del Bosque 115, Col. Lomas del Campestre}}\\
+%\vspace{-10pt}
+%\text{\small{37150, Le\'{o}n Gto. M\'{e}xico, tel. 4774414200}}\\
+\end{center}
+\vspace{12pt}
+\Large{\textbf{TINIBA$^{\reg}$ Tutorial: Version \ver} \\
+ Bernardo S. Mendoza and J. L. Cabellos}\\
+INDAUTOR Certificate \ref{inpi} 
+}
+% \small{Consejo de Ciencia y Tecnolog\'ia del Estado de Guanajuato
+%     %(CONCYTEG)
+%     (\href{http://www.concyteg.gob.mx/}
+%  {CONCYTEG})
+%        }\\
+%        }}}
+%}}
+%http://www.concyteg.gob.mx/
+  %\date{Le\'{o}n, Gto., M\'{e}xico. \today }}  } 
+%}}
+%%%%% Consejo de Ciencia y Tecnolog\'ia del Estado de Guanajuato(CONCYTEG)             
+%\author{{Grupo de Optica de Superficies, Interfaces y Sistemas
+%    Nanoscopicos }\\ 
+\author{{Divisi\'on de Fot\'onica, \href{http://www.cio.mx}{Centro
+      Investigaciones en \'Optica, A.C }}\\
+\small{Lomas de Bosque \# 115, Col. El Campestre, Le\'on Gto. M\'exico C.P. 37150}\\ 
+\date{\today }
+%\author{{\href{http://www.cio.mx}{Centro Investigaciones en Optica, A.C}\\
+%\href{http://aida.cio.mx}{\small{\emph{PRONASIS}}}\\
+``Grupo de Propiedades \'Opticas de Nano-Sistemas, Interfases\\ y 
+Superficies''
+\href{http://aida.cio.mx}{(\emph{PRONASIS})} \\   
+%  Dr. Bernardo Mendoza Santoyo \\
+%   bms@cio.mx\\
+}
+%\href{http://aida.cio.mx}{PRONASIS}}                   %   
+%\date{\selectlanguage{spanish} \today}
+%\date{\today}
+
+
+                        
+\begin{document}
+%\fancyfoot[C]{\thepage}
+\selectlanguage{spanish}                        
+\maketitle
+\tableofcontents
+
+
+\newpage
+\section{Introduction}
+
+\emph{WARNING:}
+First of all here we adopt the philosophy \emph{{\bf{TINIBA$^\reg$ is
+      not a black box}}} 
+and you might have some idea about what are you doing in order to make sense.
+and the other thing that you have to know GNU\/Linux at basic level, 
+understand something  scripting under bash and perl, 
+and enjoy tiniba.   
+  
+\subsection{Why this guide?}
+In order to improve the calculations faster and easier. 
+
+\subsection{Publications with tiniba}
+ A list of publications that used TINIBA$^\reg$ package:\\
+ 1.- Phys. Rev. B 80, 201312 (2009) \\  
+ 2.- Phys. Rev. B 80, 245204 (2009) \\ 
+
+\subsection{At the begining}
+The propouse of this toutorials is teaching the use of TINIBA$^\reg$ 
+on \href{http://aida.cio.mx/medusaPhotos/medusaPhoto2.jpg} {\emph{Medusa}}.\\ 
+Before you follow this tutorials you need to talk  Dr. Bernardo.  
+Maybe you can find him in the coffe break, around 12:00 A.M.
+
+\section{Installation  on medusa}
+\begin{itemize}
+
+\item Copy the latest version of TINIBA$^\reg$ from \\
+\verb=/home/bms/tiniba/tiniba/tiniba.tar.gz=
+
+\item Install TINIBA$^\reg$ in \verb=$$TINIBA$$/=
+\begin{itemize}
+\item  \verb=$$TINIBA$$/ > tar -xvf tiniba.tar.gz =
+\end{itemize}
+\item
+Make sure that the TINIBA$^\reg$ version you may want to use is set
+in \verb=utils/version-tiniba.txt=.
+
+\item
+  Make sure that the \verb=ABINIT=$^\reg$ version you may want to use is set
+in \verb=utils/version-abinit.txt=.
+ This information is used in\\ 
+\verb=clustering:=
+\verb=all_nodes.sh=, and
+\verb=runSCF_19_Octubre_2009.sh=, \\and in
+ \verb=utils/check_abinit.sh=.
+\label{av}
+
+\item\verb=.bashrc=
+
+In order to run
+the shells without having to give all
+the route include in the file
+ \verb=.bashrc=:
+\begin{verbatim}
+export TINIBA=$$TINIBA$$
+export PATH="$$TINIBA$$:$PATH"
+\end{verbatim}
+Remember to read \verb=.bashrc= into the shell, or exit and enter the
+shell anew.
+\item a \verb=.bash_profile= is provided at \verb=$TINIBA/utils=. Put
+  this in your \verb=/home/user/= and change at will, but DON'T remove
+  the \verb=abinit= environment variables:\\
+\verb=export I_MPI_FABRICS==\verb=shm:tcp=\\
+\verb=LD_LIBRARY_PATH==\verb=$LD_LIBRARY_PATH:/usr/lib64=
+
+\end{itemize}
+
+\section{Administration  on medusa}
+
+Here a list of usefull scripts:
+\begin{itemize}
+\item \verb=./clustering/=\textcolor{darkgreen}{run\_tiniba.sh}
+\item \verb=./utils/=\textcolor{darkgreen}{checkMountQuads.sh}
+\item \verb=./utils/=\textcolor{darkgreen}{createRemoteDir.sh}
+\item \verb=./utils/=\textcolor{darkgreen}{limpiaSetUpAbinit.pl}
+\item \verb=./utils/=\textcolor{darkgreen}{alive.sh}
+\item \verb=./utils/=\textcolor{darkgreen}{apagarMedusa$_{-}0$.sh}
+\item \verb=./utils/=\textcolor{darkgreen}{MakeMakefile2010.PL}
+\item \verb=./utils/=\textcolor{darkgreen}{compiler.sh}
+
+Here are some useful commands to check the running jobs:
+\item \verb=cluster_exec -N QUADS ps -u usrname=
+\item \verb=cluster_exec -N XEON ps -u usrname=
+\item \verb=cluster_exec -N ITANIUM ps -u usrname=
+\end{itemize} 
+\subsection{How to : restart InfiniBand communications link }
+Here you need the superuser password! 
+\begin{enumerate}
+\item \verb=$HOME > ssh quad01=  
+\item \verb=$HOME > su=
+\item \verb=$HOME > /etc/init.d/openibd stop=
+\item \verb=$HOME > /etc/init.d/openibd restart=
+\item To check if infiniband (only quads) is working you can run:
+\textcolor{darkgreen}{infiniband.sh}
+\end{enumerate}
+\subsection{How to : mount  homeib}
+Here you need the superuser password!  
+
+For the \verb=quads= proceed as follows:
+\begin{enumerate}
+\item \verb=$HOME > ssh quad01=  
+\item \verb=$HOME > su=
+\item \verb=$HOME > mount master:/home /home=
+\item \verb=$HOME > mount quad01ib:/homeib /homeib=
+\item \verb=$HOME > exit=
+\item \verb=$HOME > exit=
+\end{enumerate}
+and so on for the other nodes $\ldots$
+
+You can check if the mounting is correct with:
+\textcolor{darkgreen}{checkMountQuads.sh} 
+
+\section{How to run a TINIBA$^{\reg}$ test case}
+
+CODE:
+
+\textcolor{darkgreen}{``drakgreen'' for the TINIBA$^{\reg}$ commands}
+
+\textcolor{blue}{``blue'' for the input}
+
+\textcolor{orange}{``orange'' for the Linux commands}
+
+\verb= verbatim for directories or files=
+
+\textcolor{gray}{``gray'' for output}
+
+\verb= i.e. = is for examples\\
+
+\centerline{General Considerations}
+\begin{itemize}
+\item The same version of \verb=abinit= is runed in all platforms. If
+  a new version is needed, just compile it, and let everybody
+  know. Include this in \verb=utils/version-abinit.txt= (see \ref{av}).
+
+\item There are three switches, one for the Xeons, one for the Quads
+  and one for the Hexas. Thus is convenient to chose only one platform
+  for the whole run, at least for the SCF cycle. This would take
+  advantage of doing the \verb=mpi= and \verb=rcp= over the
+  \verb=myrinet= or \verb=infiniband= switches.
+\item \verb=ssh= to any of the \verb=xeon (node01-32)=, \verb=itanium01-04=,
+  \verb=quad01-14= or \verb=hexa1-36= platforms. Then, \verb=cd= to the
+  corresponding \verb=/home=, and work from there.
+\item The RAID system has the following storage HD's\\
+ \verb=/homea/ /homeb/ /homee/ /homeib/ /homen/ /homeu/=\\
+where each user must store the work, once finished running in the cluster. 
+\item It is very convenient to call the working directory with a
+name that relates to the case you are working with. 
+\item Since the SCF uses the parallelized version of \verb=abinit= is
+  better to use only one platform for this cycle.
+%\item \textcolor{red}{If the SCF cycle will be done in the}
+%  \verb=QUADS=, 
+%\textcolor{red}{it's better to work in the node} \verb=quad01:/homeib/$USER/=$\ldots$
+\item If running in the \verb=quads= work in \verb=/homeib/=
+and for the SCF cylce use at least
+one \verb=quad01= in \verb=.machines_scf.original=.
+\item The matrix elements could be calculated in the three plataforms,
+  although for copying the wave function is much faster if it is done
+  through the switches.  
+
+\end{itemize}
+
+The example is a slab of 6 layers mimicking Si(111):As with no spin-orbit
+coupling. 
+\begin{enumerate}
+\item \verb=$PWD > ssh [quad01,hexaN]= 
+
+\item\textcolor{red}{If} \verb=quad01= 
+\begin{itemize}
+\item \verb=$PWD > cd /homeib/user= 
+\end{itemize}
+\item\textcolor{red}{If} \verb=hexaN=
+\begin{itemize}
+\item \verb=$PWD > cd /home?/user/=  with ?=a,b,e,n,u 
+\end{itemize}
+\item 
+\verb=$PWD >= \textcolor{darkgreen}{creatingTree.sh} \verb=si_as_6=
+(optional)\\ \strut\hspace{.9cm}if so 
+\begin{itemize}
+\item \verb=$PWD >= \textcolor{orange}{cd} \verb=si_as_6/abinit-si_as_6/si_as_6/=\\else
+\item \verb=$PWD >= \textcolor{orange}{cd} \verb=si_as_6=
+\end{itemize}
+
+The 
+\verb=setUpAbinit_si_as_6.in=, \verb=si_as_6.xyz= and
+\verb=.machines_*.original= files are found in
+\verb=$TINIBA/examples/surface/nospin=. Copy these files to your
+working directory and
+\begin{itemize}
+\item \textcolor{red}{WARNING}: The psudopotentials are in\\
+\verb=$TINIBA/psp=\\
+\textcolor{red}{Be sure that in that the path to them is correctly set
+in}\\
+ \verb=setUpAbinit_case.in= 
+\item {\small Check that the input parameters are consistently
+    taken. i.e. with/without spin-orbit coupling, etc.}
+\item {\small Plot the coordinates to make sure they are correct.}
+\item \verb=.machines_scf.original= 
+for the SCF (\textcolor{red}{only chose one
+ platform!})
+\item \verb=.machines_pmn.original= for the matrix elements (\textcolor{red}{could chose mixed platforms})
+\item \verb=.machines_latm.original= for the integrands (\textcolor{red}{only one CPU from any platform})
+\item \verb=.machines_res.original= for the $\bfk$-integration
+  (\textcolor{red}{chose as many CPU's, from any platform,
+as tensor components to be calculated})
+\end{itemize}
+%\begin{enumerate}
+\item \verb=$PWD > =\textcolor{darkgreen}{createRemoteDir.sh} (optional)
+\begin{itemize}
+\item Check that the chosen nodes are working:
+\begin{itemize}
+\item above removes all the nodes that  don't work or exist
+\item You may want to remove above nodes from the \verb=*.original= files
+\end{itemize}
+\end{itemize}
+\item{\small \verb=$PWD > =\textcolor{orange}{cluster\_exec -N}
+   \textcolor{blue}{ALL} \textcolor{orange}{ps -u} \textcolor{blue}{username}
+}
+\begin{itemize}
+\item {\small run in \verb=medusa=.}
+\item {\small So you can check that the nodes chosen are not being used by other user.}
+\end{itemize}
+% aqui voy
+\item \verb=$PWD > =\textcolor{darkgreen}{abinitCheck.sh} \textcolor{blue}{1} 
+\item \verb=$PWD > =\textcolor{darkgreen}{abinitCheck.sh} \textcolor{blue}{2} 
+\begin{itemize}
+\item \textcolor{red}{Surface Calculations}: If the slab is
+  centrosymmetric, responses like  Surface SHG would be identically
+  zero. To get the correct surface response use\\
+$\bullet$\verb=odd_rank.sh=\\
+This shell takes the original centrosymmetric \verb=case.xyz=, adds a
+small part to the $z$-coordinate of the bottom surface atom(s), so the
+structure is non-centrosymmetric. 
+Then, \verb=abinit_check.sh= is run with both options, so the
+\verb=sym.d= file does not has inversion symmetry.  
+The coordinates are reset to the original centrosymmetric \verb=case.xyz=.  
+%so run_all.sh can be properly run for and odd-rank tensor surface response
+\item Check for the total memory needed and be sure that it fits in the RAM memory:\\
+\textcolor{gray}{This job should need less than\hfill ? Mbytes of memory}
+\end{itemize}
+\item \verb=$PWD > =\textcolor{darkgreen}{rklist.sh}
+\textcolor{blue}{ $N_x$ $N_y$ $N_z$} [\textcolor{blue}{abinit} or \textcolor{blue}{wine2k}]
+\begin{itemize}
+
+\item {\small $N_i$ must be odd.}
+\item {\small If in real space $L_x=n\times L_y$ take
+$N_y= n\times N_x$.}
+\item {\small For a surface take $N_z=2$.}
+\item 
+\textcolor{gray}{Do you want to add inversion? (1=yes, 0=no)}
+
+This inversion is the time-reversal symmetry. If your case has
+it answer \textcolor{blue}{1} 
+otherwise \textcolor{blue}{0} 
+
+\item{\small \verb=i.e. $PWD > =\textcolor{darkgreen}{rklist.sh}
+\textcolor{blue}{ 19 19 2 abinit}
+
+This generates 64 $N_k$-points in the IBZ.
+}
+\end{itemize}
+\item \verb=$PWD > =\textcolor{darkgreen}{rlayer.sh} (Skip for Bulk a Calculation)
+\begin{itemize}
+\item Used to generate the layers of the slab
+\item Follow instructions
+\item Plot to confirm that the layers are ok:\\
+\verb=gnuplot> p 'case.xyz' u 1:3 w lp=\\
+\verb=gnuplot> load 'front.layers.xy'=\\
+\verb=gnuplot> load 'back.layers.xy'=
+\item \verb=layers.d= is the file with the layers to be calculated.  
+\item To select any given set of layers\\ 
+\verb=$PWD > chose_layers.sh=
+\begin{itemize}
+\item Follow instructions
+\item This is convenient in order to speed
+ up the calculation for slabs with many
+ layers so one chooses only a few important layers. 
+\item The original layers are kept in \verb=layers.d.original=
+\end{itemize}
+\end{itemize}
+\item \verb=$PWD > =\textcolor{darkgreen}{run\_tiniba.sh}
+ \textcolor{darkgreen}{-r} \textcolor{blue}{setkp} 
+ \textcolor{darkgreen}{-k} \textcolor{blue}{$N_k$} 
+ \textcolor{darkgreen}{-g} \textcolor{blue}{$w_I$} 
+ \textcolor{darkgreen}{-G} \textcolor{blue}{$w_Q$} 
+\begin{itemize}
+%\item \verb=RUN==\verb=tiniba_run.sh= a  la BMS\\
+%\verb=RUN==\verb=runBULK.sh= a  la Cabellos
+\item This distributes $N_k$ points in the nodes given in
+  \verb=.machines_pmn.original=
+\item It chooses the nodes that are working and for the \verb=quads=
+  and \verb=hexas= the ones
+  that have \verb=infiniband= as well
+\item where $w_{I,Q}$ are the weights for how fast are the Itanium and Quad processors with respect to the Xeon processors.
+\textcolor{red}{Since it is better to run in only one platform, this
+  is irrelevant, and we may delete it altogether in a future version
+  of TINIBA$^{\reg}$
+}
+\item
+ \verb=i.e. $PWD > =\textcolor{darkgreen}{run\_tiniba.sh}
+\textcolor{darkgreen}{-r} \textcolor{blue}{setkp} 
+\textcolor{darkgreen}{-k} \textcolor{blue}{64} 
+\textcolor{darkgreen}{-g} \textcolor{blue}{2} 
+\textcolor{darkgreen}{-G} \textcolor{blue}{4} 
+
+\item \textcolor{gray}{1=Choose another weight or
+	2=Exit to run the full script}\\answer accordingly
+\end{itemize}
+\newpage
+\item 
+ \verb=$PWD > =\textcolor{darkgreen}{run\_tiniba.sh}
+\textcolor{darkgreen}{-r} \textcolor{blue}{run} 
+\textcolor{darkgreen}{-k} \textcolor{blue}{$N_k$} 
+\textcolor{darkgreen}{-N} \textcolor{blue}{$N_{\mathrm{Layer}}$} 
+\textcolor{darkgreen}{-x} [s-\textcolor{blue}{1} or
+p-\textcolor{blue}{2}] \textcolor{blue}{options:}  
+\begin{verbatim}
+   -w      Wave function(k)
+   -m      rho(z) for a set of k-points in case.klist_rho
+   -e      Energies E_{m}(k)
+   -p      Momentum Matrix Elements p_{mn}(k), includes m=n
+   -d      Layered ndot Matrix Elements rho_{cc'}(k) 
+   -c      Layered Momentum Matrix Elements calp_{mn}(k)
+   -l      Layered Diagonal Momentum Matrix Elements calp_{mm}(k)
+   -s      Spin Matrix Elements S_{cc'}(k)
+   -n      Layered Spin Matrix Elements calS_{cc'}(k)
+   -b      bypass WF checkup (Never use on first run)
+\end{verbatim}
+where
+\begin{itemize}
+\item \verb=-k Nk=: is the number of $\bfk$-points or \verb=rho= for
+the  -m option
+\item \verb=-N N_Layer=: is the number of
+layers ($\geq 0$) %or \verb=half-slab= or \verb=bulk=
+\item \verb=-x [s-1,p-2]= runs the SCF in {\it s}erial-1 or {\it p}arallel-2 (\textcolor{red}{recommended})
+\item Besides \verb=-w= 
+any option \textcolor{red}{{\it includes}} the
+   calculation of the wave function
+\end{itemize}
+
+
+\textcolor{red}{{\it WARNING}} don't run using options 
+\verb=-c, -l or -n= simultaneoulsy!
+
+\item Tips
+\begin{itemize}
+\item Run in a separate sequence. i.e.:
+  \verb=-w= $\to$   \verb=-e -p= $\to$   any other one option.
+\item Use the option \verb=-b= after second run, just to be sure that
+  the \verb=WF= file was correctly copied. 
+\item The file \verb=rvarios.sh= is a shell with all the steps to
+  perform a {\it whole enchilada} calculation including the response
+  functions. Get one from \verb=$TINIBA/examples/rvarios.sh= and
+  modify it {\it ad libitum}.
+\item Other \verb=rvarios-shg.sh= file for SHG to
+  perform a {\it whole enchilada} calculation is at
+ \verb=$TINIBA/examples/rvarios-shg.sh=.
+  Modify it {\it ad libitum}.
+\item run with\\ \verb=> nohup rvarios.sh=\\
+Then kill the terminal so
+  \verb=nohup= works correctly.
+\item To run {\it without} coherences for the spin injection go to\\ 
+\verb=$TINIBA/latm/SRC_1setinput/integrands.f90=\\
+comment/uncomment the corresponding lines (look for {\it without}),
+compile, rename the response for $\zeta$ and $\xi$ in\\
+ \verb=$TINIBA/utils/responses.txt=\\
+and run \verb=all_responses.sh=. Then, undo the changes!  
+\end{itemize}
+
+\item LDA Energy Gap and Scissors correction\\
+To calculate the LDA gap and the scissors correction run and follow instructions
+\begin{itemize}
+\item \verb=gap_correction.sh=
+\end{itemize}
+\item Monitors:
+\begin{itemize}
+\item To monitor the status of the run
+
+$\bullet$ \verb=culster_exec -N ALL 'ps -u user'=
+
+\item To monitor the calculation time and status of the matrix
+  elements use:
+
+$\bullet$ \textcolor{darkgreen}{ontoi.sh}
+
+\end{itemize}
+
+\item If the SCF doesn't run, before you tray again, do
+\begin{itemize}
+\item\verb=$PWD > =\textcolor{darkgreen}{run\_tiniba.sh -r} \textcolor{blue}{erasescf}
+\end{itemize}
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[scale=1.0]{plots/3drho}
+\end{center}
+\caption{$\rho_{n\bfk}(z)$ for the Si(111)As surface of the example
+  calcuated with spin-orbit interaction.
+}
+\label{figrho}
+\end{figure}
+
+\item Integrated density  $\rho_{n\bfk}(z)=\int dx\int  dy\,|\psi_{n\bfk}(\bfr)|^2$ (see Fig. \ref{figrho})
+
+\begin{itemize}
+\item
+ write or generate \verb=case.klist_rho= with the
+ $\bfk$-points where it
+needs to be evaluated, typical the $\Gamma$ point and some other few
+points of maximum
+symmetry. \textcolor{red}{Modify}\verb=.machines_pmn= such that the
+number of $\bfk$-points is the same as the number of CPU's.
+\item run with option \verb=-m= and follow instructions.
+\end{itemize}
+\item After you are done with the calculation erase as follows:
+\begin{itemize}
+\item\verb=$PWD > =\textcolor{darkgreen}{run\_tiniba.sh -r} \textcolor{blue}{erase}
+
+to erase the files in all the nodes.
+
+\item\verb=$PWD > =\textcolor{darkgreen}{run\_tiniba.sh -r} \textcolor{blue}{erasescf}
+
+to erase the SCF calculation.\textcolor{red}{Warning: this erases the wave-function and may
+ be better to keep it for future calculations, perhaps in a back-up HD}.
+
+\end{itemize}
+
+\end{enumerate}
+
+\section{Benchmark Test}
+
+Above example is run automatically by using and following the
+instructions of\\
+$\bullet$ \verb=$PWD >$TINIBA/utils/run-whole-enchilada-surface.sh=\\
+where the output ought to be compared with benchmark results in order
+to check that TINIBA$^{\reg}$ is working correctly.
+
+However the calculation of $\chi^{\rmx\rmy\rmz}(2\go)$ for GaAs is a
+better benchmark, since it is more sensitive to all the ingredients of
+the calculation. It is run with\\
+$\bullet$ \verb=$PWD >$TINIBA/utils/run-whole-enchilada-bulk.sh=\\
+
+\section{Optics}
+ 
+The program to run all the optical responses is\\
+$\bullet$\verb=$TINIBA/utils/all_responses.sh=\\ 
+which in turn runs\\
+$\bullet$\verb=$TINIBA/utils/responses.sh=\\
+To run it just execute\\
+$\bullet$ \verb=$PWD > all_responses.sh= \\
+and follow instructions. In particular one can calculate from all
+valence bands to any number of conductions bands (\verb=-o 1=),
+or from a given valence band to a given conduction band (\verb=-o 2=).
+
+\begin{itemize}
+\item For SHG bulk/surface use response 21/44. Both are coded in the
+  Length Gauge. Response 42 only works
+  for bulk and is coded the
+  Velocity Gauge. Since it has to calculate extra commutators is
+  slower than response 21. Thus use 42 only if you doubt your results
+  and would like to get some reasurance that they are correctly
+  calculated by 21.
+
+\item The file for SHG has for columns\\\\
+\begin{tabular}{|c|c|c|c|c|c|}\hline 
+Column $\to$  & 1 & 2 & 3 & 4 & 5 \\\hline 
+Quantity $\to$  & $\hbar\go$  & $\mathrm{Re}[\chi_{ijk}(1\go)]$ &
+$\mathrm{Im}[\chi_{ijk}(1\go)]$ &
+$\mathrm{Re}[\chi_{ijk}(2\go)]$ &
+$\mathrm{Im}[\chi_{ijk}(2\go)]$\\\hline
+\end{tabular} 
+Units: pm/V\\
+\textcolor{red}{So far it only works for one component of $\chi_{ijk}$.}
+
+\item Degree of Spin Polarization (DSP), $\cald^a$.
+\begin{enumerate}
+\item \textcolor{red}{WARNING}: the factor of $(\hbar/2)$ is NOT
+  included in $\zeta^{abc}$. However it is included in the expression
+  for $\cald^a$, and thus the value of $\zeta^{abc}$ as it comes out
+  of the code must be used to compute $\cald^a$. To report the value
+  of $\zeta^{abc}$ one must multiply by $\hbar/2$ and use the
+  appropriate S.I. units V$^{-2}$m$^{-1}$J.
+\item For a surface calculation use a symmetric slab, i.e. same top
+  and bottom surfaces.
+\item Use \verb=dsp.sh= to gather the results for the DSP calculation. It
+  does so for bulk (full) or layer-by-layer. The data is written as
+follows:\\\\
+\begin{tabular}{|c|c|c|c|c|c|}\hline
+Column $\to$  & 1 & 2 & 3 & 4 &5 \\\hline
+\verb=kk=$\to$  & $\hbar\go$  & $\xi_{xx}$  &
+$\xi_{yy}$ &$\xi_{zz}$ & $\zeta_{ijk}$ \\ \hline
+\end{tabular}\\
+\item \verb=dsp.sh= uses the \verb=kk= response files and not the \verb=sm=
+files. The onset of the DSP is very sharp and the \verb=sm= files
+misscalculate it.
+\item\verb=gnuplot> p 'dsp-file' u 1:(2*$5/($j+$k+eta)) w l=\\
+where $j$ and $k$ are the corresponding columns (2,3 or 4) according to the $jk$
+Cartesian components of $\zeta_{ijk}$. Also,
+\verb=eta->0=, so {\it gnuplot} plots the DSP onset properly.
+\item If you have calculated \verb=dsp.sh= with the \verb=full= option
+  for a surface, i.e. the whole ``bulk-like''
+ structure,
+ then you must get the same result as with the
+  \verb=half-slab= option, since both $\xi^{ab}$ and $\zeta^{abc}$ are
+  twice as much for the whole slab than for the half-slab, but the
+  factor of two cancels out when taking the ratio in the expression for $\cald^a$.
+\end{enumerate}
+
+\end{itemize}
+
+\section{Examples}
+\subsection{Bulk} 
+For an example copy from \verb=$TINIBA/examples/surface/nospin/gaas=:\\
+\verb=setUpAbinit_gaas.in= and \verb=gaas.xyz=. This is a
+bulk GaAs crystal. See results in \verb=gaas/res= and Fig.~\ref{shg-bulk}.
+\begin{figure}[t]
+\begin{center}
+\includegraphics[scale=0.5]{plots/shg-bulk}
+\end{center}
+\caption{$\chi_{xyz}$ for GaAs, $E_{cut}=20$ Ha and $N_k=1661$. Both
+  the length ($L$) and velocity ($V$) gauge results are shown.
+The scissors shift is 1.051 eV.
+}
+\label{shg-bulk}
+\end{figure}
+\begin{figure}[t]
+\begin{center}
+\includegraphics[scale=0.5]{plots/shg-surface}
+\end{center}
+\caption{Surface $\chi_{ijk}$ for all the allowed components of the
+  si\_as\_6 example, $E_{cut}=5$ 
+  Ha, $N_k=64$, and with a scissors shift of 0 eV. 
+}
+\label{shg-surface}
+\end{figure}
+\subsection{Surface} 
+For an example copy from \verb=$TINIBA/examples/surface/nospin/si_as_6=:\\
+\verb=setUpAbinit_si_as_6.in= and \verb=si_as_6.xyz=. This is a
+Si(111)$1\times 1$:As surface with 4 layers of Si, one top and one bottom
+layer of As. See results in \verb=si_as_6/res= and Fig.~\ref{shg-surface}.
+
+\section{For developers : how to include a new optics subroutine}
+The optical response is calculated in two steps:\\
+\begin{enumerate}
+\item The calcualtion of integrand.
+\item The integration over $k$.
+\end{enumerate}
+Both subrutines are implemented in Fortran code (thanks to Fred Nastos) and both 
+are in TINIBA$^\reg$ package. In order to include another subrutine we are going to 
+modificate only the 
+\emph{integrand}. If this not make sense, you have to read a famous paper 
+PRB 61 5337 of John Sipe and  Anatoli Shkrebtii. 
+ 
+Suppose that you want to add another subroutine, follows these step:\\ 
+(use any editor that you want)\\
+
+\subsection{a la Cabellos}
+
+This subsection only runs $\chi_{ij}(\omega)$
+and $\chi_{ijk}(2\omega)$ for bulk semiconductors. It assumes that the
+experimental or {\it GW} band gap is known, like in GaAs.
+We are planing to extend this version to other responses and the {\it
+  layer-by-layer } analysis as well. $\chi_{ijk}(2\omega)$ is
+calculated in the length-gauge  and in the velocity-gauge both wrongly
+and correctly scissored. See Cabellos et al., Phys.  Rev. B {\bf 80}, 155205-1-13 (2009).
+
+\begin{itemize}
+\item go to:\\
+\verb= cd $HOME/$TINIBA/SRC_response/SRC_set=  
+\item Make a module. This has ``two'' names, one is the name of the
+  file itself,
+i.e. \verb=ishg1la.f90=
+and the other is the name of the module itself,
+i.e. \verb=IntegrandSHG1Mod.f90=,
+ that goes as the first
+line of the file.
+The file with the module has two functions with the
+response prefactor and a ``delta function factor'' depending if the
+response is 1-$\omega$ or 2-$\omega$. It also has the subroutine with
+the integrand that codifies the response to be calculated.\\
+Then you have to link the new module to these next subroutines/modules: 
+
+\item in \verb=IntegrandsMod.f90=
+   \begin{itemize}
+   \item at the top of the file insert the
+     name of the new module, i.e. \\ \verb=USE IntegrandSHG1Mod.f90, ONLY :: SHG1= 
+   \item Asign a case nomber, i.e.\\
+     \verb=case (21)=\\
+     \verb=CALL SGH1(i_spectra)=
+   \end{itemize}
+Notice that the case number is arbitrary but is is linked to the
+\verb=ONLY :: SHG1= 
+
+\item in \verb=SymmetryOperationsMod.f90=
+
+\begin{itemize}
+
+\item write the {\it case} number in the appropriate symmetry {\it transformation},
+i.e. \\
+\verb=  CASE(21,22,26,27,28,29,30,60,61,62,63,64,65,80,81)=\\
+\verb=  CALL transformationSecondOrderResponse(i_spectra)=
+     \end{itemize}
+since the example is for SHG which is a second order response given by a third rank tensor.
+
+\item in \verb=SpectrumParametersFileMod.f90=
+      \begin{itemize}
+      \item chose the tensor rank and its total number of Cartesian
+        components, i.e.\\
+\verb= CASE(21,22)= \\
+\verb=  WRITE(6,*) "Second-harmonic generation: Length Gauge"=\\
+\verb=  dims = = 3\\
+\verb=  length = = 27
+     \end{itemize}
+
+since the rank is 3 and 3$^3$=27
+
+\item in \verb=FileControlMod.f90= include
+
+\begin{itemize}
+\item \verb=USE IntegrandSHG1Mod, ONLY : SHG1_factor, SHG1DeltaFunctionFactor=
+\item
+\verb= CASE(21)=\\
+\verb= rtmp2 = =\verb= rtmp*SHG1_factor()=\\
+\verb= iTmp ==\verb= SHG1DeltaFunctionFactor()=
+
+\end{itemize}
+
+
+\end{itemize}        
+When you finish, you have to compile in the \verb=master=, then you can make use of the 
+advanced tool MakeMakefile.PL (no one uses it) :
+\begin{enumerate}
+\item \verb=./utils/=\textcolor{darkgreen}{MakeMakefile2010.PL}
+\item
+  \verb=./utils/=\textcolor{darkgreen}{compiler.sh}\\
+and follow instructions$\ldots$ the executable is in the previous directory.
+\end{enumerate}
+% \begin{verbatim}
+% Usage [Option]:
+%  	3264        : Compile 32 and 64 bits(xeon,itanium and quad)
+% 	xeon        : Compile 32  xeon
+%  	itanium     : Compile 64 itanium
+% 	quad        : Compile 64 quad
+% 	example: ./compiler.sh 3264
+% 	Stoping right now ...
+% \end{verbatim}   
+
+
+
+After this a script has to driver this subrutine, there are several of them 
+if you want to use one of this:\\
+You have to include the number of response in those scripts\\
+/home/\$USER/\$TINIBA/SRC$_{-}$response/\textcolor{darkgreen}{responseSHG.sh}\\
+In this script include a line like this
+\begin{verbatim}
+NAMERES[1]=chi1  ;SIZERES[1]="2"
+\end{verbatim}
+As you see one of this is the name of the subroutine and other is the lenght of the tensor\\ 
+\verb=$HOME/$TINIBA/SRC_response/menu.sh=
+In this script include a line like this
+\begin{verbatim}
+printf "\t${GREEN}22${NC} ${BLU}${NAMERES[22]}${NC}  
+(${GREEN}Length 2 omega${NC})\n"
+\end{verbatim}
+
+In order to be able to run, try it with small case. 
+if you are not able to run ask to Bernardo en the coffe 
+break in order to solve the problem. 
+
+\subsection{Programs for Bulk and Layer-by-Layer response}
+\label{sec:programs}
+
+Do all the compilation in the \verb=master= node and in both 
+\verb=SRC_1setinput=
+and
+\verb=SRC_2latam=.
+
+There are two main steps in the calculation of the optical response:
+
+\begin{enumerate}
+
+\item the first one sets up the integrand and the
+files are in\\
+\verb=$TINIB/latm/SRC_1setinput=
+\item the second one does the $\mathbf{k}$-integration and the files
+  are in\\
+\verb=$TINIBA/latm/SRC_2latam=
+\end{enumerate}
+
+\begin{itemize}
+%%%%%%%%%%
+\item\verb=$TINIBA/latm/SRC_1setinput=
+%%%%%%%%%%
+
+\begin{enumerate}
+\item in
+  \verb=integrands.f90=\\
+ include a CASE and the name of the subroutine, i.e \\
+\verb=   CASE(21)=\\
+\verb=   CALL SHG1L=\\
+then write the subroutine itself. You can follow the structure from
+  any other subroutine that works, like SHG1L. 
+
+\item in \verb=inparams.f90= do the following
+\begin{itemize}
+\item in the \verb=MODULE inparams= 
+add the response prefactor as a parameter, i.e.\\
+\verb=REAL(DP),PARAMETER::shg1_factor= $=\cdots$
+\item in the \verb=MODULE inparams=  add the response prefactor in the array\\
+\verb=spectrum_factor(number_of_known_spectrum_types)==\\       
+$\vdots$\\
+\verb=!    21           22          23           =\\
+\verb=  shg1_factor, shg2_factor, leo_factor=,$\cdots$\\
+$\vdots$\\
+where it is {\bf very important} that the number chosen for the
+\verb=CASE= of the response, i.e. 21, coincides with the position-entree in
+the array.
+\item in the \verb=SUBROUTINE readSpectrumFile= add the \verb=CASE=
+ number in the appropriate response, where \verb=dims= is the rank
+ and \verb=length= is the total number of
+ Cartesian components of
+the tensor's response, i.e.\\
+$\vdots$
+\begin{verbatim}
+ CASE(21,42,44)
+  WRITE(6,*) "Second-harmonic generation"
+  dims = 3
+  length = 27
+\end{verbatim}
+$\vdots$
+
+since the rank is 3 and 3$^3$=27
+
+\item in the \verb=SUBROUTINE deltaFactor= add the 
+correct\\ \verb=deltaFunctionFactor==1 or 2\\ for 1-$\omega$ and 
+2-$\omega$ transitions, respectively.
+ The default value is\\
+\verb=deltaFunctionFactor==1 for 1-$\omega$ response terms.
+Otherwise include the response \verb=CASE= number, i.e.,\\
+$\vdots$
+\begin{verbatim}
+ CASE(22,43,45)!shg 2-omega terms
+   deltaFunctionFactor=2
+ END SELECT
+\end{verbatim}
+$\vdots$
+
+since \verb=shg2= is a 2-$\omega$ response term.
+\end{itemize} 
+
+\item in \verb=set_input_ascii.f90=
+ the \verb='all'= the \verb='standard'= and the \\\verb='layer-by-layer'=
+position and momentum matrix elements are set into arrays so they can be used by the 
+\verb=intergands.f90= file. Most of the responses already have the required
+matrix elements so this file should not be changed unless new matrix
+elements are needed. Check that the momentum-matrix elements are
+properly renormalized due to the scissors shift. 
+
+\item in \verb=symmetry_operations.f90= include the \verb=CASE= number
+  of the response in the appropriate transformation (linear,
+  secon-order, etc.), i.e.\\
+$\vdots$
+\begin{verbatim}
+  CASE(21,22,42,43,44,45)
+   CALL transformationSecondOrderResponse(i_spectra)
+\end{verbatim} 
+$\vdots$
+
+The symmetries are obtained from the file generated by the LDA program
+and they obtain the following array
+\begin{equation}\label{uno}
+R_{ij\cdots}=\sum_{\mathrm{ab}\cdots}M_{i\mathrm{a}} M_{j\mathrm{b}}\cdots
+,
+\end{equation}
+where the {\it italic} Cartesian subindices of $R_{ij\cdots}$ are chosen by the
+tensor component to be calculated, \verb=-t= option, 
+and the $\mathrm{roman}$
+Cartesian subindices of the rotation matrices $M_{i\mathrm{a}}$ are
+summed over.
+
+The following four files basically do not need to be changed.
+\item in \verb=arrays.f90= the arrays are allocated and de-allocated
+  for things like the momentum matrix elements. So far it has all the
+  arrays needed for many responses, so most likely there is no need to
+  edit this file. The file also reads the LDA energies and scissored
+  energies with the value of the provided scissor correction.
+%Perhaps the layered spin injection response needs to add the
+%appropriate array for the layered spin matrix elements.
+
+\item \verb=constants.f90= has only constants and there is no need to
+modify it.
+\item \verb=file_control.f90= controls the flow of the calculation,
+there is no need to
+modify it.
+\item \verb=functions.f90= calculates the standard and  layer-by-layer position
+  matrix elements, the generalized derivatives of the position matrix
+  elements, and other goodies not required. 
+There is no apparent need to
+modify it unless one wants to change the layer-by-layer response.
+
+\item Compilation
+\begin{itemize}
+\item run \verb=compila_all.sh= to compile in the three plataforms
+\item the executable is one directory down, i.e.\\
+\verb=../set_input_32b= for the \verb=Xeon=\\
+\verb=../set_input_64b= for the \verb=Itanium=\\
+\verb=../set_input_quad= for the \verb=quad=
+\item you may want to change the compiler and compilation flags in:\\
+\verb=Makefile32b= for the \verb=Xeon=\\
+\verb=Makefile64b= for the \verb=Itanium=\\
+\verb=Makefilequad= for the \verb=quad=
+\end{itemize}
+
+\end{enumerate}
+
+%%%%%%%%%%
+\item\verb=$TINIBA/latm/SRC_2latam=
+%%%%%%%%%%
+\begin{enumerate}
+\item\verb=inparams.f90= is the same as that of\\
+\verb=$TINIBA/latm/SRC_1setinput=\\
+it is linked so if you change it in \verb=SRC_1setinput=
+ you must compile in \verb=SRC_2latam=!
+\item \verb=tetra_method.f90=
+\begin{itemize}
+\item does the integration using the Tetrahedral Method.
+\item you may want to play with the 
+\verb=SUBROUTINE Which_Transitions= to chose particular transitions,
+i.e. look in \verb=tetra_method_vc.f90=, but be sure that is
+implemented for 2-$\omega$ terms.
+\end{itemize}
+
+\item \verb=constants.f90= has only constants and there is no need to
+modify it.
+\item \verb=globals.f90= global statements and there is no need to
+modify it.
+\item \verb=piksort.f90= there is no need to
+modify it.
+\item Compilation
+\begin{itemize}
+\item run \verb=compila_all.sh= to compile in the three plataforms
+\item the executable is one directory down, i.e.\\
+\verb=../tetra_method_32b= for the \verb=Xeon=\\
+\verb=../tetra_method_64b= for the \verb=Itanium=\\
+\verb=../tetra_method_quad= for the \verb=quad=
+\item you may want to change the compiler and compilation flags in:\\
+\verb=Makefile32b= for the \verb=Xeon=\\
+\verb=Makefile64b= for the \verb=Itanium=\\
+\verb=Makefilequad= for the \verb=quad=
+\end{itemize}
+
+\end{enumerate}
+
+\item Name for the Response
+
+The name of the response (i.e. \verb=rhomm=)
+ must go in the following files complying with the particular context 
+\begin{itemize}
+\item in \verb=$TINIBA/utils=
+\begin{enumerate}
+\item \verb=all_responses.sh=
+\item \verb=responses.sh=
+\end{enumerate}
+\item in \verb=$TINIBA/latm/SRC_1setinput=
+\begin{enumerate}
+\item \verb=arrays.f90=
+\item \verb=inparams.f90=
+\item \verb=set_input_ascii.f90=
+\end{enumerate}
+\item To include a new response once is coded as explained in
+ Sec. \ref{sec:programs} 
+
+\begin{itemize}
+\item edit
+\verb=$TINIBA/utils/responses.txt=  
+and add the
+ number and name of the respnse, perhaps you may want to modify\\
+\verb=$TINIBA/utils/print_responses.pl=\\ for fine tunning
+of the displayed text. 
+\item\textcolor{red}{NOTE:}The names that appear in
+  \verb=responses.txt= are the ones used, \verb=verbatim=, for the name
+  of the calculated responses. Thus for a different name for the same
+  response just modify this file!
+\end{itemize}
+\end{itemize}
+
+%%%
+\end{itemize}
+
+
+\subsection{Shell for Bulk and Layer-by-Layer response}
+
+\begin{itemize}
+
+\item To run the optical responses execute and follow the instruction of the bash \verb=shell=:
+
+  \verb=$TINIBA/utils/all_responses.sh=\\
+which uses\\
+\verb=$TINIBA/utils/responses_bms.sh=
+
+\item To include a new response once is coded as explained in
+ Sec. \ref{sec:programs} 
+
+\begin{itemize}
+\item edit
+\verb=$TINIBA/utils/responses.txt=  
+and add the
+ number and name of the respnse, perhaps you may want to modify\\
+\verb=$TINIBA/utils/print_responses.pl=\\ for fine tunning
+of the displayed text.
+\end{itemize}
+\item The SHG is calculated with \verb=CASE==21 and does both 1-$\go$
+  and 2-$\go$ terms.
+\end{itemize}
+
+\subsection{Formulas and Units}
+
+
+These are the formulas coded:
+
+\begin{itemize}
+
+\item Linear response (See Sipe and Shkrebtii PRB {\bf 61}, 5337 (2000) Eq. 34
+% \begin{equation*}\label{chi}
+% \mathrm{Im}[\chi^{ij}(\go)]=\frac{e^2\pi}{\hbar}
+% \int \frac{d\bfk}{8\pi^3}
+% \sum_{nm} 
+% f_{nm} 
+% r^i_{nm}(\bfk)r^j_{mn}(\bfk)\gd(\go_{mn}(\bfk)-\go)
+% ,
+% \end{equation*}  
+where $m=c$ and $n=v$ for the resonant condition with $\go>0$),
+\begin{equation*}\label{chif}
+\mathrm{Im}[\chi^{\rma\rmb}(\go)]=\frac{\pi e^2}{\hbar}
+\int \frac{d\bfk}{8\pi^3}
+\sum_{vc}
+r^{\rma}_{vc}(\bfk)r^{\rmb}_{cv}(\bfk)\gd(\go_{cv}(\bfk)-\go)
+.
+\end{equation*} 
+For the layer response we replace $r^{\rma}_{vc}(\bfk)\to{\cal
+ R}^{(\ell)\rma}_{vc}(\bfk)$ see Mendoza et al, Phys. Rev. B {\bf 74},
+075318 (2006).
+
+\item Carrier injection rate, 
+$\dot n(\go)=\xi^{ij}(\go)E^i(-\go)E^j(\go)$,
+where is better to redefine as $\dot{\tilde n}=(\hbar/2)\dot n=\tilde\xi^{ab}E^a(-\go)E^b(\go)$, with
+$\tilde\xi^{ab}=(\hbar/2)\xi^{ab}$.
+\begin{equation*}\label{chifp}
+\tilde\xi^{\rma\rmb}(\go)=\frac{\pi e^2}{\hbar}
+\int \frac{d\bfk}{8\pi^3}
+\sum_{vc}
+r^{\rma}_{vc}(\bfk)r^{\rmb}_{cv}(\bfk)\gd(\go_{cv}(\bfk)-\go)
+.
+\end{equation*} 
+For the layer response:
+\begin{equation*}\label{xizn}
+\tilde\xi^{ab}(\ell;\go)
+=
+\frac{\pi e^2}{\hbar}
+\int\frac{d^3k}{8\pi^3}
+\sum_{vcc'}
+\frac{1}{2}\mathrm{Re}\Big[
+\rho_{cc'}(\ell)    
+r^a_{vc} 
+r^b_{c'v}
++
+\rho_{c'c}(\ell) 
+r^a_{vc'} 
+r^b_{cv}
+\Big]
+\gd(\omega-\omega_{cv})
+.
+\end{equation*}
+We notice that $\tilde\xi^{ab}(\go)=\mathrm{Im}[\chi^{ab}(\go)]$, with
+$\ge^{ab}(\go)=1+4\pi\chi^{ab}(\go)$, however 
+$\tilde\xi^{ab}(\ell;\go)\neq\mathrm{Im}[\chi^{ab}(\ell;\go)]$!!!
+Therefore, for a \textcolor{red}{bulk} calculation, one must calculate
+$\mathrm{Im}[\chi^{ab}(\go)]$ for $\dot n(\go)$.
+
+\item Second Harmonic Generation
+\begin{itemize}
+\item Velocity-Gauge 
+
+The SHG $\chi_{\rmv}^{\rma\rmb\rmc}(2\go)$ is programmed within the velocity-gauge
+ according to Phys.  Rev. B {\bf 80}, 155205-1-13 (2009).
+\begin{eqnarray*}
+&&\mbox{Im}\lbrack \chi _{\mathrm{v}}^{abc}(-2\omega;\omega,\omega)] 
+=\frac{\pi
+|e|^{3}}{2\hbar ^{2}}\int \frac{d^{3}k}{8\pi ^{3}}\Big[\sum_{vc}\frac{16}{(
+\omega_{cv}^{S})^{3}}\Big(\sum_{c^{\prime }}\frac{\mbox{Im}\lbrack
+v_{vc}^{\Sigma ,a}\{v_{cc^{\prime }}^{\Sigma ,b}v_{c^{\prime }v}^{\Sigma
+,c}\}]}{\omega_{cv}^{S}-2\omega_{c^{\prime }v}^{S}}  \notag  \label{imchicf} \\
+&-&\sum_{v^{\prime }}\frac{\mbox{Im}\lbrack v_{vc}^{\Sigma
+,a}\{v_{cv^{\prime }}^{\Sigma ,b}v_{v^{\prime }v}^{\Sigma ,c}\}]}{\omega
+_{cv}^{S}-2\omega_{cv^{\prime }}^{S}}\Big)\delta(\omega_{cv}^{S}-2\omega)  \notag \\
+&+&\sum_{(vc)\neq\ell }\frac{1}{(\omega_{cv}^{S})^{3}}\Big(\frac{\mbox{Im}\lbrack
+v_{\ell c}^{\Sigma ,a}\{v_{cv}^{\Sigma ,b}v_{v\ell }^{\Sigma ,c}\}]}{\omega
+_{c\ell }^{S}-2\omega_{cv}^{S}}-\frac{\mbox{Im}\lbrack v_{v\ell }^{\Sigma
+,a}\{v_{\ell c}^{\Sigma ,b}v_{cv}^{\Sigma ,c}\}]}{\omega_{\ell v}^{S}-2\omega
+_{cv}^{S}}\Big)\delta(\omega_{cv}^{S}-\omega)  \notag \\
+&-&\sum_{vc}\frac{1}{(\omega_{cv}^{S})^{3}}\Big(4\mbox{Re}\lbrack \
+v_{vc}^{\Sigma ,a}\{\mathcal{F}_{cv}^{bc}\}]\delta(\omega_{cv}^{S}-2\omega)+\mbox{Re}
+\lbrack \{\mathcal{F}_{vc}^{ab}v_{cv}^{\Sigma ,c}\}]\delta(\omega_{cv}^{S}-\omega)
+\Big)\Big].
+\end{eqnarray*}
+Programs: \verb=shg1v= and \verb=shg2v=
+
+\item Length-Gauge: 
+Layered response by bms-unpublished. See \verb=shg-layer.pdf=
+\begin{equation*}\label{imchiewn}
+\mathrm{Im}[\chi_{e,\rma\rmb\rmc,\go}^{s(\ell)}]
+=
+\frac{\pi |e|^3}{2\hbar^2} 
+\sum_{vc\bfk}
+\sum_{l\neq(v,c)}
+\left[
+\frac{\go^S_{lc}\mathrm{Re}[{\cal R}^{\rma(\ell)}_{lc}\{r^{\rmb}_{cv}r^{\rmc}_{vl}\}]}
+{\go^S_{cv}(2\go^S_{cv}-\go^S_{cl})}
+-
+\frac{\go^S_{vl}\mathrm{Re}[{\cal R}^{\rma(\ell)}_{vl}\{r^{\rmc}_{lc}r^{\rmb}_{cv}\}]}
+{\go^S_{cv}(2\go^S_{cv}-\go^S_{lv})}
+\right]
+\gd(\go^S_{cv}-\go)
+\end{equation*}  
+\begin{equation*}\label{imchiwn}
+\mathrm{Im}[\chi_{i,\rma\rmb\rmc,\go}^{s(\ell)}]
+=
+\frac{\pi|e|^3}{2\hbar^2}
+\sum_{cv\bfk}
+\frac{1}{\go^S_{cv}}
+\left[
+\mathrm{Im}[\{r^{\rmb}_{cv}\left({\cal R}^{\rma(\ell)}_{vc}\right)_{;k^{\rmc}}\}]
++
+\frac{2\mathrm{Im}[{\cal R}^{\rma(\ell)}_{vc}\{r^{\rmb}_{cv}\gD^{\rmc}_{cv}\}]}{\go^S_{cv}}
+\right]
+\gd(\go^S_{cv}-\go)
+\end{equation*}
+\begin{equation*}\label{imchie2wn}
+\mathrm{Im}[\chi_{e,\rma\rmb\rmc,2\go}^{s(\ell)}]
+=
+\frac{\pi |e|^3}{2\hbar^2} 
+\sum_{vc\bfk}
+4
+\left[
+\sum_{v'\ne v}
+\frac{\mathrm{Re}[{\cal
+    R}^{\rma(\ell)}_{vc}\{r^{\rmb}_{cv'}r^{\rmc}_{v'v}\}]}{2\go^S_{cv'}-\go^S_{cv}}
+-
+\sum_{c'\ne c}
+\frac{\mathrm{Re}[{\cal R}^{\rma(\ell)}_{vc}\{r^{\rmc}_{cc'}r^{\rmb}_{c'v}\}]}
+{2\go^S_{c'v}-\go^S_{cv}}
+\right]
+\gd(\go^S_{cv}-2\go)
+\end{equation*}
+\begin{equation*}\label{imchi2wn}
+\mathrm{Im}[\chi_{i,\rma\rmb\rmc,2\go}^{s(\ell)}]
+=
+\frac{\pi|e|^3}{2\hbar^2}\sum_{vc\bfk}
+\frac{4}{\go^S_{cv}}
+\left[
+\mathrm{Im}[{\cal R}^{\rma(\ell)}_{vc}\{\left(r^{\rmb}_{cv}\right)_{;k^{\rmc}}\}]
+-
+\frac{2\mathrm{Im}[{\cal R}^{\rma(\ell)}_{vc}\{r^{\rmb}_{cv}\gD^{\rmc}_{cv}\}]}{\go^S_{cv}}
+\right]\gd(\go^S_{cv}-2\go)
+\end{equation*}
+\end{itemize}
+Programs: \verb=shg1l= and \verb=shg2l= for bulk, i.e. ${\cal
+  R}^{\rma(\ell)}_{vc}\to r^\rma_{vc}$.\\
+\verb=shg1c= and \verb=shg2c= for layered.
+
+\item Injection current
+
+\begin{equation*}\label{zetaell}
+\eta^{\rma\rmb\rmc}(\ell|0;\go,-\go)
+=
+\frac{i\pi e^3}{\hbar^2}
+\intk
+\sum_{vc}
+\gD_{cv}^{\rma}(\ell;\bfk)
+\mathrm{Im}
+\big[ 
+r^{\rmb}_{cv}(\bfk) 
+r^{\rmc}_{vc}(\bfk)
+\big]
+\gd(\go_{cv}(\bfk)-\go)
+.\nonumber
+\end{equation*} 
+
+For the bulk response we replace 
+$\gD_{cv}^{\rma}(\ell;\bfk) \to \gD_{cv}^{\rma}(\bfk)$
+
+\item Spin injection
+
+\begin{eqnarray*}\label{zetaabci}
+\zeta^{\mathrm{abc}}(\omega)
+&=&
+\frac{i\pi e^2}{\hbar^2}
+\int\frac{d^3k}{8\pi^3}
+\sum_{vcc'}\,'\,
+\mathrm{Im}\Big[S^{\mathrm{a}}_{c'c}(\mathbf{k}) r^{\mathrm{b}}_{vc'}(\mathbf{k}) r^{\mathrm{c}}_{cv}(\mathbf{k})
+\nonumber\\
+&+& 
+S^{\mathrm{a}}_{cc'}(\mathbf{k}) r^{\mathrm{b}}_{vc}(\mathbf{k}) r^{\mathrm{c}}_{c'v}(\mathbf{k})\Big]
+\delta(\omega_{cv}(\mathbf{k})-\omega)
+.
+\end{eqnarray*}  
+Notice that the units of $\zeta^{\rma\rmb\rmc}(\go)$ have a $\hbar/2$
+factor coming from the spin matrix elements $S^{\rma}_{cc'}$ (recall
+that
+$\hat \bfS=(\hbar/2)\hat\bfgs$), besides the other units.
+The degree of spin polarization is defined as
+\begin{equation}\label{dps}
+{\cal
+  D}=\frac{2\zeta^{\rmz\rmx\rmy}}{\hbar(\xi^{\rmx\rmx}+\xi^{\rmy\rmy})/2}
+=\frac{2\zeta^{\rmz\rmx\rmy}}{(\tilde\xi^{\rmx\rmx}+\tilde\xi^{\rmy\rmy})}
+,\nonumber
+\end{equation}    
+and it is a dimensionless quantity, as it must. 
+
+For the layered response we replace $S^{\rma}_{cc'}(\bfk)\to {\cal S}^{\ell,\rma}_{cc'}(\bfk)$. 
+
+\item Units. 
+\begin{itemize}
+
+\item In general, 
+\begin{equation*}\label{si}
+\ge_0\chi_{\mathrm{S.I.}}^{j}=\frac{4\pi\ge_0}{(3\times
+ 10^4)^{j-1}}\chi^{j}_{\mathrm{c.g.s}} \times \frac{m^{j-2}C}{V^j}
+,
+\end{equation*} 
+with $j$ the order of the response. 
+
+\item As an example we work the injection current units:
+
+\begin{equation*}\label{unp}
+\gamma=\frac{\pi e^3}{\hbar^2}\times\frac{1}{\gO}\times v \times 
+r\times r \times \frac{1}{\go}
+,
+\end{equation*} 
+the first term is the prefactor, the second is the volume of the
+$\bfk$-integration, the third is the velocity of $\gD$ the fourth and
+fifth are the matrix elements of the position operator and the last
+one comes from de Dirac delta function. Using $r=v/\go$ unit-wise
+\begin{eqnarray*}\label{un1}
+\gamma
+&=&
+\frac{\pi e^3}{\hbar^2}\times\frac{1}{a_0^3}\times v \times
+\frac{v^2}{\go^2}
+\times \frac{1}{\go}
+\nonumber\\
+&=&
+\frac{\pi e^3}{\hbar^2a_0^3}\times
+\frac{v^3}{\go^3}
+\nonumber\\
+&=&
+\frac{\pi e^3\hbar}{a_0^3}\times
+\frac{p^3}{m^3(\hbar\go)^3}
+=
+\frac{\pi e^3\hbar}{m^3a_0^3}\times
+\frac{\hbar^3}{a_0^3}
+\times
+\frac{1}{[\mathrm{eV}]^3}
+\nonumber\\
+&=&
+\frac{\pi e^3\hbar^4}{m^3a_0^6}\times
+\frac{1}{[\mathrm{eV}]^3}
+\times
+\frac{[27.21\,\mathrm{eV}]^3}{H^3}
+\nonumber\\
+&=&
+\frac{\pi e^3\hbar^4}{m^3a_0^6}\times
+[27.21]^3
+\times
+\frac{a_0^3}{e^6}
+=
+\frac{\pi \hbar^4}{e^3(ma_0)^3}\times
+[27.21]^3
+\nonumber\\
+&=&
+\frac{\pi \hbar^4}{e^3(\hbar^2/e^2)^3}\times
+[27.21]^3
+=
+\frac{\pi e^3}{\hbar^2}\times
+[27.21]^3
+,
+\end{eqnarray*}
+with $a_0=\hbar^2/me^2$ Bohr's radius, $\hbar\go$ is measured in eV, $v=p/m$ and
+$[p]=\hbar/a_0$, the Hartree $H=e^2/a_0=27.21$ eV, in c.g.s
+$e=-4.8066\times 10^{-10}$ statcoulomb and $\hbar=1.05457\times
+10^{-27}$ erg$\cdot$s, then
+\begin{equation*}\label{gam2}
+\gamma=-
+\pi
+\times
+[27.21]^3
+\times
+[9.9853\times 10^{25}]
+.
+\end{equation*}
+
+For the injection current we
+have $j=2$, 
+\begin{equation*}\label{si2}
+\eta_{\mathrm{S.I.}}=\frac{4\pi\ge_0}{3\times 10^4}\eta_{\mathrm{c.g.s}} \times \frac{C}{V^2}
+,
+\end{equation*} 
+and
+\begin{equation*}\label{is}
+\frac{1}{4\pi\ge_0}=9\times 10^9%\frac{Nm^2}{C^2}
+,
+\end{equation*} 
+since the units of $\ge_0$ are already taken into account,
+then
+\begin{equation*}\label{si3}
+\eta_{\mathrm{S.I.}}=\frac{1}{27\times 10^{13}}\eta_{\mathrm{c.g.s}} \times \frac{C^3}{J^2}
+,
+\end{equation*}
+where $J=VC$. However, $\eta$ gives the injection current,
+i.e. $dJ/dt=\eta E E$, then there is a second coming from the $J$ and
+another second coming from the time derivative, which finally give
+\begin{eqnarray*}\label{gam}
+\gamma
+&=&
+-\pi
+\times
+[27.21]^3
+\times
+[9.9853\times 10^{25}]
+\times\frac{1}{27\times 10^{13}}
+\nonumber\\
+&=&
+-\pi
+\times
+[27.21]^3
+\times
+[9.9853\times 10^{25}]
+\times[3.7037\times 10^{-15}]
+,
+\end{eqnarray*}
+as the prefactor of $\eta$ in $C^3/J^2 s^2$. For the surface $\eta_s$
+there is a factor of meters since $\eta_s\sim L \eta$, then the units
+of $\eta_s$ are $mC^3/J^2s^2$. The $L$ factor is set at the
+\verb=gnuplot= file for the plot.
+
+We remark that for the injection current the bulk prefactor
+$\gamma_{\mathrm{bulk}}=\gamma/2$ since we use the commutator instead
+of the imaginary part of $ r^{\rmb}_{cv} r^{\rmc}_{vc}$ and
+$i\mathrm{Im}[ab]=[a,b]/2$.
+
+\item SHG
+\begin{equation*}\label{shgu}
+[\chi]=\frac{\pi}{2}\frac{[e]^3}{[\gO][\hbar]^2}\frac{[r]^3}{[\go]^2}
+,
+\end{equation*}
+
+    % volume = BohrRadius_cgs ** 3
+    % tmp1 = (electronCharge_cgs ** 3) / (hbar_cgs ** 2)
+    % tmp1 = tmp1 * (positionFactor_cgs ** 3)
+    % tmp1 = tmp1 / (frequency_cgs ** 2)
+    % tmp1 = tmp1 / volume
+    % res = makeDouble(tmp1)
+    % SHG1_factor = 2.*res*pi 
+    % !######### 29 Nov. 2008 ##########
+    % !right now in pmV
+    % !##pag. 53 Nonlinear Optics Robert Boyd
+    % !K=4.189E-4*1E12
+    %  SHG1_factor= SHG1_factor*4.189E-4*1E12
+    %  SHG1_factor= SHG1_factor/2.
+
+\item Values: 
+Are given in \verb=cgs= and \verb=mks= units in\\
+ \verb=~/tiniba/tiniba2010/SRC_response/SRC_set/PhysicalConstantsMod.f90=
+% the
+%  length-gauge can be found in:\\
+% \verb=/home/bms/tiniba/tiniba2010/SRC_response/SRC_set/=\\
+% \verb=ishg1la.f90= for 1-$\omega$ and
+% \verb=ishg2la.f90= for 2-$\omega$.
+
+   \end{itemize}
+
+\end{itemize}
+
+\section{Wien2k}
+In general you can use a all electron (wien2k) or pseudopotential 
+(abinit) codes in order to calculate 
+the first and second order response, you can follow the next seteps to 
+achive the result using wien2k code. 
+Now from here the user is going to be: usrname but it could be anybody, then 
+take care of this. 
+\begin{itemize}
+\item /home/usrname/temporal/GAAS/wien2k-GAAS/GAAS >cd ~/temporal/
+\item /home/usrname/temporal >~/\$TINIBA/wien2k/creatingTree.sh GAAS
+\item /home/\$USER/\$TINIBA/wien2k/\textcolor{darkgreen}{creatingTree.sh} 
+\begin{verbatim}
+$HOME/temporal >~/\$TINIBA/wien2k/creatingTree.sh GAAS
+	=====================
+	=====================
+	Making tree to run abinis and wien2k 
+	$HOME/temporal/GAAS/abinit-GAAS/GAAS
+	$HOME/temporal/GAAS/wien2k-GAAS/GAAS
+	=====================
+
+	=====================
+$HOME/temporal/GAAS
+   +---abinit-GAAS
+      |   +---GAAS
+   +---wien2k-GAAS
+      |   +---GAAS
+	=====================
+\end{verbatim}
+
+\item 
+ \begin{verbatim}
+ $HOME/temporal >cd $HOME/temporal/GAAS/wien2k-GAAS/GAAS
+$HOME/temporal/GAAS/wien2k-GAAS/GAAS >
+ \end{verbatim}
+\item /home/\$USER/\$TINIBA/wien2k/\textcolor{darkgreen}{wien2k.sh} 
+\begin{verbatim}
+Usage: 
+	$HOME/\$TINIBA/wien2k/wien2k.sh  [option-0]  [option-1] 
+	[option-0] = scf    -run ONLY scf 
+	[option-0] = klist  -generate rklist
+	[option-0] = run    -run ONLY momentum and energy  matrix elements 
+	[option-0] = help   -example files for si bulk 
+	[option-0] = clean_lapw -remove unnecessary files 
+	[option-0] = whatneed   -what files I need  
+	[option-1] = 0.001      -energy convercence LIMIT (0.0001 Ry)
+	===================
+	$HOME/\$TINIBA/wien2k/wien2k.sh scf 0.001
+	$HOME/\$TINIBA/wien2k/wien2k.sh klist
+	$HOME/\$TINIBA/wien2k/wien2k.sh run 
+	$HOME/\$TINIBA/wien2k/wien2k.sh clean_lapw
+	$HOME/\$TINIBA/wien2k/wien2k.sh help
+	Stoping right now...  wien2k.sh
+\end{verbatim}
+
+
+
+ 
+\end{itemize}
+\section{Refinement over k-points}
+If you want to refine the density of k-points over one window of energy 
+you can follow this script 
+\begin{itemize}
+ \item /home/\$USER/\$TINIBA/\textcolor{darkgreen}{refine.sh} 
+\begin{verbatim}
+	Usage:
+	$HOME/\$TINIBA/refine.sh abinit first
+	$HOME/\$TINIBA/refine.sh abinit refine noscissors
+	$HOME/\$TINIBA/refine.sh abinit refine scissors
+	Stoping right now...
+	$HOME/\$TINIBA/refine.sh
+	I need input Args
+\end{verbatim}
+
+\end{itemize}
+
+
+\section{The GW method and Bethe-Salpeter Equation}
+to be done 
+%\subsection{Why we have to use GW and BSE}
+
+
+\section{Surfaces }
+\emph{God made solids ...\\
+      but surfaces were the work of the devil}, W. Pauli\\                                  
+%The optics at surfaces 
+
+
+
+\section{Contributors}
+This list of contributors is not completee, if there are others let us know
+\begin{itemize}
+\item Bernardo Mendoza
+\item JL Cabellos
+\item Tonatiuh Rangel
+\item Cuahutemoc Salzar
+\item Norberto Arzate
+%\item John Sipe
+\item Fred Nastos  
+\end{itemize}
+
+to be continued$\ldots$
+
+LAST MODIFICATION: by BMS on \date{\today }
+
+\appendix
+
+\section{Extras}
+
+
+\begin{enumerate}
+%
+\item Compiling IBZ: executable \verb=ibz.medusa= or \verb=ibz.quad=
+\begin{itemize}
+\item[XEON:] \verb=$$TINIBA$$/src_ibz> make clean -f Makefile_xeon= 
+\verb=$$TINIBA$$/src_ibz> make -f Makefile_xeon= 
+\item[QUAD:]\verb=ssh quad01=
+
+\verb=$$TINIBA$$/src_ibz> make clean -f Makefile_quad= 
+\verb=$$TINIBA$$/src_ibz> make -f Makefile_quad= 
+\end{itemize}
+%
+\item Compiling matrix elements: executable \verb=rpmns.itanium= or
+  \verb=rpmns.quad= or \verb=rpmns.xeon=
+\begin{itemize}
+\item \verb=$TINIBA/matrix_elements/ver3.0> compilerRPMNS.sh=\\
+Follow instructions to compile in the three plataforms.
+\end{itemize}
+%
+\item Old way to calculate Second Order Response (SHG)
+ 
+Here you must to run \textcolor{darkgreen}{responseSHG.sh} with option number 21 and 22 for lenght
+ gauge formalism and 64 and 65 for velocity gauge formalism and you must provide the LDA band gap 
+ in order to calcuate zero scissors correction and you must provide experimental band gap in order to 
+calculate the SHG with scissors correction. The typical value of semar is 0.15 eV, in the case of GaAs 
+ the tensor componet different of zero is xzy.
+when you finish with the \textcolor{darkgreen}{glue.sh} script, if everething is ok, you get  a file
+that contains in the first row energy in eV,  the second one the real part of $1\;\omega$ contribution of lenght, 
+the third one the imaginary part of $1\;\omega$ contribution of lenght,  
+the 4 one the real part of $2\;\omega$ contribution of lenght, 
+the 5 one the imaginary part of $2\;\omega$ contribution of lenght, and the others four rows (6-9)
+contains the SHG for velocity formalism. (6=Re,$1\;\omega$), (7=Im,$1\;\omega$), (8=Re,$2\;\omega$) and 
+(9=Im,$2\;\omega$)\\
+If you want to plot the $|\chi_2^{xyz}|$ for lenght gauge formalism in the case of GaAs, the typical line text in gnuplot is 
+\begin{verbatim}
+p 'shg1l_shg2l_shg1t_shg2t_xxz_sm_0-150_3876_10-
+nospin_32_N_0-849_0-0d0_0-0d0L_0-0d0t_SRC_response'  
+u 1:(sqrt(($2+$4)**2+($3+$5)**2)) smooth csplines title '$\chi^2_{xyz}$'
+w l lw 2
+\end{verbatim}
+
+   
+\begin{itemize}
+\item \verb=$HOME/$TINIBA/SRC_response/=\textcolor{darkgreen}{responseSHG.sh} 
+\item \verb=$HOME/$TINIBA/SRC_response/all/=\textcolor{darkgreen}{doNuevoSmearingt$_{-}$juniot$_{-}$14t$_{-}$2010.sh} 
+\item \verb=$HOME/$TINIBA/1response/=\textcolor{darkgreen}{glue.sh} 
+\end{itemize}
+
+\end{enumerate}
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[scale=0.6]{../tiniba_shells-indautor/CERTIFICADO-INDAUTOR-TINIBA1}
+\end{center}
+\caption{INDAUTOR Certificate of TINIBA$^{\reg}$ 
+}
+\label{inpi}
+\end{figure}
+
+\end{document}                          % The required last line
+
+%%%%% usless for DSP below
+
+\item  Using \verb=chose_layers.sh= select the following layers: 
+\begin{enumerate}
+\item front-layer $\to\ell=$\verb=1=
+\item back-layer $\to\ell=$\verb=N=
+\item middle-layer $\to\ell=$\verb=middle=
+\item half-slab $\to\ell=$\verb=half-slab= (by default is the {\it
+   front} half-slab)\\
+then run \verb=run_tiniba.sh= with option \verb=-N 4=
+\item[and]
+\item full-slab: 
+run \verb=run_tiniba.sh= with option \verb=-N 0=
+\end{enumerate}
+
+\item Then, the different responses are given by:
+\begin{eqnarray}\label{surfj}
+\tilde\chi^{\mathrm{front-surface}}
+&=&
+\chi^{\mathrm{half-slab}}-\ell_B
+\chi^{\mathrm{middle}}\nonumber
+\\
+\tilde\chi^{\mathrm{back-surface}}
+&=&
+\underbrace{\left(\chi^{\mathrm{full-slab}}-
+\chi^{\mathrm{half-slab}}
+\right)}_{\mathrm{back-surface}}
+-\ell_B
+\chi^{\mathrm{middle}}
+\nonumber
+,
+\end{eqnarray}   
+with $\ell_B$ the integer value of the middle layer. Also
+$\tilde\chi^i=\left(A/\gO\right)\chi^j$ 
+and
+$\chi^j$ is $\zeta^{j,\rma\rmb\rmc}$ or
+$\xi^{j,\rmb\rmc}$, with $i=$front-surface or back-surface and
+$j=$full-slab, half-slab or middle.
+%%%%% usless for DSP above
