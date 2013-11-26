@@ -232,7 +232,7 @@ TIMESTARTALLI=`date`
 	chmod +x cthoy
 	sname=`cthoy`
 	sname=`echo $sname | sed 's/ //g'`
-	#rm cthoy
+	rm cthoy
 	fi
 
 #
