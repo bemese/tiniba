@@ -487,7 +487,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	Line
 	echo $exec -w $lt -m $caso -s $tijera -o $option -v $Nv -c $Nc -r $response  -t \"${scases[@]}\" > mtita
 	chmod +x mtita
-	mtita
+	./mtita
 	rm mtita
 #
 	fi
