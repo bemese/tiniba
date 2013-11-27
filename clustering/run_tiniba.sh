@@ -239,7 +239,7 @@ if [ -e $case'_scf'/$case.out ]
     then
     ecutout=`grep "ecut(hartree)" $case'_scf'/$case.out | awk '{print $2}'`
     #ecutyn=`echo $ecut $ecutout | $where/$compita`
-    if [ $ecut -ne $ecutout ]
+    if [ $ecut != $ecutout ]
 	then
 	Line
 	echo -e ${RED} ecut=$ecut at setUpAbinit_$case.in different from ecut=$ecutout at $case'_scf'/$case.out ${NC}
