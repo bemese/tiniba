@@ -43,14 +43,14 @@ printf "   -b      bypass WF checkup (${red}Never use on first run${NC})\n"
 function options {
 printf "${cyan}Usage${NC}:\n"
 printf "\t***\n"
-echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}run${NC} -k ${RED}Nk${NC} -N ${RED}N_Layer${NC} -x [serial-${red}1${NC} para-${red}2${NC}] ${BLUE}options${NC}:"
+echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}run${NC} -k ${RED}Nk${NC} -N ${RED}N_Layer${NC} ${BLUE}options${NC}:"
 
     printf "\n                           ${RED}N_Layer${NC}=number of layers or half-slab\n"
 
 runoptions
 
 printf "\t***\n"
-echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}setkp${NC} -k ${RED}Nk${NC} -g ${RED}xeon/itanium${NC} -G ${RED}xeon/quad${NC} weigths"
+echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}setkp${NC} -k ${RED}Nk${NC}"
 echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}erase${NC}  To erase the calculation from the nodes" 
 echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}erasescf${NC} To erase the SCF calculation" 
 }
