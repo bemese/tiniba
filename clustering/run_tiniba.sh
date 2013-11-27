@@ -99,6 +99,7 @@ rm -f finished*
 where=$TINIBA/clustering
 cual=all_nodes.sh
 host=$HOSTNAME
+serialp=2 #serialp used to be read from -x
 
 weigth1=2
 weigth2=2
@@ -314,7 +315,7 @@ wfcheck="false" #b
 ### r: => reads 'data' from '-r data'
 ### v  => if set then is true otherwise is false, i.e. -v => v case is true
 
-while getopts “:hr:k:N:x:wmepdclsnb” OPTION 
+while getopts “:hr:k:N:wmepdclsnb” OPTION 
 do
      case $OPTION in
          h)
@@ -329,9 +330,6 @@ do
              ;;
          N)
              layers=$OPTARG
-             ;;
-         x)
-             serialp=$OPTARG
              ;;
          w)
 	     wf="true"
@@ -497,7 +495,7 @@ then
     if [[ -z $Nk ]] || [[ -z $layers ]] || [[ -z $serialp ]]  
     then
 	Line
-	printf "either -k ${RED}Nk${NC}, -N ${RED}N_Layer${NC}, or -x [serial-${RED}1${NC}-paralel-${RED}2${NC}] are not defined\n"
+	printf "either -k ${RED}Nk${NC} or -N ${RED}N_Layer${NC} are not defined\n"
 	Line
 	exit 1
     fi    
@@ -513,7 +511,6 @@ then
 ##
     Nkl=$Nk #Nk is read from -k
     layers=$layers #layers is read from -N
-    serialp=$serialp #serialp is read from -x
 ## checks that the weight were given
 if [[ ! -e .peso1 &&  ! -e .peso2 ]]; then
     Line
