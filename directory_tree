@@ -1,4 +1,3 @@
-Directory tree for testing branch
 .
 |-- README
 |-- SRC_readwfk_abinit
@@ -32,11 +31,6 @@ Directory tree for testing branch
 |   |-- all_nodes.sh
 |   |-- arrange_machines_quad.pl
 |   |-- checkPSPabinit.pl
-|   |-- compita.f90
-|   |-- compita_hexa
-|   |-- compita_itanium
-|   |-- compita_quad
-|   |-- compita_xeon
 |   |-- concatena.pl
 |   |-- copySCF2allnodes.sh
 |   |-- get_value.pl
@@ -47,7 +41,7 @@ Directory tree for testing branch
 |   |-- scf.sh
 |   |-- set.pl
 |   `-- trunc.sh
-|-- directorytree
+|-- directory_tree
 |-- docs
 |   |-- 2tutorial.pdf
 |   |-- 2tutorial.tex
@@ -470,4 +464,4 @@ Directory tree for testing branch
     |-- version-abinit.txt
     `-- zmesh.pl
 
-35 directories, 434 files
+35 directories, 429 files

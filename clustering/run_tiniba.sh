@@ -140,21 +140,6 @@ fi
 $TINIBA/utils/createRemoteDir.sh
 }
 
-if [ "$host" == "medusa" ]; then
-    compita='compita_hexa'
-fi
-if [[ "$host" == "hexa"* ]]; then
-    compita='compita_hexa'
-fi
-if [ "$host" == "node" ]; then
-    compita='compita_xeon'
-fi
-if [[ "$host" == "itanium"* ]]; then
-    compita='compita_itanium'
-fi
-if [[ "$host" == "quad"* ]]; then
-    compita='compita_quad'
-fi
 ## arrays for cpu's
 declare -a nodeArrayscf
 declare -a nodeArraypmn
@@ -238,7 +223,6 @@ ecut=`grep ecut setUpAbinit_$case.in  |  awk '{print $2}'`
 if [ -e $case'_scf'/$case.out ]
     then
     ecutout=`grep "ecut(hartree)" $case'_scf'/$case.out | awk '{print $2}'`
-    #ecutyn=`echo $ecut $ecutout | $where/$compita`
     if [ $ecut != $ecutout ]
 	then
 	Line
