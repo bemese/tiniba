@@ -77,11 +77,11 @@ then
 	echo run_tiniba.sh -r setkp -k $kt > natmat
 	./natmat
         #  gets the wave function
- 	echo run_tiniba.sh -r run -k $kt -N 0 -x 2 -w > natmat
+ 	echo run_tiniba.sh -r run -k $kt -N 0 2 -w > natmat
 	./natmat
         # gets the energies and the momentum matrix elements
         # bypassing the copying of the wavefunction
-	echo run_tiniba.sh -r run -k $kt -N 0 -x 2 -b -e -p > natmat
+	echo run_tiniba.sh -r run -k $kt -N 0 2 -b -e -p > natmat
 	./natmat
 #    fi 
        # calculates the scissors shift. The experimental gap for GaAs is 1.52

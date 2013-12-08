@@ -85,15 +85,15 @@ then
 	echo run_tiniba.sh -r setkp -k 64 -g 2 -G 2 > natmat
 	./natmat
     # gets the wave function
-	echo run_tiniba.sh -r run -k 64 -N 1 -x 2 -w > natmat
+	echo run_tiniba.sh -r run -k 64 -N 1 -w > natmat
 	./natmat
     # gets the energies and the momentum matrix elements
     # bypassing the copying of the wavefunction
-	echo run_tiniba.sh -r run -k 64 -N 1 -x 2 -b -e -p > natmat
+	echo run_tiniba.sh -r run -k 64 -N 1 -b -e -p > natmat
 	./natmat
     # gets the layered momentum matrix elements
     # bypassing the copying of the wavefunction
-	echo run_tiniba.sh -r run -k 64 -N 1 -x 2 -b -c > natmat
+	echo run_tiniba.sh -r run -k 64 -N 1 -b -c > natmat
 	./natmat
     # calculates \chi_{xxx} for the surface
 	echo all_responses.sh -w layer -m 64_half-slab_5-nospin -s 0 -o 1 -v 13 -c 26 -r 44 -t "xxx" > natmat
