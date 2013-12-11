@@ -6,4 +6,9 @@ This program was written by the PRONASIS group of the Centro de Investigaciones 
 
 This includes the official 2.0 release (along with two older versions), which is the starting point of my full rewrite of the program.
 
-Goals and expected results are in the adjoining .TODO file.
+I suggest adding these lines to the appropriate shell file:
+
+```bash
+export TINIBA=$HOME/tiniba
+export PATH="$TINIBA/clustering:$TINIBA/utils:$PATH"
+```
