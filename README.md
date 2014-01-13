@@ -5,7 +5,7 @@ TINIBA is a tool written in bash, perl, and fortran to do ab initio calculations
 This project was built by the PRONASIS group of the Centro de Investigaciones en Óptica, A.C. in Mexico. It has been a collaborative project spanning almost a decade. TINIBA has been used in (at least) the following articles:
 * J Opt Soc Am B 28 1882 (2011)
 * Mod Phys Lett B 24, 1507 (2010)
-* Opt Laser Eng 49 668 (2011)
+* Opt Laser Eng 49, 668 (2011)
 * Opt Mater 29, 1 (2006)
 * Phys Rev B 73, 195330 (2006)
 * Phys Rev B 74, 075318 (2006)
