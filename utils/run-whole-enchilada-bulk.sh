@@ -64,25 +64,25 @@ then
 	# abinit_check.sh 1
 	echo abinit_check.sh 1 > natmat
 	chmod +x natmat
-	natmat
+	./natmat
 	# abinit_check.sh 2
 	echo abinit_check.sh 2 > natmat
-	natmat
+	./natmat
         # k-points
 	kp=108
 	echo rklist.sh $kp $kp $kp abinit > natmat
-	natmat
+	./natmat
 	kt=27720
         # gets the k-points distributed among the processors 
 	echo run_tiniba.sh -r setkp -k $kt > natmat
-	natmat
+	./natmat
         #  gets the wave function
- 	echo run_tiniba.sh -r run -k $kt -N 0 -x 2 -w > natmat
-	natmat
+ 	echo run_tiniba.sh -r run -k $kt -N 0 2 -w > natmat
+	./natmat
         # gets the energies and the momentum matrix elements
         # bypassing the copying of the wavefunction
-	echo run_tiniba.sh -r run -k $kt -N 0 -x 2 -b -e -p > natmat
-	natmat
+	echo run_tiniba.sh -r run -k $kt -N 0 2 -b -e -p > natmat
+	./natmat
 #    fi 
        # calculates the scissors shift. The experimental gap for GaAs is 1.52
 	gap_correction.sh 1.52
@@ -90,10 +90,10 @@ then
        # calculates \chi_{xyz}-Length Gauge for the bulk
 	echo all_responses.sh -w total -m $kt'_'20-nospin -s $tij -o 1 -v 4 -c 7 -r 21 -t "xyz" > natmat
 	chmod +x natmat
-	natmat
+	./natmat
         # calculates \chi_{xyz}-Velocity Gauge for the bulk
 	echo all_responses.sh -w total -m $kt'_'20-nospin -s $tij -o 1 -v 4 -c 7 -r 42 -t "xyz" > natmat
-	natmat
+	./natmat
 	rm natmat
 	Line
 	Line

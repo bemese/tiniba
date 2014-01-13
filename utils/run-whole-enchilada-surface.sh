@@ -64,40 +64,40 @@ then
 	# abinit_check.sh 1
 	echo abinit_check.sh 1 > natmat
 	chmod +x natmat
-	natmat
+	./natmat
 	# abinit_check.sh 2
 	echo abinit_check.sh 2 > natmat
 	chmod +x natmat
-	natmat
+	./natmat
     # It is a surface
 	odd_rank.sh
     # k-points
 	echo rklist.sh 19 19 2 abinit > natmat
 	chmod +x natmat
-	natmat
+	./natmat
     # generates layers
 	echo rlayer.sh 4.788090 1 4 1 1 > natmat
-	natmat
+	./natmat
     # choses half-slab layer
 	echo chose_layers.sh half-slab > natmat
-	natmat
+	./natmat
     # gets the k-points distributed among the processors 
 	echo run_tiniba.sh -r setkp -k 64 -g 2 -G 2 > natmat
-	natmat
+	./natmat
     # gets the wave function
-	echo run_tiniba.sh -r run -k 64 -N 1 -x 2 -w > natmat
-	natmat
+	echo run_tiniba.sh -r run -k 64 -N 1 -w > natmat
+	./natmat
     # gets the energies and the momentum matrix elements
     # bypassing the copying of the wavefunction
-	echo run_tiniba.sh -r run -k 64 -N 1 -x 2 -b -e -p > natmat
-	natmat
+	echo run_tiniba.sh -r run -k 64 -N 1 -b -e -p > natmat
+	./natmat
     # gets the layered momentum matrix elements
     # bypassing the copying of the wavefunction
-	echo run_tiniba.sh -r run -k 64 -N 1 -x 2 -b -c > natmat
-	natmat
+	echo run_tiniba.sh -r run -k 64 -N 1 -b -c > natmat
+	./natmat
     # calculates \chi_{xxx} for the surface
 	echo all_responses.sh -w layer -m 64_half-slab_5-nospin -s 0 -o 1 -v 13 -c 26 -r 44 -t "xxx" > natmat
-	natmat
+	./natmat
 	rm natmat
 	Line
 	Line
