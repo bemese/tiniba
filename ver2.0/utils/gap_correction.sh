@@ -58,7 +58,7 @@ else
             mv .machines_pmn.original .machines_pmn.backup
         fi
         head -1 .machines_pmn.backup > .machines_pmn.original
-        run_tiniba.sh -r run -k G -N 0 -x 2 -e
+        run_tiniba.sh -r run -k G -N 0 -e
         mv .machines_pmn.backup .machines_pmn.original
         cp .machines_pmn.original .machines_pmn
         clear

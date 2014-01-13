@@ -230,7 +230,7 @@ TIMESTARTALLI=`date`
 	else
 	    echo  "awk -F : '{if(\$1==$response) print \$2}' $where/responses.txt" > cthoy
 	chmod +x cthoy
-	sname=`cthoy`
+	sname=`./cthoy`
 	sname=`echo $sname | sed 's/ //g'`
 	rm cthoy
 	fi
@@ -746,5 +746,5 @@ TIMESTARTALLI=`date`
         rm -rf hoy*
 	rm -f energys.d* fort* fromSmear halfene*
 	rm -f input*set  tijeras spectra*
-	rm -f  response_type 
+	rm -f response_type 
 	rm -f int_*

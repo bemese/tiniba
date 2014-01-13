@@ -45,14 +45,13 @@ printf "   -b      bypass WF checkup (${red}Never use on first run${NC})\n"
 function options {
 printf "${cyan}Usage${NC}:\n"
 printf "\t***\n"
-echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}run${NC} -k ${RED}Nk${NC} -N ${RED}N_Layer${NC} -x [serial-${red}1${NC} para-${red}2${NC}] ${BLUE}options${NC}:"
+echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}run${NC} -k ${RED}Nk${NC} -N ${RED}N_Layer${NC} ${BLUE}options${NC}:"
 
     printf "\n                           ${RED}N_Layer${NC}=number of layers or half-slab\n"
 
 runoptions
 
 printf "\t***\n"
-echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}setkp${NC} -k ${RED}Nk${NC} -g ${RED}xeon/itanium${NC} -G ${RED}xeon/quad${NC} weigths"
 echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}erase${NC}  To erase the calculation from the nodes" 
 echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}erasescf${NC} To erase the SCF calculation" 
 }
@@ -101,6 +100,7 @@ rm -f finished*
 where=$HOME/tiniba/$ver/clustering/itaxeo
 cual=all_nodes.sh
 host=$HOSTNAME
+serialp=2 #serialp used to be read from -x
 
 weigth1=2
 weigth2=2
@@ -142,21 +142,6 @@ fi
 $HOME/tiniba/$ver/utils/createRemoteDir.sh
 }
 
-if [ "$host" == "medusa" ]; then
-    compita='compita_hexa'
-fi
-if [[ "$host" == "hexa"* ]]; then
-    compita='compita_hexa'
-fi
-if [ "$host" == "node" ]; then
-    compita='compita_xeon'
-fi
-if [[ "$host" == "itanium"* ]]; then
-    compita='compita_itanium'
-fi
-if [[ "$host" == "quad"* ]]; then
-    compita='compita_quad'
-fi
 ## arrays for cpu's
 declare -a nodeArrayscf
 declare -a nodeArraypmn
@@ -174,8 +159,6 @@ then
     weigth1=`awk '{print $1}' .peso1`
     weigth2=`awk '{print $1}' .peso2`
     mensaje=$weigth1-$weigth2
-else
-    mensaje='choose one: -r setkp...'
 fi
 #
 #
@@ -240,8 +223,8 @@ ecut=`grep ecut setUpAbinit_$case.in  |  awk '{print $2}'`
 if [ -e $case'_scf'/$case.out ]
     then
     ecutout=`grep "ecut(hartree)" $case'_scf'/$case.out | awk '{print $2}'`
-    ecutyn=`echo $ecut $ecutout | $where/$compita`
-    if [ $ecutyn == 'no' ]
+    ecutyn=`echo $ecut'=='$ecutout | bc -l`
+    if [ $ecutyn -eq 0 ]
 	then
 	Line
 	echo -e ${RED} ecut=$ecut at setUpAbinit_$case.in different from ecut=$ecutout at $case'_scf'/$case.out ${NC}
@@ -331,7 +314,7 @@ wfcheck="false" #b
 ### r: => reads 'data' from '-r data'
 ### v  => if set then is true otherwise is false, i.e. -v => v case is true
 
-while getopts “:hr:k:N:x:wmepdclsnb” OPTION 
+while getopts “:hr:k:N:wmepdclsnb” OPTION 
 do
      case $OPTION in
          h)
@@ -346,9 +329,6 @@ do
              ;;
          N)
              layers=$OPTARG
-             ;;
-         x)
-             serialp=$OPTARG
              ;;
          w)
 	     wf="true"
@@ -398,77 +378,14 @@ moptions="$em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp"
 # first that -r has the correct weigth1
 #
 
-if [[ $action != "run" ]] && [[ $action != "setkp" ]] && [[ $action != "erase" ]] && [[ $action != "erasescf" ]]
+if [[ $action != "run" ]] && [[ $action != "erase" ]] && [[ $action != "erasescf" ]]
     then
         Line
-        printf "\tFor -r chose either ${RED}run, setkp, erase${NC} or ${RED}erasescf${NC}\n"
+        printf "\tFor -r chose either ${RED}run, erase${NC} or ${RED}erasescf${NC}\n"
         Line
         exit 1
 fi
     
-########################## set k-points:begin #####################################
-if [ $action == 'setkp' ]; then
-
-    if [[ $Nk == "" ]]; then
-        Line
-        # printf "either -k ${RED}Nk${NC}, -g ${RED}xeon/itanium${NC} or -G ${RED}xeon/quad${NC} weigths are not defined\n"
-        printf "For the option ${RED} setkp ${NC} you need to type:  \n     run_tiniba -r setkp -k ${RED}Nk${NC} \n"
-        printf "and type te value for ${RED}Nk${NC} \n "
-        Line 
-        printf "\n"
-        exit 1
-    fi
-
-    ## this selects the nodes that are working
-        depuranodos
-    #    printf "\taqui\n"
-
-    ##
-        Nkl=$Nk # Nk is read from the input line
-        Line
-        echo -e "The work will be divided as follows: "
-        $where/arrange_machines_quad.pl $case.klist_$Nkl $numberOfNodes_pmn $weigth1 $weigth2
-        # echo -e "Please choose an option, or choose any other option to continue"
-        # echo -e "1. Choose another weigth       2. Exit to ${RED}run${NC} the full script"
-        # option=`$where/get_value.pl`
-        # echo $weigth1  > .peso1 #itanium/xeon
-        # echo $weigth2  > .peso2 #quad/xeon
-
-    #     if [ $option == "2" ];then 
-    # #rm unecesary files
-    # 	rm -f startpoint.txt
-    # 	rm -f endpoint.txt
-    # 	rm -f klist_length.txt
-    # 	rm -f hoy
-    # 	exit 1
-    #     fi
-    #     while [ $option == "1" ]
-    #     do
-    # 	Line
-    # 	echo "Please insert the new weigth:"
-    # 	weigth=`$where/get_value.pl`
-    # 	echo -e "The optimization for weigth = ${BLUE} $weigth ${NC}is:"
-    # 	$where/arrange_machines.pl $case.klist_$Nkl $numberOfNodes_pmn $weigth
-    # 	echo -e "Please choose an option, or choose any other option to continue"
-    # 	echo -e "1. Choose another weigth       2. Exit to ${RED}run${NC} the full"
-    # 	option=`$where/get_value.pl`
-    # 	echo $weigth1 > .peso1
-    # 	echo $weigth2 > .peso2
-    # 	if [ $option == "2" ] 
-    # 	then 
-    # 	    exit 1
-    # 	fi
-    #     done
-
-    #rm unecesary files
-        rm -f startpoint.txt
-        rm -f endpoint.txt
-        rm -f klist_length.txt
-        rm -f hoy
-        exit 1
-fi
-
-
 ########################## set k-points: end #####################################
 ########################## erase: begin #####################################
 if [ $action == 'erase' ] 
@@ -511,10 +428,10 @@ then
 	fi
     fi
 ## checks that the input is given
-    if [[ -z $Nk ]] || [[ -z $layers ]] || [[ -z $serialp ]]  
+    if [[ -z $Nk ]] || [[ -z $layers ]]
     then
 	Line
-	printf "either -k ${RED}Nk${NC}, -N ${RED}N_Layer${NC}, or -x [serial-${RED}1${NC}-paralel-${RED}2${NC}] are not defined\n"
+	printf "either -k ${RED}Nk${NC} or -N ${RED}N_Layer${NC} are not defined\n"
 	Line
 	exit 1
     fi    
@@ -530,12 +447,10 @@ then
 ##
     Nkl=$Nk #Nk is read from -k
     layers=$layers #layers is read from -N
-    serialp=$serialp #serialp is read from -x
 ## checks that the weight were given
 if [[ ! -e .peso1 &&  ! -e .peso2 ]]; then
     Line
     echo -e ${RED} NO itanium/xeon/quad weigth, choose one!
-    echo -e ${RED} run with: ${BLUE}run_tiniba.sh -r ${blue}setkp...
     Line
     exit 1
 fi

@@ -251,13 +251,21 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 # decides if it runs locally or non-locally 
 	    if [ "$yesno" == "si" ]
 	    then
+<<<<<<< HEAD:ver2.0/utils/all_responses.sh~
 		rcp mtita $adondi"ib":/data/$quien/workspace/$case/.
 		qui=$ontoi"ib"
 		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
 		ssh $adondi "rcp /data/$quien/workspace/$case/21* $qui:$aqui/."
+=======
+			rcp mtita $adondi"ib":/data/$quien/workspace/$case/.
+			qui=$ontoi"ib"
+			ssh $adondi "cd /data/$quien/workspace/$case/;./mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
+#			ssh $adondi "cd /data/$quien/workspace/$case/;./mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;mv mtita mtita1"
+			ssh $adondi "rcp /data/$quien/workspace/$case/21* $qui:$aqui/."
+>>>>>>> testing:utils/all_responses.sh
 	    else
-		mtita
-		rm mtita
+			./mtita
+			rm mtita
 	    fi
 #
 	    Line
@@ -269,6 +277,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 # decides if it runs locally or non-locally 
 	    if [ "$yesno" == "si" ]
 	    then
+<<<<<<< HEAD:ver2.0/utils/all_responses.sh~
 		rcp mtita $adondi"ib":/data/$quien/workspace/$case/.
 		qui=$ontoi"ib"
 		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
@@ -276,6 +285,16 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	    else
 		mtita
 		rm mtita
+=======
+			rcp mtita $adondi"ib":/data/$quien/workspace/$case/.
+			qui=$ontoi"ib"
+			ssh $adondi "cd /data/$quien/workspace/$case/;./mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
+#			ssh $adondi "cd /data/$quien/workspace/$case/;./mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;mv mtita mtita2"
+			ssh $adondi "rcp /data/$quien/workspace/$case/22* $qui:$aqui/."
+	    else
+			./mtita
+			rm mtita
+>>>>>>> testing:utils/all_responses.sh
 	    fi
 #
 	    if [ -e 'fallo' ]
@@ -328,12 +347,12 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	    then
 		rcp mtita $adondi"ib":/data/$quien/workspace/$case/.
 		qui=$ontoi"ib"
-		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
+		ssh $adondi "cd /data/$quien/workspace/$case/;./mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
 		ssh $adondi "rcp /data/$quien/workspace/$case/44* $qui:$aqui/."
 #		mtita
 #		rm mtita
 	    else
-		mtita
+		./mtita
 		rm mtita
 	    fi
 #
@@ -348,9 +367,9 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	    then
 		rcp mtita $adondi"ib":/data/$quien/workspace/$case/.
 		qui=$ontoi"ib"
-		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
+		ssh $adondi "cd /data/$quien/workspace/$case/;./mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
 		ssh $adondi "rcp /data/$quien/workspace/$case/45* $qui:$aqui/."
-#		mtita
+#		./mtita
 #		rm mtita
 	    else
 		mtita
@@ -406,10 +425,10 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	    then
 		rcp mtita $adondi"ib":/data/$quien/workspace/$case/.
 		qui=$ontoi"ib"
-		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
+		ssh $adondi "cd /data/$quien/workspace/$case/;./mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
 		ssh $adondi "rcp /data/$quien/workspace/$case/42* $qui:$aqui/."
 	    else
-		mtita
+		./mtita
 		rm mtita
 	    fi
 #
@@ -424,10 +443,10 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	    then
 		rcp mtita $adondi"ib":/data/$quien/workspace/$case/.
 		qui=$ontoi"ib"
-		ssh $adondi "cd /data/$quien/workspace/$case/;mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
+		ssh $adondi "cd /data/$quien/workspace/$case/;./mtita;rcp res/* $qui:$aqui/res/.;rm -f res/*;rm mtita"
 		ssh $adondi "rcp /data/$quien/workspace/$case/43* $qui:$aqui/."
 	    else
-		mtita
+		./mtita
 		rm mtita
 	    fi
 #
@@ -473,7 +492,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	Line
 	echo $exec -w $lt -m $caso -s $tijera -o $option -v $Nv -c $Nc -r $response  -t \"${scases[@]}\" > mtita
 	chmod +x mtita
-	mtita
+	./mtita
 	rm mtita
 #
 	fi

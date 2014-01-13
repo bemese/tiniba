@@ -1,4 +1,0 @@
-export TINIBA=$HOME/tiniba/ver2.0
-export TINIBAC=$TINIBA/clustering/itaxeo
-export TINIBAU=$TINIBA/utils
-export PATH=$PATH:$TINIBAC:$TINIBAU:.
