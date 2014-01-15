@@ -2108,7 +2108,7 @@ CONTAINS
 !    write(*,*)'@intergands.f90-shg1C: Layer-Length gauge'
 !    write(*,*)'*********'
 
-!!!
+!!! this is for interband 1w contributions
     T3(1:3,1:3,1:3) = reshape( spectrum_info(i_spectra)%transformation_elements(1:27), (/3,3,3/))    
     tol = 0.03  !agrege
 
@@ -2136,7 +2136,7 @@ CONTAINS
                       end if
                    end do
 
-!!! 
+!!! this is for intraband 1w contributions
                    psym1=( posMatElem(db,c,v)*GenDerCalPosition(da,dc,v,c) &
                           +posMatElem(dc,c,v)*GenDerCalPosition(da,db,v,c) )/2.
                    psym2=( posMatElem(db,c,v)*delta(dc,c,v) &
@@ -2185,7 +2185,7 @@ CONTAINS
 !    write(*,*)'@intergands.f90-shg2C: Layer-Length gauge'
 !    write(*,*)'*********'
 
-!!!
+!!! this is for interband 2w contributions
     T3(1:3,1:3,1:3) = reshape( spectrum_info(i_spectra)%transformation_elements(1:27), (/3,3,3/))    
     tol = 0.03 ! agrege
 
@@ -2218,7 +2218,8 @@ CONTAINS
                          tmp=tmp-4.*T3(da,db,dc)*real(calPosMatElem(da,v,c)*psym)/omegacpvcv
                       end if
                    end do
-!!! 
+
+!!! this is for intraband 2w contributions 
                    psym=(derMatElem(db,dc,c,v)+derMatElem(dc,db,c,v))/2.
                    psym1=(posMatElem(db,c,v)*delta(dc,c,v)+posMatElem(dc,c,v)*delta(db,c,v))/2.
                    tmp=tmp+4.*(T3(da,db,dc)/omegacv)*(aimag(posMatElem(da,v,c)*psym) &
