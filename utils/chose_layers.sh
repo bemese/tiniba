@@ -144,7 +144,7 @@ if [ "$i" == "half-slab" ]
 else
     echo "awk 'NR==$lay{print \$0}' layers.d.original >> layers.d" > dogy
     chmod +x dogy
-    dogy
+    ./dogy
     rm dogy
 fi
 done
