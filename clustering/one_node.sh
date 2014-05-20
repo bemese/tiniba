@@ -263,6 +263,7 @@ do
     if [[ $lpmn == "true" ]]
     then 
 	mv fort.$cual1 $diro/$caseo'_'$No/cpmnd'_'$nn
+    echo $cual1 > perro_aguayo
     fi
 # rhoccp
      if [[ $rhoccp == "true" ]]
