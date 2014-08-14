@@ -1,0 +1,3 @@
+### Files produced when compiling FORTRAN
+*.mod
+*.o
