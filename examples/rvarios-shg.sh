@@ -4,10 +4,11 @@ ecut=5
 v=13
 c=13
 r=44
-tijera=0
+tijera=1
 cases=(1 2 3 4 5 6 half-slab)
-#cases=(1)
+#cases=(half-slab)
 ijk=(zzz xxx xyy yyx)
+#ijk=(zzz zxx xxz xxx)
 #ijk=(zzz)
 for t in ${ijk[@]}
 do
