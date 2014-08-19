@@ -44,17 +44,16 @@ This project was built by the PRONASIS group of the Centro de Investigaciones en
 
 To-do List and WIP
 -------------------
-in SRC_1setinput:
-
-1. integrands.f90:
+1. `latm/SRC_1setinput`
+* `integrands.f90`:
 - [ ] add new case => new number and new subroutine
 
-2. inparams.f90:
+* `inparams.f90`:
 - [ ] add new case at the top of the program 
 - [ ] change: number_of_known_spectrum_types
 - [ ] add spectrum_factor() at the end of it
 - [ ] add new case so one knows what's calculated
 
-3. symmetry_operations.f90:
+* `symmetry_operations.f90`:
 - [ ] add new case at the top of the program
 - [ ] add new case for the correct transformation
