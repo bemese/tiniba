@@ -4,25 +4,6 @@ TINIBA is a tool written in bash, perl, and fortran to do ab initio calculations
 
 ![](https://raw2.github.com/roguephysicist/tiniba-manual/master/plots/3drho.png)
 
-To-do List
--------------------
-
-in SRC_1setinput:
-
-integrands.f90:
-- [ ] add new case => new number and new subroutine
-
-inparams.f90:
-- [ ] add new case at the top of the program 
-- [ ] change: number_of_known_spectrum_types
-- [ ] add spectrum_factor() at the end of it
-- [ ] add new case so one knows what's calculated
-
-symmetry_operations.f90:
-- [ ] add new case at the top of the program
-- [ ] add new case for the correct transformation
-
-
 Introduction
 -------------------
 
@@ -60,3 +41,20 @@ This project was built by the PRONASIS group of the Centro de Investigaciones en
 * Phys Status Solidi C 8, 2604 (2008)
 * Phys Status Solidi C 9, 1378 (2012)
 * Surf Sci 605, 941 (2011)
+
+To-do List and WIP
+-------------------
+in SRC_1setinput:
+
+1. integrands.f90:
+- [ ] add new case => new number and new subroutine
+
+2. inparams.f90:
+- [ ] add new case at the top of the program 
+- [ ] change: number_of_known_spectrum_types
+- [ ] add spectrum_factor() at the end of it
+- [ ] add new case so one knows what's calculated
+
+3. symmetry_operations.f90:
+- [ ] add new case at the top of the program
+- [ ] add new case for the correct transformation
