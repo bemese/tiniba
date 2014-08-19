@@ -44,10 +44,16 @@ This project was built by the PRONASIS group of the Centro de Investigaciones en
 
 To-do List and WIP
 -------------------
-1. `latm/SRC_1setinput`
+
+1. Correcting SHG via shg-notes (07/13/14)
+    The work branch of TINIBA contains some preliminary work with calpmn. The next stage is working on integrands.f90. First, take a look at Eq. I15 and compare to Eq. G2 that is already coded. These two can be placed in the same subroutine and may be readily completed.
+
+    What needs to be done: code Eqs. I15, and I17 and verify that I17 yields the same result as G2.
+
+2. `latm/SRC_1setinput`
 
 * `integrands.f90`:
-- [ ] add new case => new number and new subroutine
+    - [ ] add new case => new number and new subroutine
 
 * `inparams.f90`:
     - [ ] add new case at the top of the program 
@@ -56,5 +62,5 @@ To-do List and WIP
     - [ ] add new case so one knows what's calculated
 
 * `symmetry_operations.f90`:
-- [ ] add new case at the top of the program
-- [ ] add new case for the correct transformation
+    - [ ] add new case at the top of the program
+    - [ ] add new case for the correct transformation
