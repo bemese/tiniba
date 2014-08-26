@@ -12,8 +12,8 @@ This is the official 3.0 release. New features and fixes are added all the time 
 I suggest adding these lines to the appropriate shell file:
 
 ```bash
-export TINIBA=$HOME/tiniba
-export PATH="$TINIBA/clustering:$TINIBA/utils:$PATH"
+export TINIBA=$HOME/tiniba/ver3.0
+export PATH="$TINIBA/clustering/itaxeo:$TINIBA/utils:$PATH"
 ```
 
 For more information you can contact me at sma@cio.mx and I will be happy to answer any questions.
