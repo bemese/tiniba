@@ -27,8 +27,8 @@ source version-abinit.txt
 # reads TINIBA version from version-tiniba.txt
 source version-tiniba.txt
 #
-where=$HOME/tiniba/$ver/utils
-whereset=$HOME/tiniba/$ver/clustering/itaxeo
+where=$TINIBA/utils
+whereset=$TINIBA/clustering/itaxeo
 if [[ ! -e .machines_pmn.original || ! -e .machines_scf.original ]]
     then
     Line
