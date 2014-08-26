@@ -395,6 +395,19 @@ then
     Line
     exit 1
 fi
+#BMSVer3.0d
+# checks that if a layerer response is chosen, then N neq 0
+if [[ "$rhoccp" == "true"  || "$lpmn" == "true" || "$lpmm" == "true" || "$lsccp" == "true" ]]
+then
+    if [ "$layers" == "0" ]
+    then
+	Line
+	printf "\t${RED}For a layered response choose -N > 0${NC}\n"
+	Line
+	exit 1
+    fi
+fi
+#BMSVer3.0u
 ########################## set k-points:begin #####################################
 if [ $action == 'setkp' ] 
     then
