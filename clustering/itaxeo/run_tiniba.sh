@@ -80,6 +80,7 @@ echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}erasescf${NC} To erase the SCF calcu
 
     Nct=`expr $Nband - $Nvf`
     rm -f hoyj*
+
 }
 ##
  function IsThereError {
@@ -92,6 +93,13 @@ echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}erasescf${NC} To erase the SCF calcu
 ##
 function Line {
     printf "\t${BLUE}=============================${NC}\n"
+}
+
+function aqui {
+Line
+printf "\taqui\n"
+Line
+exit 1
 }
 ## Star
 #clear
@@ -194,8 +202,11 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 dir=$PWD
 # 
 grep nband setUpAbinit_$case.in > hoy
-Nband=`head -1 hoy | awk '{print $2}'`
-rm hoy
+grep -v \# hoy > hoy1
+Nband=`head -1 hoy1 | awk '{print $2}'`
+#printf "\tb=$Nband\n"
+#exit 1
+rm hoy*
 # get number of valence and conduction bands
 nvalence
 # puts info to be read by pmn.f90 at each working node
@@ -385,6 +396,8 @@ do
 done
 # string with the chosen options
 moptions="$em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp $vnlkss"
+
+
 # checks that the input parameters are correct
 # first that -r has the correct value
 #
