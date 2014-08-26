@@ -1,7 +1,19 @@
 ### Files produced when compiling FORTRAN
-#*.mod
-#*.o
+*.mod
+*.o
+rpmns.*
+set_input_32b  
+set_input_hexa
+set_input_64b  
+set_input_quad
+SRC_1setinput
+SRC_2latm
+tetra_method_32b
+tetra_method_64b
+tetra_method_quad
+tetra_method_hexa
 
+### emacs stuff
 \#*
 .\#*
 *\~
