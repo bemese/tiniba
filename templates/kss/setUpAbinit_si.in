@@ -1,6 +1,8 @@
 # This is the input file used to set up abinit calculations
 # 1=>SCF calculation; 2=>Wave-Function for each k; 3=>KSS file for each k
-# Comments are just accepted at the beggining of a line, otherwise it will fail.###
+# Comments are just accepted at the beggining of a line, otherwise it
+# will fail.
+###
 ### For KSS set nbandkss3=nband
 ### 
 # You must not remove the lines that appear as "Section: "
@@ -10,66 +12,64 @@
   Section: Coordinate System: xcart->Catresian xred->Reduced xang->Angstroms
 ######################################################
 
-xcart
+xred
 
 ######################################################
   Section: Pseudo-potential files
 ######################################################
 
-/home/bms/tiniba/ver3.0/psp/51sb.5.pspnc
-/home/bms/tiniba/ver3.0/psp/14si.4.pspnc
-
+/home/bms/tiniba/ver3.0/pseudopotentials/pspnc/14si.4.pspnc
 
 ######################################################
   Section: Common Variables
 ######################################################
 
-#  Si(111)-1x1-As
-#  6 Layers   As + 4L Si-bulk + As
-#              5e + 4x4e       + 5e = 26/2 => Nv=13 
-#  centrosymmetric
+#  Si Bulk
 
 prtvol      10
 
 ### Definition of the unit cell
 chksymbreak 0
 chkprim     1 
-# a0=5.43 a0b = 10.26121212 Bohr
-acell       7.255773198 7.255773198 25
-rprim       0.8660254037844385  -.5 0.0
-            0       1.0   0.0
-            0.0     0.0   1.0 
+# a0=5.43 a0b =  10.26121212 Bohr
+acell       10.26121212  10.26121212 10.26121212 
+rprim       0.0     0.5   0.5 
+            0.5     0.0   0.5
+            0.5     0.5   0.0 
 
 ### Definition of the atom types
-ntypat      2
-znucl       33 14
+ntypat      1
+znucl       14
 
 ### Definition of the atoms
-natom       6
-typat       1*1 4*2 1*1
+natom       2 
+typat       1*1 1*1
 
 ## spin-orbit
 ### For KSS comment spin-related variables ###
-#so_psp         1 1
-#nspinor        1 1
-##
+#so_psp       0 0
+#nspinor      1 1 
+###
 toldfe1        1.0d-6
 kptopt1        1
-nshiftk1       1
-shiftk1        0. 0. 0.5
+nshiftk1       4
+shiftk1        0.5 0.5 0.5
+               0.5 0.0 0.0
+               0.0 0.5 0.0
+               0.5 0.0 0.5
 
 nsppol         1
  
 ## change for convergence
-ngkpt1        8 8 2
+ngkpt1        8 8 8
 
 ### Definition of the planewave basis set
 
-ecut          5
+ecut          10
 
 ### Definition of the SCF procedure
 
-diemac       12
+diemac       10.9
 
 ###################################################
   Section: Scf variables
@@ -92,7 +92,7 @@ irdwfk1             1
 iscf2              -2
 kptnrm2             1.0 
 kptopt2             0
-nband               30
+nband              16
 nstep1              0
 nstep2              200 
 prtden1             1
@@ -104,7 +104,7 @@ tolwfr             1.0d-12
 ###             part of the pseudopotential to the 
 ###             velocity matrix elements
 ### For KSS set nbandkss3 with the same numerical values as nband
-nbandkss3          30
+nbandkss3          16
 ### For KSS the following variables are a must
 getden3            -2
 iscf3              -2
