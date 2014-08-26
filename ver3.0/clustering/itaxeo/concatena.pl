@@ -258,7 +258,32 @@ if (\$lpmn eq "true")
    }
    close( OUTF );
 }
-############################cpmn
+############################cfmn
+if (\$lpmn eq "true") 
+{
+      print "\tCalFmn Files\\n";
+## Loop for layer
+   foreach \$L (\@arrl) 
+   {
+      foreach \$mn ("cfmnd_") 
+      {
+   \$outfile = "$directory/\$mn\$Nk\\_\$L";
+   open( OUTF, ">\$outfile") or die;
+   foreach \$i (\@arr) 
+         {
+      \$infile = "$directory\/$case\_\$i/\$mn\$L";
+      open( FL, "<\$infile") or die;
+      while (<FL>) 
+            {
+         print OUTF \$_;
+      }
+      close(FL);
+   }
+      }
+   }
+   close( OUTF );
+}
+############################cpmm
 if (\$lpmm eq "true") 
 {
       print "\tCalPmm Files\\n";

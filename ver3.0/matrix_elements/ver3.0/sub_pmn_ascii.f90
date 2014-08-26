@@ -268,8 +268,8 @@ SUBROUTINE lpmn(unitS,u_log,ik,nbandk,nspinor,npw&
   DOUBLE PRECISION, DIMENSION(2,nbandk,nspinor,npw) :: cg
   DOUBLE COMPLEX, ALLOCATABLE :: cf(:,:)
   DOUBLE COMPLEX :: ci,cgn,cgm,cero
-  DOUBLE COMPLEX, DIMENSION(3) :: ctmp,ctmp1
-  DOUBLE COMPLEX, DIMENSION(3) :: ctmp2 ! Only to check
+  DOUBLE COMPLEX, DIMENSION(3) :: ctmp1
+  DOUBLE COMPLEX :: ctmp, ctmp2 ! Layered cut function
   DOUBLE PRECISION, DIMENSION(3) :: kmg,kmg12
   ! i,cero
   ci = cmplx(0.,1.)
@@ -354,8 +354,9 @@ SUBROUTINE lpmn(unitS,u_log,ik,nbandk,nspinor,npw&
                        cgm=dcmplx(realcg,imagcg)
                        ! only for b1(i) \cdot b2(i) =0?  b1(i) \cdot b3(i) = b2(i) \cdot b3(i) = 0 for sure
                        kmg = kmg12 + (2.*kp(3) + jz + iz)*b3
-                       ctmp=CONJG(cgn)*cgm*kmg*cf(jz-iz,izeta)
-                       ctmp1= ctmp1 + ctmp
+                       ctmp=CONJG(cgn)*cgm*cf(jz-iz,izeta)
+                       ctmp1= ctmp1 + ctmp*kmg
+                       ctmp2= ctmp2 + ctmp
                     end if
                  end do ! jz (Gperp)
               endif
@@ -363,26 +364,27 @@ SUBROUTINE lpmn(unitS,u_log,ik,nbandk,nspinor,npw&
 !!!!!!!!!!!!!!!!!!!!!! full sum
 !!! activate if need to check with above
 !!! sum over G_perp only
-              if ( 1 .eq. 2 ) then
-                 do jz =1,npw
-                    if((ix.eq.kg(1,jz)).and.(iy.eq.kg(2,jz))) then
-                       ipw = arr(ix,iy,kg(3,jz))
-                       realcg=cg(1,jband,1,ipw) !jband => m
-                       imagcg=cg(2,jband,1,ipw) !jband => m
-                       cgm=dcmplx(realcg,imagcg)
-                       kmg = kmg12 + (2.*kp(3) + jz + iz)*b3
-                       ctmp=CONJG(cgn)*cgm*kmg*cf(kg(3,jz)-iz,izeta)
-                       !ctmp=2.*CONJG(cgn)*cgm*cf(kg(3,jz)-iz,izeta)
-                       ctmp1= ctmp1 + ctmp
-                    end if
-                 end do ! jz (Gperp)
-              endif
+!!              if ( 1 .eq. 2 ) then
+!!                 do jz =1,npw
+!!                    if((ix.eq.kg(1,jz)).and.(iy.eq.kg(2,jz))) then
+!!                       ipw = arr(ix,iy,kg(3,jz))
+!!                       realcg=cg(1,jband,1,ipw) !jband => m
+!!                       imagcg=cg(2,jband,1,ipw) !jband => m
+!!                       cgm=dcmplx(realcg,imagcg)
+!!                       kmg = kmg12 + (2.*kp(3) + jz + iz)*b3
+!!                       ctmp=CONJG(cgn)*cgm*kmg*cf(kg(3,jz)-iz,izeta)
+!!                       !ctmp=2.*CONJG(cgn)*cgm*cf(kg(3,jz)-iz,izeta)
+!!                       ctmp1= ctmp1 + ctmp
+!!                    end if
+!!                 end do ! jz (Gperp)
+!!              endif
 !!!!!!!!!!!!!!!!!!!!!!!!
            end do ! ipw  (Gpara,Gperp)
 !!! with sum over G_perp only
            write(unitS+izeta-1,"(6E18.8)")dreal(ctmp1(1)/2.),dimag(ctmp1(1)/2.)&
                 ,dreal(ctmp1(2)/2.),dimag(ctmp1(2)/2.)&
-                ,dreal(ctmp1(3)/2.),dimag(ctmp1(3)/2.) 
+                ,dreal(ctmp1(3)/2.),dimag(ctmp1(3)/2.)
+           write(unitS+izeta+9,*)dreal(ctmp2),dimag(ctmp2)
 !              write(31,63)ik,izeta,iband,jband,dreal(ctmp1(1)/2.),dimag(ctmp1(1)/2.)&
 !                   ,dreal(ctmp1(2)/2.),dimag(ctmp1(2)/2.)&
 !                   ,dreal(ctmp1(3)/2.),dimag(ctmp1(3)/2.) 
