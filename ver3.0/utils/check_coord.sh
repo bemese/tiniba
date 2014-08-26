@@ -15,7 +15,7 @@ function Line {
 ## checks if there are cart and red coordinates to use ONLY
 ## cart coordinates for the layers
 case=`echo $PWD | awk -F / '{print$NF}'`
-where=$HOME/tiniba/ver1.0/utils/programs_layer
+where=$TINIBA/utils/programs_layer
 xredcart=`grep xred setUpAbinit_$case.in | tail -1 | awk '{print $1}'` 
 if [ $xredcart == 'xred' ]
     then

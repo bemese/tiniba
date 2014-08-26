@@ -29,7 +29,7 @@ function Line {
       exit 127    
        }
 # Main, set up diectories, loop over number of jobs, call eachnode, and clean up.
-trunc_dir=$HOME/tiniba/$ver/clustering/itaxeo
+trunc_dir=$TINIBA/clustering/itaxeo
 ######################################### RUN below
 if [ $1 == '1' ]
 then
@@ -51,7 +51,7 @@ then
     wfcheck=${16}
     options="$rho $em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp $vnlkss $wfcheck"
 ## executables
-    allexec=$HOME/tiniba/$ver/clustering/itaxeo
+    allexec=$TINIBA/clustering/itaxeo
 ## reads abinit executables from version-abinit.txt
 source version-abinit.txt
 ##
