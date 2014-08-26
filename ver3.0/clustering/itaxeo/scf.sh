@@ -65,7 +65,7 @@ if [ $serialp == '2' ]
     then
 	cd $diro
 	rm -f finished_scf       
-	/home/$USER/tiniba/$ver/clustering/itaxeo/runSCF_19_Octubre_2009.sh 2          
+	$TINIBA/clustering/itaxeo/runSCF_19_Octubre_2009.sh 2          
     fi
 fi
 #
