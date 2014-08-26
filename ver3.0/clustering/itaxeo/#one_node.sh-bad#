@@ -283,22 +283,21 @@ do
     then 
 	mv fort.$cual1 $diro/$caseo'_'$No/cpmnd'_'$nn
 	mv fort.$cual4 $diro/$caseo'_'$No/cfmnd'_'$nn
-    fi
 # rhoccp
-     if [[ $rhoccp == "true" ]]
-     then 
- 	mv fort.$cual1 $diro/$caseo'_'$No/rhoccpd'_'$nn
-     fi
+	if [[ $rhoccp == "true" ]]
+	then 
+ 	    mv fort.$cual1 $diro/$caseo'_'$No/rhoccpd'_'$nn
+	fi
 # CalPmm
-    if [[ $lpmm == "true" ]]
-    then 
-	mv fort.$cual2 $diro/$caseo'_'$No/cpmmd'_'$nn
-    fi
+	if [[ $lpmm == "true" ]]
+	then 
+	    mv fort.$cual2 $diro/$caseo'_'$No/cpmmd'_'$nn
+	fi
 # CalScc'
-    if [[ $lsccp == "true" ]]
-    then
-	mv fort.$cual2 $diro/$caseo'_'$No/csmnd'_'$nn
-    fi
+	if [[ $lsccp == "true" ]]
+	then
+	    mv fort.$cual2 $diro/$caseo'_'$No/csmnd'_'$nn
+	fi
 ##
 done
 ##
