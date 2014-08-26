@@ -1,0 +1,72 @@
+usage: lf95 [@RESPFILE] [FILENAMES] [SWITCHES]
+  @RESPFILE is a file containing switches, file names, or other response files
+  FILENAMES are the names of source or object files
+  SWITCHES are option switches
+
+You may mix command line switches in any order.  They will be evaluated
+from left to right, with the rightmost value used.
+
+Option switches:
+  --[n]ap                ensure consistent arithmetic precision
+  --block <value>        set default block size for open statements
+  -[n]c                  suppress linking
+  --[n]chk               checking
+  --[n]chkglobal         global checking
+  --[n]co                display compiler options
+  --[n]dal               deallocate allocated arrays
+  --[n]dbl               extend single precision reals to double precision
+  --[n]f95               turn on F95 conformance warnings
+  --file <name>          use <name> literally as a file name
+  --[n]fix               assume fixed form
+  -[n]g                  generate debugging information
+  -I <dir>               directory containing include files
+  --include <dir1:dir2...> directory(s) containing include files
+  --[n]in                no implicit typing
+  --[n]info              display informational messages
+  -l <name>              specify library to link
+  -L <path>              specify directory to find library in
+  --[n]li                Lahey intrinsic procedures
+  --[n]long              extend integer*4 to integer*8
+  --[n]lst               create source listings
+  --[n]maxfatals <value> specify maximum fatal errors before stopping
+  --ml cdecl             specify mixed language target
+  --mldefault cdecl      specify default mixed language target
+  -M <dir>               directory containing module files
+  --mod <dir1:dir2...>   directory(s) containing module files
+  --o0 | -O0             no optimizations
+  --o1 | -O              classical, memory, and interprocedural optimizations
+  --o2                   --o1 plus loop and array optimizations
+  --out <name> | -o <name> specify output file name
+  --[n]ocl               recognize Optimization Control Lines
+  --[n]openmp            enable OpenMP directives
+  --[n]parallel          automatic paralellization
+  --[n]pca               protect constant arguments
+  --[n]prefetch          Athlon and Pentium III optimizations
+  --[n]private           set default private accessability
+  --[n]quad              extend double precision reals to quad precision
+  --[n]quiet             quiet compilation
+  --[n]sav               save local variables
+  --[n]shared            generate a shared library
+  --[n]sse2              optimize using SSE2 instructions
+   -static               link with static libraries only
+  --[n]staticlink        static link LF95 run-time only, dynamic link system
+  --[n]swm <args>        suppress warning messages
+  --t4                   generate 486 code
+  --tp                   generate Pentium code
+  --tpp                  generate Pentium Pro code
+  --tp4                  generate Pentium 4 code
+  --threadheap <value>   allocate thread storage on heap
+  --threads <value>      number of threads
+  --[n]trace             enable runtime error traceback
+  --[n]trap              trap ndp exceptions
+  --[n]unroll <value>    perform/control loop unrolling
+  --[n]varheap <value>   allocate local variables on heap
+  --[n]verbose           verbose mode
+  --[n]version           display version information
+  --[n]warn              display warnings
+  --[n]wide              wide fixed-source format
+  --[n]wisk              use Winteracter Starter Kit
+  --[n]wo                warn if obsolescent feature
+   -x arg                inline code
+  --[n]xref              create cross reference listings
+  --[n]zfm               use zero flash mode of SIMD floating point
