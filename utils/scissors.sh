@@ -78,7 +78,9 @@ printf "\t${cyan}--------------------${NC}\n"
  fi
 ##----------------------------
     grep nband setUpAbinit_$CASO.in > tmpk_0
-    NMAX=`head -1 tmpk_0 | awk '{print $2}'`
+    grep -v \# tmpk_0 > hoy1
+    grep -v kss hoy1 > hoy2
+    NMAX=`head -1 hoy2 | awk '{print $2}'`
 ##----------------------------
      index=1
           for arg in "$@"

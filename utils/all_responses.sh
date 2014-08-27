@@ -16,6 +16,13 @@ YELLOW='\e[1;33m'
 MAG='\e[0;35m'
 NC='\e[0m' # No Color
 ##
+## debug
+function despulga {
+Line
+printf "\taqui\n"
+exit 1
+Line
+}
 ## thanks
 function gracias {
     printf "\tThanks for using ${cyan}TINIBA${NC}: ${RED}NO WARRANTIES WHATSOEVER\n${NC}"
@@ -46,8 +53,11 @@ dir=$PWD
 case=`echo $PWD | awk -F / '{print$NF}'`
     latm="latm_new"
     grep nband setUpAbinit_$case.in > hoy
-    Nband=`head -1 hoy | awk '{print $2}'`
+    grep -v \# hoy > hoy1
+    grep -v kss hoy1 > hoy2
+    Nband=`head -1 hoy2 | awk '{print $2}'`
     Nmax=$Nband
+    rm hoy*
 #
 ####################################################################
     ESPINsetUp=`grep nspinor setUpAbinit_$case.in  |  awk '{print $2}'`
@@ -492,6 +502,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	echo $exec -w $lt -m $caso -s $tijera -o $option -v $Nv -c $Nc -r $response  -t \"${scases[@]}\" -n $vnlkss > mtita
 	chmod +x mtita
 	mtita
+#despulga
 	rm mtita
 #
 	fi

@@ -203,9 +203,8 @@ dir=$PWD
 # 
 grep nband setUpAbinit_$case.in > hoy
 grep -v \# hoy > hoy1
-Nband=`head -1 hoy1 | awk '{print $2}'`
-#printf "\tb=$Nband\n"
-#exit 1
+grep -v kss hoy1 > hoy2
+Nband=`head -1 hoy2 | awk '{print $2}'`
 rm hoy*
 # get number of valence and conduction bands
 nvalence

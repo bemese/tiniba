@@ -15,6 +15,13 @@ GRE='\e[1;32m'
 YELLOW='\e[1;33m'
 MAG='\e[0;35m'
 NC='\e[0m' # No Color
+## debug
+function despulga {
+Line
+printf "\taqui\n"
+exit 1
+Line
+}
 ##
 function Line {
 printf "\t${cyan}--------------------${NC}\n"
@@ -45,8 +52,11 @@ laheylib="env LD_LIBRARY_PATH=/usr/local/lf9562/lib"
 dir=$PWD
 case=`echo $PWD | awk -F / '{print$NF}'`
 grep nband setUpAbinit_$case.in > hoy
-Nband=`head -1 hoy | awk '{print $2}'`
+grep -v \# hoy > hoy1
+grep -v kss hoy1 > hoy2
+Nband=`head -1 hoy2 | awk '{print $2}'`
 Nmax=$Nband
+rm hoy*
 ##==========================
      ESPINsetUp=`grep nspinor setUpAbinit_$case.in  |  awk '{print $2}'`
        if [ -z $ESPINsetUp ];then
@@ -237,7 +247,6 @@ TIMESTARTALLI=`date`
 	sname=`echo $sname | sed 's/ //g'`
 	rm cthoy
 	fi
-
 #
 	rm -f chido
 	rm -f tmp*
@@ -285,6 +294,7 @@ TIMESTARTALLI=`date`
 		exit 1
 	    fi
 	fi
+
 #
 	if [[ ${#nodes[@]} -lt  $n_responses  ]]
 	then
@@ -590,6 +600,7 @@ TIMESTARTALLI=`date`
     Line
 #exit 1
 ########
+    puta=0
     for ij in ${scases[@]}
     do
 	if [ ! -e $sname.$ij.$spe'_'$pfix ]
@@ -608,6 +619,10 @@ TIMESTARTALLI=`date`
 		int=`wc -l $sname.$ij.$spe'_'$pfix | awk '{print $1}'`
 	    fi
 #	    echo 2nd $int $energy_steps
+puta=`expr $puta + 1`
+Line
+printf "\tint=$int $puta $sname.$ij.$spe'_'$pfix\n"
+Line
 	done
 	printf "\t${blue}$ij ${red}done${NC}\n"
     done
@@ -763,7 +778,7 @@ TIMESTARTALLI=`date`
 	fi
 	rm -f bc*
 	rm -f Symmetries.Cartesian* kpoints.reciprocal_$Nk kpoints.cartesian_$Nk tetrahedra_$Nk
-        rm -rf tmp* endWELL*		
+#        rm -rf tmp* endWELL*		
         rm -rf hoy*
 	rm -f energys.d* fort* fromSmear halfene*
 	rm -f input*set  tijeras spectra*
