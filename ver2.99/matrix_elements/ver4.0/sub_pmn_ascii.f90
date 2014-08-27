@@ -275,8 +275,8 @@ SUBROUTINE lpmn(unitS,u_log,ik,nbandk,nspinor,npw&
   DOUBLE PRECISION, DIMENSION(2,nbandk,nspinor,npw) :: cg
   DOUBLE COMPLEX, ALLOCATABLE :: cf(:,:)
   DOUBLE COMPLEX :: ci,cgn,cgm,cero
-  DOUBLE COMPLEX, DIMENSION(3) :: ctmp1
-  DOUBLE COMPLEX :: ctmp,ctmp2 ! Layered Cut Function
+  DOUBLE COMPLEX, DIMENSION(3) :: ctmp,ctmp1
+  DOUBLE COMPLEX :: ctmp2 ! Layered Cut Function
   DOUBLE PRECISION, DIMENSION(3) :: kmg,kmg12
   ! i,cero
   ci = cmplx(0.,1.)
@@ -361,8 +361,9 @@ SUBROUTINE lpmn(unitS,u_log,ik,nbandk,nspinor,npw&
                        cgm=dcmplx(realcg,imagcg)
                        ! only for b1(i) \cdot b2(i) =0?  b1(i) \cdot b3(i) = b2(i) \cdot b3(i) = 0 for sure
                        kmg = kmg12 + (2.*kp(3) + jz + iz)*b3
-                       ctmp=CONJG(cgn)*cgm*cf(jz-iz,izeta)
-                       ctmp1= ctmp1 + ctmp*kmg
+                       ctmp=CONJG(cgn)*cgm*kmg*cf(jz-iz,izeta)
+                       ctmp1= ctmp1 + ctmp
+!                       ctmp1= ctmp1 + ctmp*kmg
 !                       ctmp2= ctmp2 + ctmp
                     end if
                  end do ! jz (Gperp)
