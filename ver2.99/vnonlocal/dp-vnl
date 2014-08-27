@@ -1,0 +1,43 @@
+#########################################################
+# This file has the minimum required information
+# for DP to calculate ONLY the velocity matrix elements,
+# V_{nm}(k)=(1/m)p_{nm}(k)+v^nl_{nm}(k)
+# in particular we ONLY calculate the the contribution
+# form the non-local part of the pseudopotential
+# v^nl_{nm}(k)=i/hbar<nk[V_ps^nl,r]mk>
+#########################################################
+#########################################################
+### this flag controls whether V^nl is calculated or not 
+### if commented   it does     calculate v^nl
+### if uncommented it does NOT calculate v^nl
+### One can use it uncommented to check with TINIBA
+### However the version of DP has been modified in
+### calcolacommutatore.F90 son ONLY v^nl is calculated
+### see the subroutine around vkbme
+#novkb 
+#########################################################
+####### don't change below ##############################
+# leave 1, si it starts for the bottom of the valence band
+lomo    1
+# leave this values for q
+# DP indeed uses 10^-5, and we have to normalize
+# V_{nm}(k) by this value
+q 0.0 0.0 0.0
+# these two are crucial, so DP calcuates
+# in exactly the same k-points as in the TINIBA-part 
+nsym 1
+noinv 
+### these are required, although the are irrelevant 
+testparticle                    
+rpa
+savememory
+### the numerical value assigned following variables 
+### are irrelevant for calculation
+omegai 2.0   #any value
+omegae 5.5   #any value
+domega 0.025 #any value
+broad  0.1   #any value
+matsh  1     #any value
+####### end of don't change below ########################
+###### nbands and novkb must be modified accordingly ####
+# this must be the same as in the TINIBA-part of the calculation
