@@ -28,7 +28,7 @@ OBJS= sub_pmn_${ab}.o readAbinitWF.o geometry.o
 	WHATPL=QUAD
 	endif
 
-	ifeq    ($(PLATAFORM),hexa1)
+	ifeq    ($(PLATAFORM),hexa2)
         F90=/opt/intel/composer_xe_2011_sp1.6.233/bin/intel64/ifort
 	FFLAGS=-O3 -axSSE4.2
 #	FFLAGS = -O3  

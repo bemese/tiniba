@@ -53,7 +53,7 @@ fi
     fi
     ln -s $f1 fort.1
     ln -s $f2 fort.2
-    echo $row1 $col | $TINIBAU/add/r-add-2-files
+    echo $row1 $col | $TINIBA/utils/add/r-add-2-files
     mv fort.3 $of
     rm fort.1 fort.2
     Line

@@ -219,7 +219,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	printf "\tinto  me_pmn_$caso so the script runs\n"
 	mv me_pmn_$caso me_pmn_$caso-o
 	# there are 6 columns: (re,im)(x,y,z)
-	$TINIBAU/add/s-add-2-files.sh 6 me_pmn_$caso-o me_vnlnm_$caso me_pmn_$caso
+	$TINIBA/utils/add/s-add-2-files.sh 6 me_pmn_$caso-o me_vnlnm_$caso me_pmn_$caso
 	printf "\tThe response will now be calculated\n"
 	Line
     fi

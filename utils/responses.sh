@@ -600,7 +600,6 @@ TIMESTARTALLI=`date`
     Line
 #exit 1
 ########
-    puta=0
     for ij in ${scases[@]}
     do
 	if [ ! -e $sname.$ij.$spe'_'$pfix ]
@@ -619,10 +618,6 @@ TIMESTARTALLI=`date`
 		int=`wc -l $sname.$ij.$spe'_'$pfix | awk '{print $1}'`
 	    fi
 #	    echo 2nd $int $energy_steps
-puta=`expr $puta + 1`
-Line
-printf "\tint=$int $puta $sname.$ij.$spe'_'$pfix\n"
-Line
 	done
 	printf "\t${blue}$ij ${red}done${NC}\n"
     done

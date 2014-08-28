@@ -204,8 +204,8 @@ PROGRAM matrixElements
              &(occk(iband),iband=1,nbandk)
         IF ( oem ) THEN
 !           WRITE(10,"(1i4,500f18.12)")ik,eigen(1:nbandk)*HaeV
-!           WRITE(10,"(1i4,500f22.16)")ik,eigen(1:nbandk)*HaeV
-           WRITE(10,*)ik,eigen(1:nbandk)*HaeV
+           WRITE(10,"(1i7,500f22.16)")ik,eigen(1:nbandk)*HaeV
+!           WRITE(10,*)ik,eigen(1:nbandk)*HaeV
         END IF
         DEALLOCATE(eigen,occk)
 

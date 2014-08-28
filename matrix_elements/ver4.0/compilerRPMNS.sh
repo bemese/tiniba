@@ -98,7 +98,7 @@ function mueve {
   if [ $1 == 'hexa' ];then
       printf "\t${GREEN}compiling hexa ${NC} \n"
       make clean >> /dev/null
-      ssh  hexa1 "cd $dir; make"
+      ssh  hexa2 "cd $dir; make"
       make clean >> /dev/null
       mueve $1
   fi
