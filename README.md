@@ -41,25 +41,3 @@ This project was built by the PRONASIS group of the Centro de Investigaciones en
 * Phys Status Solidi C 8, 2604 (2008)
 * Phys Status Solidi C 9, 1378 (2012)
 * Surf Sci 605, 941 (2011)
-
-To-do List and WIP
--------------------
-
-1. Correcting SHG via shg-notes (07/13/14)
-
-    Follow appendix I.
-
-2. `latm/SRC_1setinput`
-
-* `integrands.f90`:
-    - [ ] add new case => new number and new subroutine
-
-* `inparams.f90`:
-    - [ ] add new case at the top of the program 
-    - [ ] change: number_of_known_spectrum_types
-    - [ ] add spectrum_factor() at the end of it
-    - [ ] add new case so one knows what's calculated
-
-* `symmetry_operations.f90`:
-    - [ ] add new case at the top of the program
-    - [ ] add new case for the correct transformation
