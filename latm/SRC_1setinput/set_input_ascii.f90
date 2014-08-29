@@ -19,6 +19,9 @@
 ! Takes raw momentum matrix elements, and generates matrix
 ! elements for position, generalized derivative of position,
 ! and energy transitions.
+!#BMSVer3.0d
+! and layered velocity matrix elements
+!#BMSVer3.0u
 ! 
 ! Applies scissor shift to the energies
 ! 
@@ -67,6 +70,9 @@ PROGRAM set_input
   USE arrays, ONLY : calPosMatElem
   USE arrays, ONLY : efe
   !!!!!!!!!!
+  !#BMSVer3.0d
+  USE inparams, ONLY : vnlkss
+  !#BMSVer3.0u
 !  USE arrays, ONLY : denMatElem, den_data_filename
   USE arrays, ONLY : curMatElem, cur_data_filename
   USE arrays, ONLY : layeredCalculation
@@ -81,7 +87,7 @@ PROGRAM set_input
   USE functions, ONLY : position, genderiv
   USE functions, ONLY : GenDerCalPositionf
   USE integrands, ONLY : calculateintegrands
-   USE functions, ONLY : calposition
+  USE functions, ONLY : calposition
   IMPLICIT NONE
   
   INTEGER :: i, ii, ij, iii, l
@@ -94,7 +100,6 @@ PROGRAM set_input
   COMPLEX(DPC) :: ci
   REAL (DP) :: scissorFactor
   INTEGER :: checkflag
-  
   LOGICAL :: writeoutMEdata   ! flag controlling whether matrix element output
   !                             is written or not. Much slower if outputting.
   !-------------------------------------------------------------------
@@ -119,6 +124,15 @@ PROGRAM set_input
   CALL closeOutputDataFiles
   IF (debug) WRITE(6,*) "Testing opening and closing files succeeded"
   
+  !#BMSVer3.0d
+  ! debug
+  !if(vnlkss)then
+  !   write(*,*)'vnl will be included'
+  !else
+  !   write(*,*)'vnl not included'
+  !end if
+  !stop 'set_input_ascii.f90:stop'
+  !#BMSVer3.0u
 !  write(*,*)"%%%%%%%%%%%%%%%%%%%%%%"
 
   OPEN(11, FILE=pmn_data_filename, STATUS='OLD', IOSTAT=io_status)
@@ -460,9 +474,18 @@ PROGRAM set_input
         DO ic = nVal + 1, nMax
 !!!
 !!! BMS jan/29/2013: THIS IS CORRECT FOR SHG IN THE VELOCITY GAUGE.
-!!! FOR OTHER RESPONSES WHERE ONE USES THE MOMENTUM INSTEAD OF THE POSITION MATRIX ELEMENTS
+!!! FOR OTHER RESPONSES WHERE ONE USES THE MOMENTUM 
+!!! INSTEAD OF THE POSITION MATRIX ELEMENTS
 !!! ONE HAS YET TO CHECK THE CORRECT IMPLEMENTATION OF THE SCISSOR SHIFT
 !!!
+!!!#BMSVer3.0d
+!!! If -n option is given, then the momMatElem already
+!!! contain the v^nl contribution.
+!!!
+!!! Off-diagonal matrix elements are renormalized by scissorFactor
+!!! diagonal matrix elements are NOT renormalized by scissorFactor
+!!!#BMSVer3.0u
+
            scissorFactor = 1.d0 + scissor / (band(ic)-band(iv))
 !           write(70,*)'in set_input_ascii ',scissor
            DO ii=1,3

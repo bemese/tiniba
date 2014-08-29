@@ -21,9 +21,12 @@ MODULE inparams
   INTEGER :: nVal_tetra    ! number of valence bands in tetra_method
   INTEGER :: nMax_tetra    ! total number of bands in tetra_method
   INTEGER :: kMax          ! number of kpoints
-  INTEGER :: nTetra         ! number of tetrahedra
-  INTEGER :: nTrans          ! number of transitions
-  LOGICAL :: withSO           ! flag for whether spin-orbit is included or not
+  INTEGER :: nTetra        ! number of tetrahedra
+  INTEGER :: nTrans        ! number of transitions
+  LOGICAL :: withSO        ! flag for whether spin-orbit is included or not
+  !#BMSVer3.0d
+  LOGICAL :: vnlkss        ! flag for whether vnl is included or not
+  !#BMSVer3.0u
   INTEGER :: nSpinor=0        ! number of spinor components (1 or 2 only)
 !!!                            ! if nSpinor==2 then will look for smn.d file
   INTEGER :: nSym                ! number of symmetry operations
@@ -232,6 +235,9 @@ CONTAINS
     NAMELIST/INDATA/kMax, nTetra, tol
 !!!    NAMELIST/INDATA/nSym
     NAMELIST/INDATA/withSO, nSpinor
+    !#BMSVer3.0d
+    NAMELIST/INDATA/vnlkss
+    !#BMSVer3.0u
     NAMELIST/INDATA/actualBandGap
     NAMELIST/INDATA/scissor
     NAMELIST/INDATA/energy_data_filename, energys_data_filename
@@ -286,6 +292,9 @@ CONTAINS
        WRITE(*,*) "nSym ", nSym
        WRITE(*,*) "withSO ", withSO
        WRITE(*,*) "nSpinor WHAT ", nSpinor
+       !#BMSVer3.0d
+       WRITE(*,*) "vnlkss", vnlkss
+       !#BMSVer3.0u
        WRITE(*,*) "actualBandgap ", actualBandgap
        WRITE(*,*) "scissor ", scissor
        WRITE(*,*) "energy_data_filename ", TRIM(energy_data_filename)

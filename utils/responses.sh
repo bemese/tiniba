@@ -18,9 +18,9 @@ NC='\e[0m' # No Color
 ## debug
 function despulga {
 Line
-printf "\taqui\n"
-exit 1
+printf "\tdespulga hasta aqui\n"
 Line
+exit 1
 }
 ##
 function Line {
@@ -149,7 +149,7 @@ fi
 	Line
 	echo -e "There are ${RED}$Nmax${NC} bands, so choose Nv=${RED}$Nvf${NC} and up to Nc=${RED}$Nct${NC} "
 	Line
-	printf "responses.sh -w [${red}layer${NC} or ${red}total${NC}] -m [_${red}case${NC}] -s [${red}scissors${NC}] -o [${red}1${NC}-full or ${red}2${NC}-vc] -v [${red}Nv${NC}] -c [${red}Nc${NC}] -r [response${red}#${NC}] -t [tensor ${red}\"ijk ...\" ${NC}]\n"
+	printf "responses.sh -w [${red}layer${NC} or ${red}total${NC}] -m [_${red}case${NC}] -s [${red}scissors${NC}] -o [${red}1${NC}-full or ${red}2${NC}-vc] -v [${red}Nv${NC}] -c [${red}Nc${NC}] -r [response${red}#${NC}] -t [tensor ${red}\"ijk ...\" ${NC}] -n [${red}response with v^nl included${NC} ${blue} optional${NC}]\n"
 	Line
 	echo you have the following options:
 	echo
@@ -228,6 +228,9 @@ TIMESTARTALLI=`date`
 	    rhomm='me_rhoccp_'
 	    cal='me_cpmn_'
 	    cur='me_cpnn_'
+#BMSVer3.0d
+	    cfmn='me_cfmn_' 
+#BMSVer3.0u
 	    aux='nada' # nada is fine
 	else
 	    spin='me_sccp_'
@@ -384,6 +387,16 @@ TIMESTARTALLI=`date`
 ### added 10 de diciembre de 2008 at 15:30
 #	Line
 	printf "\twith ${RED}Spin-Orbit${NC}\n"
+#BMSVer3.0d set value of vnlkss so is read by 
+	if [ $vnlkss == true ]
+	then
+	echo vnlkss= .true., >> tmp_$pfix        
+	fi
+	if [ $vnlkss == false ]
+	then
+	echo vnlkss= .false., >> tmp_$pfix        
+	fi
+#BMSVer3.0u
 	if [ ! -r  $ene$pfixe ] 
 	    then
 	    Line
