@@ -7,7 +7,7 @@ TINIBA is a tool written in bash, perl, and fortran to do ab initio calculations
 Introduction
 -------------------
 
-This is my rewrite of the official 2.0 release and will continue to be improved upon as time allows. New features and fixes are added all the time via different branches, and then merged into the master branch. Full documentation for the project is located in the tiniba-manual repository. It is a work in progress but will allow the average user to get up and running without too many problems.
+This is the official 3.0 release. New features and fixes are added all the time via different branches, and then merged into the master branch. Full documentation for the project is located in the tiniba-manual repository. It is a work in progress but will allow the average user to get up and running without too many problems.
 
 I suggest adding these lines to the appropriate shell file:
 

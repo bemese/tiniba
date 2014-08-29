@@ -1,0 +1,34 @@
+# ifort
+ab=ascii
+##FC=/opt/intel/fce/9.1.036/bin/ifort
+## Modificated on Miercoles 06 de Agosto 2009
+#FC= /opt/intel/fce/10.1.008/bin/ifort 
+FC=/opt/intel/composer_xe_2011_sp1.6.233/bin/intel64/ifort
+OPTS=-O3 -axSSE4.2
+#
+MODS = constants.o inparams.o arrays.o functions.o file_control.o symmetry_operations.o
+CRYSOBJS = wurtzite.o zincblende.o
+OBJS = ${MODS} integrands.o set_input_${ab}.o
+set_input : ${OBJS}
+	${FC} ${OPTS} -o set_input_${ab} ${OBJS}
+	mv set_input_${ab} ../set_input_hexa
+constants.o : constants.f90
+	${FC} ${OPTS} -c constants.f90
+inparams.o : inparams.f90 constants.f90
+	${FC} ${OPTS} -c inparams.f90
+symmetry_operations.o : symmetry_operations.f90
+	${FC} ${OPTS} -c symmetry_operations.f90
+arrays.o : arrays.f90 inparams.f90
+	${FC} ${OPTS} -c arrays.f90
+file_control.o : file_control.f90
+	${FC} ${OPTS} -c file_control.f90
+functions.o : functions.f90 arrays.f90
+	${FC} ${OPTS} -c functions.f90
+integrands.o : integrands.f90
+	${FC} ${OPTS} -c integrands.f90
+set_input_${ab}.o : set_input_${ab}.f90
+	${FC} ${OPTS} -c set_input_${ab}.f90
+all : ${ALL}
+clean :
+	rm -f *.o *.mod
+	rm -f ../set_input_hexa

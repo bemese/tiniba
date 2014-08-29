@@ -1,0 +1,1 @@
+../SRC_1setinput/inparams.f90
