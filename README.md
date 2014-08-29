@@ -13,7 +13,7 @@ I suggest adding these lines to the appropriate shell file:
 
 ```bash
 export TINIBA=$HOME/tiniba
-export PATH="$TINIBA/clustering:$TINIBA/utils:$PATH"
+export PATH="$TINIBA/clustering/itaxeo:$TINIBA/utils:$PATH"
 ```
 
 For more information you can contact me at sma@cio.mx and I will be happy to answer any questions.
