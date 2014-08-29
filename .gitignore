@@ -1,15 +1,15 @@
-<<<<<<< HEAD
 ### binary files produced when compiling
 *.mod
 *.o
-compita_*
 rpmns.*
-*_32b
-*_64b
-*_hexa
-*_quad
-*_xeon
-*_itanium
+set_input_32b
+set_input_hexa
+set_input_64b
+set_input_quad
+tetra_method_32b
+tetra_method_64b
+tetra_method_quad
+tetra_method_hexa
 
 
 ### emacs temporary files
