@@ -58,6 +58,9 @@ MODULE inparams
   CHARACTER(LEN=80) ::  pmn_data_filename     ! momentum me input file
 !!!FN
   CHARACTER(LEN=80) ::  cal_data_filename     !caligrpahic momentum matrix elements
+  !#BMSVer3.0d
+  CHARACTER(LEN=80) ::  cfmn_data_filename    !caligrpahic cut-function matrix elements
+  !#BMSVer3.0u
   CHARACTER(LEN=80) ::  cur_data_filename     !caligrpahic current momentum matrix elements
 !!!FN
   CHARACTER(LEN=80) ::  rmn_data_filename     ! position me output file
@@ -245,6 +248,9 @@ CONTAINS
 !!! FN
     NAMELIST/INDATA/pmn_data_filename, rmn_data_filename, cal_data_filename
     NAMELIST/INDATA/cur_data_filename
+    !#BMSVer3.0d
+    NAMELIST/INDATA/cfmn_data_filename
+    !#BMSVer3.0u
 !!!FN
     NAMELIST/INDATA/smn_data_filename, der_data_filename
     NAMELIST/INDATA/rhomm_data_filename
@@ -304,6 +310,9 @@ CONTAINS
 !!!FN
 !!!OJO
        WRITE(*,*) "cal_data_filename ", TRIM(cal_data_filename)
+       !#BMSVer3.0d
+       WRITE(*,*) "cfmn_data_filename ", TRIM(cfmn_data_filename)
+       !#BMSVer3.0u
        WRITE(*,*) "cur_data_filename ", TRIM(cur_data_filename)
 !!!FN
        WRITE(*,*) "rmn_data_filename ", TRIM(rmn_data_filename)
@@ -375,7 +384,6 @@ CONTAINS
      !   spin_factor = 1.d0
      !endif
 
-    
     if(debug)    WRITE(6,'(A,F)') 'spin_factor (inparams.f90) paso   = ', spin_factor
     
 !!!#############################
@@ -391,9 +399,6 @@ CONTAINS
     INTEGER :: istat, iostat
     INTEGER, ALLOCATABLE :: tmpIntArr(:)
     CHARACTER(LEN=14) :: response_type
-
-
-
 !!!
     if(debug)    WRITE(6,*) ' '
     if(debug)    WRITE(6,*) 'Opening ', spectrumFile

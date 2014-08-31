@@ -6,8 +6,83 @@ MODULE FUNCTIONS
   USE arrays, ONLY : band, momMatElem, posMatElem, Delta, tolchoice
   USE arrays, ONLY : oldStyleScissors
   USE arrays, ONLY : calMomMatElem,calDelta,calPosMatElem
+  !#BMSVer3.0d
+  USE arrays, ONLY : cfMatElem
+  !#BMSVer3.0u
   IMPLICIT NONE
 CONTAINS
+!#BMSVer3.0d
+!############################################
+  COMPLEX(DPC) FUNCTION calVlda(alpha,iv,ic,ik)
+!############################################
+    ! Finds \calv^{\lda}_{n,m} (c-a.2) for the given k-value.
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: alpha, iv, ic
+    INTEGER :: q,ik
+    COMPLEX(DPC) :: tmp,aux1,aux2
+    tmp=(0.d0,0.d0)
+    DO q = 1, nMax
+       aux1=momMatElem(alpha,iv,q)*cfMatElem(q,ic)
+       aux2=cfMatElem(iv,q)*momMatElem(alpha,q,ic)
+       tmp=tmp+(aux1+aux2)/2.d0
+    end DO
+    calVlda=tmp
+!############################################
+  end FUNCTION calVlda
+!############################################
+!#BMSVer3.0u
+!#BMSVer3.0d
+!!!############################################
+  COMPLEX(DPC) FUNCTION calVscissors(alpha,iv,ic,ik)
+!!!############################################
+    ! Finds \calv^\cals_{nm} (vs.cv,vs.cc,vs.vv) for the given k-value.
+    ! IF iv not equal to ic:
+    ! \calv^\cals_{cv} (vs.cv) is calculated
+    ! IF iv=ic=conduction
+    ! \calv^\cals_{cc} (vs.cc) is calculated
+    ! IF iv=ic=valence
+    ! \calv^\cals_{vv} (vs.vv) is calculated
+    !
+    ! The value of the scissor correction (scissorFactor) is used in 
+    ! set_input_ascii.f90 instead of here, just for convenience
+    ! 
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: alpha, iv, ic
+    INTEGER :: q,ik
+    COMPLEX(DPC) :: tmp1,tmp2,aux
+    tmp1=(0.d0,0.d0)
+    tmp2=(0.d0,0.d0)
+    if (ic.ne.iv) then
+       DO q = 1, nVal
+          aux=posMatElem(alpha,ic,q)*cfMatElem(q,iv)
+          tmp1=tmp1+aux
+       end DO
+       DO q = nVal+1, nMax
+          aux=cfMatElem(ic,q)*posMatElem(alpha,q,iv)
+          tmp2=tmp2+aux
+       end DO
+       calVscissors=(0.d0,1.d0)*(tmp1+tmp2)/2.d0
+    end if
+    if (ic.eq.iv) then
+       if (ic.le.nVal) then !vv-case
+          do q=nVal+1,nMax !sum over conduction states
+             aux=aimag(posMatElem(alpha,iv,q)*cfMatElem(q,iv))
+             tmp1=tmp1+aux             
+          end do
+          calVscissors=tmp1
+       end if
+       if (ic.gt.nVal) then !cc-case
+          do q=1,nVal !sum over valence states
+             aux=aimag(posMatElem(alpha,ic,q)*cfMatElem(q,ic))
+             tmp1=tmp1+aux             
+          end do
+          calVscissors=-tmp1
+       end if
+    end if
+!!!############################################
+  end FUNCTION calVscissors
+!############################################
+!#BMSVer3.0u
 
 !############################################
   COMPLEX(DPC) FUNCTION calPosition(alpha,iv,ic,ik)
@@ -193,6 +268,10 @@ CONTAINS
 !!! Finds (r^\alpha_{nm})_{;k^\beta} for the given k-value according to \ref{a_rgendevn}
 !!! from shg-layer.tex, i.e. Eq. (E13)
 !!!
+!#BMSVer3.0d
+! for -n option the contribution from v^\nl is included
+! however, neglectinh \tau^{ab}_{nm}
+!#BMSVer3.0u
     IMPLICIT NONE
     INTEGER, INTENT(IN) :: alpha, beta,n,m,k
     INTEGER :: l

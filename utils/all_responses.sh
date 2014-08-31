@@ -20,8 +20,8 @@ NC='\e[0m' # No Color
 function despulga {
 Line
 printf "\taqui\n"
-exit 1
 Line
+exit 1
 }
 ## thanks
 function gracias {
@@ -210,19 +210,32 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 		;;
 	esac
     done
+#BMSVer3.0d
     if [ "$vnlkss" == "true" ] 
     then
+	if [ "$lt" == "total" ] 
+	then
+	    casovnl=$caso
+	fi
+	if [ "$lt" == "layer" ] 
+	then
+	    #take out the layer info from $caso
+	    echo $caso > hoy
+	    casovnl=`awk -F_ '{print $1"_"$3}' hoy`
+	fi
 	Line
 	printf "\tvnl=$vnlkss chosen\n"
-	printf "\tmove me_pmn_$caso to me_pmn_$caso-o\n"
-	printf "\tadding me_pmn_$caso-o and me_vnlnm_$caso\n"
-	printf "\tinto  me_pmn_$caso so the script runs\n"
-	mv me_pmn_$caso me_pmn_$caso-o
+	printf "\tmove me_pmn_$casovnl to me_pmn_$casovnl-o\n"
+	printf "\tadding me_pmn_$casovnl-o and me_vnlnm_$casovnl\n"
+	printf "\tinto  me_pmn_$casovnl so the script runs\n"
+	mv me_pmn_$casovnl me_pmn_$casovnl-o
 	# there are 6 columns: (re,im)(x,y,z)
-	$TINIBA/utils/add/s-add-2-files.sh 6 me_pmn_$caso-o me_vnlnm_$caso me_pmn_$caso
+	$TINIBA/utils/add/s-add-2-files.sh 6 me_pmn_$casovnl-o me_vnlnm_$casovnl me_pmn_$casovnl
 	printf "\tThe response will now be calculated\n"
 	Line
+	#despulga
     fi
+#BMSVer3.0u
 ## starts the overall time
     TIMESTARTALL=`date`
     Line
@@ -531,9 +544,9 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	then
 	    Line
 	    printf "\tsince vnl=$vnlkss was chosen\n"
-	    printf "\tme_pmn_$caso-o is moved to me_pmn_$caso\n"
+	    printf "\tme_pmn_$casovnl-o is moved to me_pmn_$casovnl\n"
 	    printf "\tso the files are as they were\n"
-	    mv me_pmn_$caso-o me_pmn_$caso
+	    mv me_pmn_$casovnl-o me_pmn_$casovnl
 	    Line
 	fi
 ###

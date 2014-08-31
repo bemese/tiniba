@@ -1,3 +1,6 @@
+!#BMSVer3.0d
+! INJECTION CURRENT MUST BE CODIFIED ANEW!!!!!
+!#BMSVer3.0u
 !#########################################################
 ! January, 2005
 ! 
@@ -66,8 +69,11 @@ PROGRAM set_input
   USE arrays, ONLY : calrho
   USE arrays, ONLY : calDelta
   USE arrays, ONLY : calMomMatElem, cal_data_filename
+!#BMSVer3.0d
+  USE arrays, ONLY : cfMatElem,cfmn_data_filename
+!#BMSVer3.0u
   !!!!!!!!!!
-  USE arrays, ONLY : calPosMatElem
+  Use arrays, ONLY : calPosMatElem
   USE arrays, ONLY : efe
   !!!!!!!!!!
   !#BMSVer3.0d
@@ -86,6 +92,9 @@ PROGRAM set_input
   USE arrays, ONLY : oldStyleScissors
   USE functions, ONLY : position, genderiv
   USE functions, ONLY : GenDerCalPositionf
+  !#BMSVer3.0d
+  USE functions, ONLY : calVlda,calVscissors
+  !#BMSVer3.0u
   USE integrands, ONLY : calculateintegrands
   USE functions, ONLY : calposition
   IMPLICIT NONE
@@ -96,6 +105,10 @@ PROGRAM set_input
   INTEGER :: io_status
   REAL(DP) :: matTemp(6)
   REAL(DP) :: matTemp3(3)
+  !#BMSVer3.0d
+  REAL(DP) :: matTemp2(3)
+  COMPLEX (DPC) :: t1,t2
+  !#BMSVer3.0u
   COMPLEX (DPC) :: tmpm
   COMPLEX(DPC) :: ci
   REAL (DP) :: scissorFactor
@@ -163,6 +176,16 @@ PROGRAM set_input
 !  else
 !     WRITE(6,*) "no cal_data_filename => no-caligraphic P calculation"
   END IF
+
+  !#BMSVer3.0d
+    INQUIRE(FILE=cfmn_data_filename, EXIST=layeredCalculation)
+  IF ( layeredCalculation ) THEN
+!     WRITE(*,*) "Found file ", TRIM(cfmn_data_filename), " => Performing layer P calculation"
+     OPEN(53, FILE=cfmn_data_filename,IOSTAT=io_status)
+!  else
+!     WRITE(6,*) "no cfmn_data_filename => no-caligraphic P calculation"
+  END IF
+  !#BMSVer3.0u
 
   INQUIRE(FILE=cur_data_filename, EXIST=layeredInjectionCurrent)
   IF ( layeredInjectionCurrent ) THEN
@@ -244,6 +267,9 @@ PROGRAM set_input
            READ(11,*) (matTemp(l), l=1,6)
 
 101        FORMAT(2I3,6E15.7)
+           !#BMSVer3.0d
+           ! for option -n v^\nl is included in momMatElem
+           !#BMSVer3.0u
            momMatElem(1,iv,ic) = matTemp(1) + (0.0d0,1.0d0)*matTemp(2)
            momMatElem(2,iv,ic) = matTemp(3) + (0.0d0,1.0d0)*matTemp(4)
            momMatElem(3,iv,ic) = matTemp(5) + (0.0d0,1.0d0)*matTemp(6)
@@ -316,9 +342,29 @@ PROGRAM set_input
                  END DO
               END IF
            END IF
+!#BMSVer3.0d
+           IF ( layeredCalculation ) then
+              READ(53,*) (matTemp2(l),l=1,2)
+              IF(io_status.NE.0) THEN
+                 WRITE(*,*) "ERROR: Could not read matTemp2 for layered calculation. Stopping"
+                 WRITE(*,*) "Error number ", io_status
+                 STOP "COULD NOT READ matTemp"
+              ELSE
+                 cfMatElem(iv,ic) = matTemp2(1) + (0.0d0,1.0d0)*matTemp2(2)
+              END IF
+              IF (ic.NE.iv) THEN
+                 DO ii=1,3
+                   cfMatElem(ic,iv) = CONJG(cfMatElem(iv,ic))
+                 END DO
+              END IF
+           END IF
+!#BMSVer3.0u
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!#BMSVer3.0d
+! below shouldn't be needed
           !! Calculate the calPosMatElem matrix elements 
           !! despues de calcular los calMomMatElem 
            IF ( layeredCalculation ) then
@@ -327,6 +373,7 @@ PROGRAM set_input
                  calPosMatElem(ii,ic,iv) = conjg(calPosMatElem(ii,iv,ic))
               END DO
            end if
+!#BMSVer3.0u
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! jl 
@@ -348,10 +395,11 @@ PROGRAM set_input
               curMatElem(3,iv) = matTemp3(3) 
            END IF
         END IF
-
-     
 !!! FN
-           
+        !#BMSVer3.0d
+        ! for option -n v^\nl is included in momMatElem
+        ! and so is also included in r_{nm}
+        !#BMSVer3.0u
            ! Calculate the position matrix elements
            DO ii=1,3
               posMatElem(ii,iv,ic) = position(ii,iv,ic,ik)
@@ -386,8 +434,10 @@ PROGRAM set_input
     
 
      ! Calculate Delta(m,n)
-!     DO iv = 1, nMax
-!        DO ic = 1, nMax
+!#BMSVer3.0d
+! for -n option the contribution from v^\nl is included
+!#BMSVer3.0u
+
      DO iv = 1, nVal
         DO ic = nVal+1, nMax
            Delta(1,ic,iv) = momMatElem(1,ic,ic)-momMatElem(1,iv,iv)
@@ -470,6 +520,9 @@ PROGRAM set_input
         END DO
      END IF
 !!! Now renormalize (scissor) the momentum matrix elements     
+!!!#BMSVer3.0d
+!!! so the scissor correction is properly included
+!!!#BMSVer3.0u
      DO iv = 1, nVal
         DO ic = nVal + 1, nMax
 !!!
@@ -484,16 +537,46 @@ PROGRAM set_input
 !!!
 !!! Off-diagonal matrix elements are renormalized by scissorFactor
 !!! diagonal matrix elements are NOT renormalized by scissorFactor
+!!! Notice that:
+!!! \Sigma=scissor
+!!! and
+!!! \omega^\sigma_{nm}/\omega_{nm}=scissorFactor
 !!!#BMSVer3.0u
 
            scissorFactor = 1.d0 + scissor / (band(ic)-band(iv))
-!           write(70,*)'in set_input_ascii ',scissor
+!           write(70,*)'in set_input_ascii.f90:',scissor
            DO ii=1,3
               momMatElem(ii,iv,ic) = momMatElem(ii,iv,ic)*scissorFactor
               momMatElem(ii,ic,iv) = momMatElem(ii,ic,iv)*scissorFactor
               IF ( layeredCalculation ) then
-                 calMomMatElem(ii,iv,ic) = calMomMatElem(ii,iv,ic)*scissorFactor
-                 calMomMatElem(ii,ic,iv) = calMomMatElem(ii,ic,iv)*scissorFactor
+                 !#BMSVer3.0d
+                 !if vnlkss is true: v^\nl is included
+                 !and Eq. \ref{c-a.2} is calculated 
+                 if(vnlkss)then
+                    t1=calVlda(ii,iv,ic,ik)
+                    t2=calVscissors(ii,iv,ic,ik)*scissor
+                    calMomMatElem(ii,iv,ic) = t1+t2
+                    calMomMatElem(ii,ic,iv) = conjg(t1+t2)
+                    stop "under cosntruction"
+                 else
+                    !if vnlkss is false: v^\nl is NOT included
+                    !and Eq. \ref{eni.2} is used, which was
+                    !computed in matrix elements and already stored
+                    !in calMomMatElem
+                    !we only add the scissors correction
+                    !using new expressions c-a.3b or vs.cv
+                    t1=calMomMatElem(ii,iv,ic)
+                    t2=calVscissors(ii,iv,ic,ik)*scissor
+                    calMomMatElem(ii,iv,ic) = t1+t2
+                    calMomMatElem(ii,ic,iv) = conjg(t1+t2)
+!!!As explianed in shg-layer-nonlocal.pdf
+!!!calMomMatElem ARE NOT SIMPLY RESCALED
+!!!by scissorFactor, therefore
+!!!these two were wrong
+!!!calMomMatElem(ii,iv,ic) = calMomMatElem(ii,iv,ic)*scissorFactor
+!!!calMomMatElem(ii,ic,iv) = calMomMatElem(ii,ic,iv)*scissorFactor
+                 end if
+                 !#BMSVer3.0u
               end IF
            END DO
         END DO

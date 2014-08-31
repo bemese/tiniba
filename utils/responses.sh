@@ -460,7 +460,19 @@ TIMESTARTALLI=`date`
 			Line
 			exit 1
 		    fi
+#BMSVer3.0d
+		    if [ ! -r $cfmn$pfix ] 
+		    then
+			Line
+			echo WARNING NO $cfmn$pfix for layer response
+			Line
+			exit 1
+		    fi
+#BMSVer3.0u
 		    echo cal_data_filename= \""$cal$pfix"\", >> tmp_$pfix
+#BMSVer3.0d
+		    echo cfmn_data_filename= \""$cfmn$pfix"\", >> tmp_$pfix
+#BMSVer3.0u
 		fi
 #
 		if [ $response == '25' ]

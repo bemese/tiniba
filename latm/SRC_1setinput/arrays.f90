@@ -10,6 +10,9 @@ MODULE arrays
   USE inparams, ONLY : pmn_data_filename,rmn_data_filename,der_data_filename
 !!!FN
   USE inparams, ONLY : cal_data_filename
+  !#BMSVer3.0d
+  USE inparams, ONLY : cfmn_data_filename
+  !#BMSVer3.0u
   USE inparams, ONLY :  cur_data_filename
 !  USE inparams, ONLY : den_data_filename
 !!!FN
@@ -19,6 +22,9 @@ MODULE arrays
   COMPLEX(DPC), ALLOCATABLE :: momMatElem(:,:,:)
 !!!FN
   COMPLEX(DPC), ALLOCATABLE :: calMomMatElem(:,:,:)
+  !#BMSVer3.0d
+  COMPLEX(DPC), ALLOCATABLE :: cfMatElem(:,:)
+  !#BMSVer3.0u
   !!!!!!new mayo 2008 
   COMPLEX(DPC), ALLOCATABLE :: calPosMatElem(:,:,:)
   COMPLEX(DPC), ALLOCATABLE :: GenDerCalPosition(:,:,:,:)
@@ -76,7 +82,21 @@ CONTAINS
           STOP
        END IF
     END IF
-!!!!!!!!!!!!!!!!!!
+!#BMSVer3.0d
+!!!FN
+    IF (layeredCalculation) THEN
+       if(debug)WRITE(*,*) "Allocating cfMatElem(",nMax,",",nMax,")"
+       ALLOCATE (cfMatElem(nMax,nMax), STAT=istat)
+       IF (istat.EQ.0) THEN
+          istat=0
+          if(debug) WRITE(*,*) 'Allocated array cfMatElem'
+       ELSE
+          WRITE(6,*) 'Could not allocate cfMatElem'
+          WRITE(6,*) 'Stopping'
+          STOP
+       END IF
+    END IF
+!#BMSVer3.0u
 !!!!!!!!!!!!!!!!!!
      IF (layeredCalculation) THEN
         if(debug)WRITE(*,*) "Allocating calPosMatELem(3,",nMax,",",nMax,")"
@@ -204,6 +224,17 @@ CONTAINS
           STOP
        END IF
     end IF
+    !#BMSVer3.0d
+    IF (layeredCalculation) THEN
+       DEALLOCATE (cfMatElem, STAT=istat)
+       IF (istat.NE.0) THEN
+          WRITE(6,*) 'Could not deallocate cfMatElem'
+          WRITE(6,*) 'Stopping'
+          STOP
+       END IF
+    end IF
+    !#BMSVer3.0u
+
      IF (ndotCalculation) THEN
         DEALLOCATE (calrho, STAT=istat)
         IF (istat.NE.0) THEN
