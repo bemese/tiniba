@@ -1,5 +1,6 @@
 !#BMSVer3.0d
 ! INJECTION CURRENT MUST BE CODIFIED ANEW!!!!!
+! if scissor =0 don't compute calVscissors
 !#BMSVer3.0u
 !#########################################################
 ! January, 2005
@@ -71,6 +72,8 @@ PROGRAM set_input
   USE arrays, ONLY : calMomMatElem, cal_data_filename
 !#BMSVer3.0d
   USE arrays, ONLY : cfMatElem,cfmn_data_filename
+  USE arrays, ONLY : gdVlda
+  USE arrays, ONLY : gdf
 !#BMSVer3.0u
   !!!!!!!!!!
   Use arrays, ONLY : calPosMatElem
@@ -454,8 +457,11 @@ PROGRAM set_input
      IF (oldStyleScissors) THEN
         band(1:nMax) = energys(ik,1:nMax)
      END IF
-     
+     !#BMSVer3.0d
      ! Calculate the generalized derivative of the position matrix elements
+     ! for -n option the contribution from v^\nl is included
+     ! however, neglecting \tau^{ab}_{nm}
+     !#BMSVer3.0u
      DO iv = 1, nMax
         DO ic = 1, nMax
            DO ii=1,3
@@ -506,21 +512,24 @@ PROGRAM set_input
         end do
      end do
 
-     IF ( layeredCalculation ) then
-        ! Calculate the generalized derivative of the layered position matrix elements
-        ! Eq (97), i.e. \eqref{rgkcal} shg-layer.tex
-        DO iv = 1, nMax
-           DO ic = 1, nMax
-              DO ii=1,3
-                 DO iii=1,3
-                    GenDerCalPosition(iii,ii,iv,ic) = GenDerCalPositionf(iii,ii,iv,ic,ik)
-                 END DO
-              END DO
-           END DO
-        END DO
-     END IF
-!!! Now renormalize (scissor) the momentum matrix elements     
 !!!#BMSVer3.0d
+!!!This is not longer required
+!!! Calculate the generalized derivative of the layered position matrix elements
+!!! Eq (97), i.e. \eqref{rgkcal} shg-layer.tex
+!!$     IF ( layeredCalculation ) then
+!!$        DO iv = 1, nMax
+!!$           DO ic = 1, nMax
+!!$              DO ii=1,3
+!!$                 DO iii=1,3
+!!$                    GenDerCalPosition(iii,ii,iv,ic) = GenDerCalPositionf(iii,ii,iv,ic,ik)
+!!$                 END DO
+!!$              END DO
+!!$           END DO
+!!$        END DO
+!!$     END IF
+!!!#BMSVer3.0u
+!!!#BMSVer3.0d
+!!! Now renormalize (scissor) the momentum matrix elements     
 !!! so the scissor correction is properly included
 !!!#BMSVer3.0u
      DO iv = 1, nVal
@@ -541,6 +550,8 @@ PROGRAM set_input
 !!! \Sigma=scissor
 !!! and
 !!! \omega^\sigma_{nm}/\omega_{nm}=scissorFactor
+!!! This far in the code the energies are still the LDA energies
+!!! => they have not yet been scissored
 !!!#BMSVer3.0u
 
            scissorFactor = 1.d0 + scissor / (band(ic)-band(iv))
@@ -548,16 +559,26 @@ PROGRAM set_input
            DO ii=1,3
               momMatElem(ii,iv,ic) = momMatElem(ii,iv,ic)*scissorFactor
               momMatElem(ii,ic,iv) = momMatElem(ii,ic,iv)*scissorFactor
+              do iii=1,3
+                 !Eq. c-a.3 off-diagonal terms
+                 gdVlda(iii,ii,iv,ic)=(0.d0,1.d0)*(Delta(ii,iv,ic)*posMatElem(iii,iv,ic)&
+                      +(band(iv)-band(ic))*derMatElem(iii,ii,iv,ic))
+                 gdVlda(iii,ii,ic,iv)=conjg(gdVlda(iii,ii,iv,ic))
+              end do
               IF ( layeredCalculation ) then
                  !#BMSVer3.0d
                  !if vnlkss is true: v^\nl is included
                  !and Eq. \ref{c-a.2} is calculated 
                  if(vnlkss)then
                     t1=calVlda(ii,iv,ic,ik)
-                    t2=calVscissors(ii,iv,ic,ik)*scissor
+                    if (scissor .gt. 0.d0) then
+                       t2=calVscissors(ii,iv,ic,ik)*scissor
+                    else
+                       t2=(0.d0,0.d0)
+                    end if
                     calMomMatElem(ii,iv,ic) = t1+t2
                     calMomMatElem(ii,ic,iv) = conjg(t1+t2)
-                    stop "under cosntruction"
+                    !stop "under cosntruction"
                  else
                     !if vnlkss is false: v^\nl is NOT included
                     !and Eq. \ref{eni.2} is used, which was
@@ -566,7 +587,11 @@ PROGRAM set_input
                     !we only add the scissors correction
                     !using new expressions c-a.3b or vs.cv
                     t1=calMomMatElem(ii,iv,ic)
-                    t2=calVscissors(ii,iv,ic,ik)*scissor
+                    if (scissor .gt. 0.d0) then
+                       t2=calVscissors(ii,iv,ic,ik)*scissor
+                    else
+                       t2=(0.d0,0.d0)
+                    end if
                     calMomMatElem(ii,iv,ic) = t1+t2
                     calMomMatElem(ii,ic,iv) = conjg(t1+t2)
 !!!As explianed in shg-layer-nonlocal.pdf
@@ -576,14 +601,62 @@ PROGRAM set_input
 !!!calMomMatElem(ii,iv,ic) = calMomMatElem(ii,iv,ic)*scissorFactor
 !!!calMomMatElem(ii,ic,iv) = calMomMatElem(ii,ic,iv)*scissorFactor
                  end if
-                 !#BMSVer3.0u
               end IF
            END DO
         END DO
      END DO
+     !#BMSVer3.0u
 !!! 
-
+     !#BMSVer3.0d
+     ! calculation of c-a.3c diagonal terms
+     do ic=1,nMax
+        do ii=1,3
+           do iii=1,3
+              t1=(0.d0,0.d0)
+              do iv=1,nMax
+                 if ( iv .ne. ic) then
+                    t2=(band(iv)-band(ic))&
+                         *(posMatElem(ii,ic,iv)*posMatElem(iii,iv,ic)&
+                         + posMatElem(iii,ic,iv)*posMatElem(ii,iv,ic))
+                    t1=t1+t2
+                 end if
+              end do
+              if ( ii .eq. iii) then
+                 gdVlda(ii,iii,ic,ic)=1.d0-t1
+              else
+                 gdVlda(ii,iii,ic,ic)=-t1
+              end if
+           end do
+        end do
+     end do
+     !#BMSVer3.0u
+     !#BMSVer3.0d
+     !calculation of c-a.7
+     do ic=1,nMax
+        do iv=ic,nMax
+           do ii=1,3
+              t1=(0.d0,0.d0)
+              do l=1,nMax
+                 if((l.ne.ic).and.(l.ne.iv)) then
+                    t2=posMatElem(ii,ic,l)*cfMatElem(l,iv)&
+                         -cfMatElem(ic,l)*posMatElem(ii,l,iv)
+                    t1=t1+t2
+                 end if
+              end do
+              if ( ic .ne. iv ) then
+                 gdf(ii,ic,iv)=(0.d0,1.d0)*(t1+posMatElem(ii,ic,iv)&
+                      *( cfMatElem(iv,iv)-cfMatElem(ic,ic) ) )
+              else
+                 gdf(ii,ic,iv)=(0.d0,1.d0)*t1
+              end if
+              gdf(ii,iv,ic)=conjg(gdf(ii,ic,iv))
+           end do
+        end do
+     end do
+     !#BMSVer3.0u
+!!!
 !!! Now use the scissored energy bands !!!!!!!!!!
+!!!
      
      band(1:nMax) = energys(ik,1:nMax)
 

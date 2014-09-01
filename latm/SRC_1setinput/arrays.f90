@@ -24,6 +24,8 @@ MODULE arrays
   COMPLEX(DPC), ALLOCATABLE :: calMomMatElem(:,:,:)
   !#BMSVer3.0d
   COMPLEX(DPC), ALLOCATABLE :: cfMatElem(:,:)
+  COMPLEX(DPC), ALLOCATABLE :: gdVlda(:,:,:,:)
+  COMPLEX(DPC), ALLOCATABLE :: gdf(:,:,:)
   !#BMSVer3.0u
   !!!!!!new mayo 2008 
   COMPLEX(DPC), ALLOCATABLE :: calPosMatElem(:,:,:)
@@ -83,7 +85,6 @@ CONTAINS
        END IF
     END IF
 !#BMSVer3.0d
-!!!FN
     IF (layeredCalculation) THEN
        if(debug)WRITE(*,*) "Allocating cfMatElem(",nMax,",",nMax,")"
        ALLOCATE (cfMatElem(nMax,nMax), STAT=istat)
@@ -92,6 +93,31 @@ CONTAINS
           if(debug) WRITE(*,*) 'Allocated array cfMatElem'
        ELSE
           WRITE(6,*) 'Could not allocate cfMatElem'
+          WRITE(6,*) 'Stopping'
+          STOP
+       END IF
+    END IF
+!!!
+    IF (layeredCalculation) THEN
+       if(debug)WRITE(*,*) "Allocating gdVlda(3,3",nMax,",",nMax,")"
+       ALLOCATE (gdVlda(3,3,nMax,nMax), STAT=istat)
+       IF (istat.EQ.0) THEN
+          istat=0
+          if(debug) WRITE(*,*) 'Allocated array gdVlda'
+       ELSE
+          WRITE(6,*) 'Could not allocate gdVlda'
+          WRITE(6,*) 'Stopping'
+          STOP
+       END IF
+    END IF
+    IF (layeredCalculation) THEN
+       if(debug)WRITE(*,*) "Allocating gdf(3",nMax,",",nMax,")"
+       ALLOCATE (gdf(3,nMax,nMax), STAT=istat)
+       IF (istat.EQ.0) THEN
+          istat=0
+          if(debug) WRITE(*,*) 'Allocated array gdf'
+       ELSE
+          WRITE(6,*) 'Could not allocate gdf'
           WRITE(6,*) 'Stopping'
           STOP
        END IF
@@ -229,6 +255,22 @@ CONTAINS
        DEALLOCATE (cfMatElem, STAT=istat)
        IF (istat.NE.0) THEN
           WRITE(6,*) 'Could not deallocate cfMatElem'
+          WRITE(6,*) 'Stopping'
+          STOP
+       END IF
+    end IF
+    IF (layeredCalculation) THEN
+       DEALLOCATE (gdVlda, STAT=istat)
+       IF (istat.NE.0) THEN
+          WRITE(6,*) 'Could not deallocate gdVlda'
+          WRITE(6,*) 'Stopping'
+          STOP
+       END IF
+    end IF
+    IF (layeredCalculation) THEN
+       DEALLOCATE (gdf, STAT=istat)
+       IF (istat.NE.0) THEN
+          WRITE(6,*) 'Could not deallocate gdf'
           WRITE(6,*) 'Stopping'
           STOP
        END IF
