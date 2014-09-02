@@ -74,6 +74,9 @@ PROGRAM set_input
   USE arrays, ONLY : cfMatElem,cfmn_data_filename
   USE arrays, ONLY : gdVlda
   USE arrays, ONLY : gdf
+  USE arrays, ONLY : vldaMatElem
+  USE arrays, ONLY : gdcalVlda
+  USE arrays, ONLY : gdcalVS
 !#BMSVer3.0u
   !!!!!!!!!!
   Use arrays, ONLY : calPosMatElem
@@ -256,7 +259,7 @@ PROGRAM set_input
      
      ! Use unscissored band energies to calculate rmn
      band(1:nMax) = energy(ik,1:nMax)
-     
+     ! iv.eq.ic and iv.ne.ic
      DO iv = 1, nMax
         !------------------------
         ! DO ic = 1, nMax
@@ -446,6 +449,9 @@ PROGRAM set_input
            Delta(1,ic,iv) = momMatElem(1,ic,ic)-momMatElem(1,iv,iv)
            Delta(2,ic,iv) = momMatElem(2,ic,ic)-momMatElem(2,iv,iv)
            Delta(3,ic,iv) = momMatElem(3,ic,ic)-momMatElem(3,iv,iv)
+!#BMSVer3.0d
+! Is calDelta needed???
+!#BMSVer3.0u
            IF ( layeredCalculation ) then
                calDelta(1,ic,iv) = calmomMatElem(1,ic,ic)-calmomMatElem(1,iv,iv)
                calDelta(2,ic,iv) = calmomMatElem(2,ic,ic)-calmomMatElem(2,iv,iv)
@@ -528,10 +534,23 @@ PROGRAM set_input
 !!$        END DO
 !!$     END IF
 !!!#BMSVer3.0u
+     !#BMSVer3.0d
+     ! v^\lda diagonal terms before scissors correction
+     ! is implemented in momMatElem
+     ! Eq. (c-chon.98) v^\gs_{nn}=v^\lda_{nn}
+     ! If -n option is given, then the momMatElem already
+     ! contain the v^nl contribution.
+     do ic=1,nMax
+        do ii=1,3
+           vldaMatElem(ii,ic,ic) = momMatElem(ii,ic,ic)
+        end do
+     end do
+     !#BMSVer3.0u
 !!!#BMSVer3.0d
 !!! Now renormalize (scissor) the momentum matrix elements     
 !!! so the scissor correction is properly included
 !!!#BMSVer3.0u
+     ! iv .ne. ic
      DO iv = 1, nVal
         DO ic = nVal + 1, nMax
 !!!
@@ -546,6 +565,9 @@ PROGRAM set_input
 !!!
 !!! Off-diagonal matrix elements are renormalized by scissorFactor
 !!! diagonal matrix elements are NOT renormalized by scissorFactor
+!!! diagonal matrix elements are coded above, however since
+!!! the diagonal momMatElem are not affected by the scissors
+!!! correction, they could be coded below as well.
 !!! Notice that:
 !!! \Sigma=scissor
 !!! and
@@ -557,6 +579,15 @@ PROGRAM set_input
            scissorFactor = 1.d0 + scissor / (band(ic)-band(iv))
 !           write(70,*)'in set_input_ascii.f90:',scissor
            DO ii=1,3
+              ! v^\lda=p/m + v^\nl
+              ! where v^\nl could or could not be included
+              ! depending on the -n flag
+              ! off-diagonal terms
+              ! Before scissors correction
+              vldaMatElem(ii,iv,ic) = momMatElem(ii,iv,ic)
+              vldaMatElem(ii,ic,iv) = momMatElem(ii,ic,iv)
+              !with this momMatElem become 
+              !v^\sigma=v^\lda+v^\scissor (c-chon.98)
               momMatElem(ii,iv,ic) = momMatElem(ii,iv,ic)*scissorFactor
               momMatElem(ii,ic,iv) = momMatElem(ii,ic,iv)*scissorFactor
               do iii=1,3
@@ -594,6 +625,7 @@ PROGRAM set_input
                     end if
                     calMomMatElem(ii,iv,ic) = t1+t2
                     calMomMatElem(ii,ic,iv) = conjg(t1+t2)
+!!!calMomMatElem->\calbv^{\gs,\ell}_{nm} (c-a.1)
 !!!As explianed in shg-layer-nonlocal.pdf
 !!!calMomMatElem ARE NOT SIMPLY RESCALED
 !!!by scissorFactor, therefore
@@ -653,6 +685,82 @@ PROGRAM set_input
            end do
         end do
      end do
+     !#BMSVer3.0u
+     !#BMSVer3.0d
+     !Eq. c-a.2nn (\calbV^\lda);k
+     do ic=1,nMax
+        do iv=ic,nMax
+           do ii=1,3
+              do iii=1,3
+                 t1=(0.d0,0.d0)
+                 do l=1,nMax
+                    t2=gdVlda(ii,iii,ic,l)*cfMatElem(l,iv)&
+                         +vldaMatElem(ii,ic,l)*gdf(iii,l,iv)&
+                         +gdf(iii,ic,l)*vldaMatElem(ii,l,iv)&
+                         +cfMatElem(ic,l)*gdVlda(ii,iii,l,iv)
+                    t1=t1+t2
+                 end do
+                 gdcalVlda(ii,iii,ic,iv)=t1/2.d0
+                 gdcalVlda(ii,iii,iv,ic)=conjg(t1)/2.d0
+              end do
+           end do
+        end do
+     end do
+     !#BMSVer3.0u
+     !#BMSVer3.0d
+     !Eq. dgvs.cv, dgvs.cc and dgvs.vv: (\calbV^\cals);k
+     if (scissor .gt. 0.d0) then
+        !dgvs.cv
+        do ic=1,nMax
+           do iv=ic,nMax
+              do ii=1,3
+                 do iii=1,3
+                    t1=(0.d0,0.d0)
+                    do l=1,nVal !sum over v'
+                       t2=derMatElem(ii,iii,ic,l)*cfMatElem(l,iv)&
+                            +posMatElem(ii,ic,l)*gdf(iii,l,iv)
+                       t1=t1+t2
+                    end do
+                    do l=nVal+1,nMax !sum over c'
+                       t2=gdf(iii,ic,l)*posMatElem(ii,l,iv)&
+                            +cfMatElem(ic,l)*derMatElem(ii,iii,l,iv)
+                       t1=t1+t2 !the value of t1 from sum over v' is added
+                    end do
+                    gdcalVS(ii,iii,ic,iv)=(0.d0,1.d0)*scissor*t1/2.d0
+                    gdcalVS(ii,iii,iv,ic)=conjg(gdcalVS(ii,iii,ic,iv))
+                 end do
+              end do
+           end do
+        end do
+        !dgvs.cc
+        do ic=nVal+1,nMax
+           do ii=1,3
+              do iii=1,3
+                 t1=(0.d0,0.d0)
+                 do iv=1,nVal !sum over v
+                    t2=derMatElem(ii,iii,ic,iv)*cfMatElem(iv,ic)&
+                         +posMatElem(ii,ic,iv)*gdf(iii,iv,ic)
+                    t1=t1+t2
+                 end do
+                 gdcalVS(ii,iii,ic,ic)=cmplx(-scissor*aimag(t1),0.d0)
+              end do
+           end do
+        end do
+        !dgvs.vv
+        do iv=1,nVal
+           do ii=1,3
+              do iii=1,3
+                 t1=(0.d0,0.d0)
+                 do ic=nVal+1,nMax !sum over c
+                    t2=derMatElem(ii,iii,iv,ic)*cfMatElem(ic,iv)&
+                         +posMatElem(ii,iv,ic)*gdf(iii,ic,iv)
+                    t1=t1+t2
+                 end do
+                 gdcalVS(ii,iii,iv,iv)=cmplx(scissor*aimag(t1),0.d0)
+              end do
+           end do
+        end do
+     end if
      !#BMSVer3.0u
 !!!
 !!! Now use the scissored energy bands !!!!!!!!!!

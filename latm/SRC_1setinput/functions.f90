@@ -66,17 +66,17 @@ CONTAINS
     if (ic.eq.iv) then
        if (ic.le.nVal) then !vv-case
           do q=nVal+1,nMax !sum over conduction states
-             aux=aimag(posMatElem(alpha,iv,q)*cfMatElem(q,iv))
+             aux=posMatElem(alpha,iv,q)*cfMatElem(q,iv)
              tmp1=tmp1+aux             
           end do
-          calVscissors=tmp1
+          calVscissors=cmplx(aimag(tmp1),0.d0)
        end if
        if (ic.gt.nVal) then !cc-case
           do q=1,nVal !sum over valence states
-             aux=aimag(posMatElem(alpha,ic,q)*cfMatElem(q,ic))
+             aux=posMatElem(alpha,ic,q)*cfMatElem(q,ic)
              tmp1=tmp1+aux             
           end do
-          calVscissors=-tmp1
+          calVscissors=cmplx(-aimag(tmp1),0.d0)
        end if
     end if
 !!!############################################

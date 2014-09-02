@@ -26,6 +26,9 @@ MODULE arrays
   COMPLEX(DPC), ALLOCATABLE :: cfMatElem(:,:)
   COMPLEX(DPC), ALLOCATABLE :: gdVlda(:,:,:,:)
   COMPLEX(DPC), ALLOCATABLE :: gdf(:,:,:)
+  COMPLEX(DPC), ALLOCATABLE :: vldaMatElem(:,:,:)
+  COMPLEX(DPC), ALLOCATABLE :: gdcalVlda(:,:,:,:)
+  COMPLEX(DPC), ALLOCATABLE :: gdcalVS(:,:,:,:)
   !#BMSVer3.0u
   !!!!!!new mayo 2008 
   COMPLEX(DPC), ALLOCATABLE :: calPosMatElem(:,:,:)
@@ -70,6 +73,15 @@ CONTAINS
        WRITE(6,*) 'Stopping'
        STOP
     END IF
+
+!#BMSVer3.0d
+    ALLOCATE (vldaMatElem(3,nMax,nMax), STAT=istat)
+    IF (istat.NE.0) THEN
+       WRITE(6,*) 'Could not allocate vldaMatElem'
+       WRITE(6,*) 'Stopping'
+       STOP
+    END IF
+!#BMSVer3.0u
     
 !!!FN
     IF (layeredCalculation) THEN
@@ -118,6 +130,30 @@ CONTAINS
           if(debug) WRITE(*,*) 'Allocated array gdf'
        ELSE
           WRITE(6,*) 'Could not allocate gdf'
+          WRITE(6,*) 'Stopping'
+          STOP
+       END IF
+    END IF
+    IF (layeredCalculation) THEN
+       if(debug)WRITE(*,*) "Allocating gdcalVlda(3,3",nMax,",",nMax,")"
+       ALLOCATE (gdcalVlda(3,3,nMax,nMax), STAT=istat)
+       IF (istat.EQ.0) THEN
+          istat=0
+          if(debug) WRITE(*,*) 'Allocated array gdcalVlda'
+       ELSE
+          WRITE(6,*) 'Could not allocate gdcalVlda'
+          WRITE(6,*) 'Stopping'
+          STOP
+       END IF
+    END IF
+    IF (layeredCalculation) THEN
+       if(debug)WRITE(*,*) "Allocating gdcalVS(3,3",nMax,",",nMax,")"
+       ALLOCATE (gdcalVS(3,3,nMax,nMax), STAT=istat)
+       IF (istat.EQ.0) THEN
+          istat=0
+          if(debug) WRITE(*,*) 'Allocated array gdcalVS'
+       ELSE
+          WRITE(6,*) 'Could not allocate gdcalVS'
           WRITE(6,*) 'Stopping'
           STOP
        END IF
@@ -268,9 +304,25 @@ CONTAINS
        END IF
     end IF
     IF (layeredCalculation) THEN
+       DEALLOCATE (gdcalVS, STAT=istat)
+       IF (istat.NE.0) THEN
+          WRITE(6,*) 'Could not deallocate gdcalVS'
+          WRITE(6,*) 'Stopping'
+          STOP
+       END IF
+    end IF
+    IF (layeredCalculation) THEN
        DEALLOCATE (gdf, STAT=istat)
        IF (istat.NE.0) THEN
           WRITE(6,*) 'Could not deallocate gdf'
+          WRITE(6,*) 'Stopping'
+          STOP
+       END IF
+    end IF
+    IF (layeredCalculation) THEN
+       DEALLOCATE (gdcalVlda, STAT=istat)
+       IF (istat.NE.0) THEN
+          WRITE(6,*) 'Could not deallocate gdcalVlda'
           WRITE(6,*) 'Stopping'
           STOP
        END IF
