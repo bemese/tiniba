@@ -25,10 +25,13 @@ MODULE arrays
   !#BMSVer3.0d
   COMPLEX(DPC), ALLOCATABLE :: cfMatElem(:,:)
   COMPLEX(DPC), ALLOCATABLE :: gdVlda(:,:,:,:)
+  COMPLEX(DPC), ALLOCATABLE :: gdVsig(:,:,:,:)
   COMPLEX(DPC), ALLOCATABLE :: gdf(:,:,:)
   COMPLEX(DPC), ALLOCATABLE :: vldaMatElem(:,:,:)
   COMPLEX(DPC), ALLOCATABLE :: gdcalVlda(:,:,:,:)
   COMPLEX(DPC), ALLOCATABLE :: gdcalVS(:,:,:,:)
+  COMPLEX(DPC), ALLOCATABLE :: gdcalVsig(:,:,:,:)
+  COMPLEX(DPC), ALLOCATABLE :: calVsig(:,:,:)
   !#BMSVer3.0u
   !!!!!!new mayo 2008 
   COMPLEX(DPC), ALLOCATABLE :: calPosMatElem(:,:,:)
@@ -110,17 +113,25 @@ CONTAINS
        END IF
     END IF
 !!!
-    IF (layeredCalculation) THEN
-       if(debug)WRITE(*,*) "Allocating gdVlda(3,3",nMax,",",nMax,")"
-       ALLOCATE (gdVlda(3,3,nMax,nMax), STAT=istat)
-       IF (istat.EQ.0) THEN
-          istat=0
-          if(debug) WRITE(*,*) 'Allocated array gdVlda'
-       ELSE
-          WRITE(6,*) 'Could not allocate gdVlda'
-          WRITE(6,*) 'Stopping'
-          STOP
-       END IF
+    if(debug)WRITE(*,*) "Allocating gdVlda(3,3",nMax,",",nMax,")"
+    ALLOCATE (gdVlda(3,3,nMax,nMax), STAT=istat)
+    IF (istat.EQ.0) THEN
+       istat=0
+       if(debug) WRITE(*,*) 'Allocated array gdVlda'
+    ELSE
+       WRITE(6,*) 'Could not allocate gdVlda'
+       WRITE(6,*) 'Stopping'
+       STOP
+    END IF
+    if(debug)WRITE(*,*) "Allocating gdVsig(3,3",nMax,",",nMax,")"
+    ALLOCATE (gdVsig(3,3,nMax,nMax), STAT=istat)
+    IF (istat.EQ.0) THEN
+       istat=0
+       if(debug) WRITE(*,*) 'Allocated array gdVsig'
+    ELSE
+       WRITE(6,*) 'Could not allocate gdVsig'
+       WRITE(6,*) 'Stopping'
+       STOP
     END IF
     IF (layeredCalculation) THEN
        if(debug)WRITE(*,*) "Allocating gdf(3",nMax,",",nMax,")"
@@ -157,6 +168,26 @@ CONTAINS
           WRITE(6,*) 'Stopping'
           STOP
        END IF
+    END IF
+    if(debug)WRITE(*,*) "Allocating gdcalVsig(3,3",nMax,",",nMax,")"
+    ALLOCATE (gdcalVsig(3,3,nMax,nMax), STAT=istat)
+    IF (istat.EQ.0) THEN
+       istat=0
+       if(debug) WRITE(*,*) 'Allocated array gdcalVsig'
+    ELSE
+       WRITE(6,*) 'Could not allocate gdcalVsig'
+       WRITE(6,*) 'Stopping'
+       STOP
+    END IF
+    if(debug)WRITE(*,*) "Allocating calVsig(3",nMax,",",nMax,")"
+    ALLOCATE (calVsig(3,nMax,nMax), STAT=istat)
+    IF (istat.EQ.0) THEN
+       istat=0
+       if(debug) WRITE(*,*) 'Allocated array calVsig'
+    ELSE
+       WRITE(6,*) 'Could not allocate calVsig'
+       WRITE(6,*) 'Stopping'
+       STOP
     END IF
 !#BMSVer3.0u
 !!!!!!!!!!!!!!!!!!
@@ -311,6 +342,18 @@ CONTAINS
           STOP
        END IF
     end IF
+    DEALLOCATE (gdcalVsig, STAT=istat)
+    IF (istat.NE.0) THEN
+       WRITE(6,*) 'Could not deallocate gdcalVsig'
+       WRITE(6,*) 'Stopping'
+       STOP
+    END IF
+    DEALLOCATE (calVsig, STAT=istat)
+    IF (istat.NE.0) THEN
+       WRITE(6,*) 'Could not deallocate calVsig'
+       WRITE(6,*) 'Stopping'
+       STOP
+    END IF
     IF (layeredCalculation) THEN
        DEALLOCATE (gdf, STAT=istat)
        IF (istat.NE.0) THEN

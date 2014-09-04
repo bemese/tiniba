@@ -1,6 +1,5 @@
 !#BMSVer3.0d
-! INJECTION CURRENT MUST BE CODIFIED ANEW!!!!!
-! if scissor =0 don't compute calVscissors
+! ??Linear resposne and INJECTION CURRENT MUST BE CODIFIED ANEW!!!!!
 !#BMSVer3.0u
 !#########################################################
 ! January, 2005
@@ -73,10 +72,13 @@ PROGRAM set_input
 !#BMSVer3.0d
   USE arrays, ONLY : cfMatElem,cfmn_data_filename
   USE arrays, ONLY : gdVlda
+  USE arrays, ONLY : gdVsig
   USE arrays, ONLY : gdf
   USE arrays, ONLY : vldaMatElem
   USE arrays, ONLY : gdcalVlda
   USE arrays, ONLY : gdcalVS
+  USE arrays, ONLY : gdcalVsig
+  USE arrays, ONLY : calVsig
 !#BMSVer3.0u
   !!!!!!!!!!
   Use arrays, ONLY : calPosMatElem
@@ -575,7 +577,6 @@ PROGRAM set_input
 !!! This far in the code the energies are still the LDA energies
 !!! => they have not yet been scissored
 !!!#BMSVer3.0u
-
            scissorFactor = 1.d0 + scissor / (band(ic)-band(iv))
 !           write(70,*)'in set_input_ascii.f90:',scissor
            DO ii=1,3
@@ -664,103 +665,173 @@ PROGRAM set_input
      !#BMSVer3.0u
      !#BMSVer3.0d
      !calculation of c-a.7
-     do ic=1,nMax
-        do iv=ic,nMax
-           do ii=1,3
-              t1=(0.d0,0.d0)
-              do l=1,nMax
-                 if((l.ne.ic).and.(l.ne.iv)) then
-                    t2=posMatElem(ii,ic,l)*cfMatElem(l,iv)&
-                         -cfMatElem(ic,l)*posMatElem(ii,l,iv)
-                    t1=t1+t2
+     IF ( layeredCalculation ) then
+        do ic=1,nMax
+           do iv=ic,nMax
+              do ii=1,3
+                 t1=(0.d0,0.d0)
+                 do l=1,nMax
+                    if((l.ne.ic).and.(l.ne.iv)) then
+                       t2=posMatElem(ii,ic,l)*cfMatElem(l,iv)&
+                            -cfMatElem(ic,l)*posMatElem(ii,l,iv)
+                       t1=t1+t2
+                    end if
+                 end do
+                 if ( ic .ne. iv ) then
+                    gdf(ii,ic,iv)=(0.d0,1.d0)*(t1+posMatElem(ii,ic,iv)&
+                         *( cfMatElem(iv,iv)-cfMatElem(ic,ic) ) )
+                 else
+                    gdf(ii,ic,iv)=(0.d0,1.d0)*t1
                  end if
+                 gdf(ii,iv,ic)=conjg(gdf(ii,ic,iv))
               end do
-              if ( ic .ne. iv ) then
-                 gdf(ii,ic,iv)=(0.d0,1.d0)*(t1+posMatElem(ii,ic,iv)&
-                      *( cfMatElem(iv,iv)-cfMatElem(ic,ic) ) )
-              else
-                 gdf(ii,ic,iv)=(0.d0,1.d0)*t1
-              end if
-              gdf(ii,iv,ic)=conjg(gdf(ii,ic,iv))
            end do
         end do
-     end do
+     end IF
      !#BMSVer3.0u
      !#BMSVer3.0d
      !Eq. c-a.2nn (\calbV^\lda);k
-     do ic=1,nMax
-        do iv=ic,nMax
-           do ii=1,3
-              do iii=1,3
-                 t1=(0.d0,0.d0)
-                 do l=1,nMax
-                    t2=gdVlda(ii,iii,ic,l)*cfMatElem(l,iv)&
-                         +vldaMatElem(ii,ic,l)*gdf(iii,l,iv)&
-                         +gdf(iii,ic,l)*vldaMatElem(ii,l,iv)&
-                         +cfMatElem(ic,l)*gdVlda(ii,iii,l,iv)
-                    t1=t1+t2
-                 end do
-                 gdcalVlda(ii,iii,ic,iv)=t1/2.d0
-                 gdcalVlda(ii,iii,iv,ic)=conjg(t1)/2.d0
-              end do
-           end do
-        end do
-     end do
-     !#BMSVer3.0u
-     !#BMSVer3.0d
-     !Eq. dgvs.cv, dgvs.cc and dgvs.vv: (\calbV^\cals);k
-     if (scissor .gt. 0.d0) then
-        !dgvs.cv
+     IF ( layeredCalculation ) then
         do ic=1,nMax
            do iv=ic,nMax
               do ii=1,3
                  do iii=1,3
                     t1=(0.d0,0.d0)
-                    do l=1,nVal !sum over v'
-                       t2=derMatElem(ii,iii,ic,l)*cfMatElem(l,iv)&
-                            +posMatElem(ii,ic,l)*gdf(iii,l,iv)
+                    do l=1,nMax
+                       t2=gdVlda(ii,iii,ic,l)*cfMatElem(l,iv)&
+                            +vldaMatElem(ii,ic,l)*gdf(iii,l,iv)&
+                            +gdf(iii,ic,l)*vldaMatElem(ii,l,iv)&
+                            +cfMatElem(ic,l)*gdVlda(ii,iii,l,iv)
                        t1=t1+t2
                     end do
-                    do l=nVal+1,nMax !sum over c'
-                       t2=gdf(iii,ic,l)*posMatElem(ii,l,iv)&
-                            +cfMatElem(ic,l)*derMatElem(ii,iii,l,iv)
-                       t1=t1+t2 !the value of t1 from sum over v' is added
+                    gdcalVlda(ii,iii,ic,iv)=t1/2.d0
+                    gdcalVlda(ii,iii,iv,ic)=conjg(t1)/2.d0
+                 end do
+              end do
+           end do
+        end do
+     end IF
+     !#BMSVer3.0u
+     !#BMSVer3.0d
+     !Eq. dgvs.cv, dgvs.cc and dgvs.vv: (\calbV^\cals);k
+     IF ( layeredCalculation ) then
+        if (scissor .gt. 0.d0) then
+           !dgvs.cv
+           do ic=1,nMax
+              do iv=ic,nMax
+                 do ii=1,3
+                    do iii=1,3
+                       t1=(0.d0,0.d0)
+                       do l=1,nVal !sum over v'
+                          t2=derMatElem(ii,iii,ic,l)*cfMatElem(l,iv)&
+                               +posMatElem(ii,ic,l)*gdf(iii,l,iv)
+                          t1=t1+t2
+                       end do
+                       do l=nVal+1,nMax !sum over c'
+                          t2=gdf(iii,ic,l)*posMatElem(ii,l,iv)&
+                               +cfMatElem(ic,l)*derMatElem(ii,iii,l,iv)
+                          t1=t1+t2 !the value of t1 from sum over v' is added
+                       end do
+                       gdcalVS(ii,iii,ic,iv)=(0.d0,1.d0)*scissor*t1/2.d0
+                       gdcalVS(ii,iii,iv,ic)=conjg(gdcalVS(ii,iii,ic,iv))
                     end do
-                    gdcalVS(ii,iii,ic,iv)=(0.d0,1.d0)*scissor*t1/2.d0
-                    gdcalVS(ii,iii,iv,ic)=conjg(gdcalVS(ii,iii,ic,iv))
+                 end do
+              end do
+           end do
+           !dgvs.cc
+           do ic=nVal+1,nMax
+              do ii=1,3
+                 do iii=1,3
+                    t1=(0.d0,0.d0)
+                    do iv=1,nVal !sum over v
+                       t2=derMatElem(ii,iii,ic,iv)*cfMatElem(iv,ic)&
+                            +posMatElem(ii,ic,iv)*gdf(iii,iv,ic)
+                       t1=t1+t2
+                    end do
+                    gdcalVS(ii,iii,ic,ic)=cmplx(-scissor*aimag(t1),0.d0)
+                 end do
+              end do
+           end do
+           !dgvs.vv
+           do iv=1,nVal
+              do ii=1,3
+                 do iii=1,3
+                    t1=(0.d0,0.d0)
+                    do ic=nVal+1,nMax !sum over c
+                       t2=derMatElem(ii,iii,iv,ic)*cfMatElem(ic,iv)&
+                            +posMatElem(ii,iv,ic)*gdf(iii,ic,iv)
+                       t1=t1+t2
+                    end do
+                    gdcalVS(ii,iii,iv,iv)=cmplx(scissor*aimag(t1),0.d0)
+                 end do
+              end do
+           end do
+        end if
+        !Eq. c-a.1
+        do ic=1,nMax
+           do iv=ic,nMax
+              do ii=1,3
+                 do iii=1,3
+                    if (scissor .gt. 0.d0) then
+                       gdcalVsig(ii,iii,ic,iv)=gdcalVlda(ii,iii,ic,iv)&
+                            +gdcalVS(ii,iii,ic,iv)
+                    else
+                       gdcalVsig(ii,iii,ic,iv)=gdcalVlda(ii,iii,ic,iv)
+                    end if
+                    gdcalVsig(ii,iii,iv,ic)=conjg(gdcalVlda(ii,iii,ic,iv))
                  end do
               end do
            end do
         end do
-        !dgvs.cc
-        do ic=nVal+1,nMax
+     end IF
+     !#BMSVer3.0u
+     !#BMSVer3.0d
+     !Eq. c-a.1nn (v^sigma_{nm});k
+     do ic=1,nMax
+        do iv=ic,nMax
            do ii=1,3
               do iii=1,3
-                 t1=(0.d0,0.d0)
-                 do iv=1,nVal !sum over v
-                    t2=derMatElem(ii,iii,ic,iv)*cfMatElem(iv,ic)&
-                         +posMatElem(ii,ic,iv)*gdf(iii,iv,ic)
-                    t1=t1+t2
-                 end do
-                 gdcalVS(ii,iii,ic,ic)=cmplx(-scissor*aimag(t1),0.d0)
+                 if ( ic .ne. iv ) then
+                    gdVsig(ii,iii,ic,iv)=gdVlda(ii,iii,ic,iv)&
+                         +(0.d0,1.d0)*scissor*derMatElem(ii,iii,ic,iv)
+                 else
+                    gdVsig(ii,iii,ic,iv)=gdVlda(ii,iii,ic,iv)
+                 end if
+                 gdVsig(ii,iii,iv,ic)=conjg(gdVlda(ii,iii,ic,iv))
               end do
            end do
         end do
-        !dgvs.vv
-        do iv=1,nVal
-           do ii=1,3
-              do iii=1,3
-                 t1=(0.d0,0.d0)
-                 do ic=nVal+1,nMax !sum over c
-                    t2=derMatElem(ii,iii,iv,ic)*cfMatElem(ic,iv)&
-                         +posMatElem(ii,iv,ic)*gdf(iii,ic,iv)
-                    t1=t1+t2
-                 end do
-                 gdcalVS(ii,iii,iv,iv)=cmplx(scissor*aimag(t1),0.d0)
-              end do
-           end do
-        end do
-     end if
+     end do
+     !#BMSVer3.0u
+     !#BMSVer3.0d
+     ! layer-to-bulk
+     IF ( layeredCalculation ) then
+        if ( ik .eq. 1 ) then 
+           write(*,*)'********'
+           write(*,*)'set_input_ascii.f90: layered calculation'
+           write(*,*)'********'
+        end if
+        !########## MIMIC A BULK RESPONSE #######d
+        calVsig=calMomMatElem !comment to check layered fromulas
+        ! uncomment next two lines to check layered fromulas
+        !calVsig=momMatElem !\calv^\gs -> v^\gs
+        !gdcalVsig=gdVsig   !(\calv^\gs);k -> (v^\gs);k
+        !########## MIMIC A BULK RESPONSE #######u
+     else !bulk calculation
+        if ( ik .eq. 1 ) then 
+           write(*,*)'********'
+           write(*,*)'set_input_ascii.f90: bulk calculation'
+           write(*,*)'momMatElem->calVsig'
+           write(*,*)'gdVsig->gdcalVsig'
+           write(*,*)'********'
+        end if
+        calVsig=momMatElem !\calv^\gs -> v^\gs
+        gdcalVsig=gdVsig !(\calv^\gs);k -> (v^\gs);k
+     end IF
+     ! Now, Eqs. c-calvimchiewn, c-calvimchie2wn, c-calvimchiwn
+     !      and  c-calvimchi2wn
+     ! ??ADD linear response and current injection responses??
+     ! can be calculated as coded for a layered-response
      !#BMSVer3.0u
 !!!
 !!! Now use the scissored energy bands !!!!!!!!!!

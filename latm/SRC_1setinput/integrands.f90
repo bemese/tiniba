@@ -11,6 +11,9 @@ MODULE integrands
   USE arrays, ONLY: calMomMatElem
   USE arrays, ONLY: spiMatElem
   USE arrays, ONLY: calDelta
+  !#BMSVer3.0d
+  USE arrays, ONLY: calVsig,gdcalVsig
+  !#BMSVer3.0u
 !  USE arrays, ONLY: genderiv
   USE arrays, ONLY: curMatelem
   USE arrays, ONLY: calrho
@@ -2065,8 +2068,9 @@ CONTAINS
 !!! 
                    psym=(derMatElem(db,dc,c,v)+derMatElem(dc,db,c,v))/2.
                    psym1=(posMatElem(db,c,v)*delta(dc,c,v)+posMatElem(dc,c,v)*delta(db,c,v))/2.
-                   tmp=tmp+4.*(T3(da,db,dc)/omegacv)*(aimag(posMatElem(da,v,c)*psym) &
-                                                     -2.*aimag(posMatElem(da,v,c)*psym1)/omegacv)
+                   tmp=tmp+4.*(T3(da,db,dc)/omegacv)&
+                        *(aimag(posMatElem(da,v,c)*psym) &
+                        -2.*aimag(posMatElem(da,v,c)*psym1)/omegacv)
                 END DO
              END DO
           END DO
@@ -2087,6 +2091,7 @@ CONTAINS
   END SUBROUTINE shg2L
 !!!######################
 
+!!!#BMSVer3.0d 
 !!!##################
   SUBROUTINE shg1C
 !!!##################
@@ -2094,7 +2099,7 @@ CONTAINS
 !!! This computes the integrand of the imaginary part of
 !!! the nonlinear response tensor for the 1-omega term
 !!! using the length-gauge correctly scissored according to
-!!! shg-layer.tex \ref{imchiewn,imchiiwn}, i.e. Eq. (99,101)
+!!! shg-layer-nonlocal.tex Eqs. calvimchiewn and calvimchiwn
 !!!
     IMPLICIT NONE
     
@@ -2131,17 +2136,19 @@ CONTAINS
                          IF ((omegacvlv.le.0.d0).and.(omegacvlv.ge.(-tol))) omegacvlv=omegacvlv-tol ! agrege
                          psym1=(posMatElem(db,c,v)*posMatElem(dc,v,l)+posMatElem(dc,c,v)*posMatElem(db,v,l))/2.
                          psym2=(posMatElem(dc,l,c)*posMatElem(db,c,v)+posMatElem(db,l,c)*posMatElem(dc,c,v))/2.
-                         tmp=tmp+T3(da,db,dc)*( real(-omegacl*calPosMatElem(da,l,c)*psym1)/(omegacv*omegacvcl) &
-                                               -real(-omegalv*calPosMatElem(da,v,l)*psym2)/(omegacv*omegacvlv)) 
+                         tmp=tmp+T3(da,db,dc)*( aimag(calVsig(da,l,c)*psym1)/(omegacv*omegacvcl) &
+                              -aimag(calVsig(da,v,l)*psym2)/(omegacv*omegacvlv)) 
                       end if
                    end do
 
 !!! 
-                   psym1=( posMatElem(db,c,v)*GenDerCalPosition(da,dc,v,c) &
-                          +posMatElem(dc,c,v)*GenDerCalPosition(da,db,v,c) )/2.
+                   psym1=( posMatElem(db,c,v)*gdcalVsig(da,dc,v,c) &
+                          +posMatElem(dc,c,v)*gdcalVsig(da,db,v,c) )/2.
                    psym2=( posMatElem(db,c,v)*delta(dc,c,v) &
                           +posMatElem(dc,c,v)*delta(db,c,v) )/2.
-                   tmp=tmp+(T3(da,db,dc)/omegacv)*(aimag(psym1)+2.*aimag(calPosMatElem(da,v,c)*psym2)/omegacv)
+                   tmp=tmp+(T3(da,db,dc)/(omegacv)**2)&
+                        *( real(psym1)&
+                        +real(calVsig(da,v,c)*psym2)/omegacv)
 !!!
                 END DO
              END DO
@@ -2162,15 +2169,17 @@ CONTAINS
 !!!##################
   END SUBROUTINE shg1C
 !!!##################
+!!!#BMSVer3.0u
 
+!!!#BMSVer3.0d
 !!!##############
   SUBROUTINE shg2C
 !!!##############
 !!!
 !!! This computes the integrand of the imaginary part of
-!!! the nonlinear response tensor for the 1-omega term
+!!! the nonlinear response tensor for the 2-omega term
 !!! using the length-gauge correctly scissored according to
-!!! shg-layer.tex \ref{imchie2wn,imchi2wn}, i.e. Eq. (100,102)
+!!! shg-layer.tex Eqs. calvimchie2wn and calvimchi2wn
 !!!
 
     IMPLICIT NONE
@@ -2204,7 +2213,8 @@ CONTAINS
                          IF ((omegacvpcv.ge.0.d0).and.(omegacvpcv.le.tol))    omegacvpcv=omegacvpcv+tol ! agrege
                          IF ((omegacvpcv.le.0.d0).and.(omegacvpcv.ge.(-tol))) omegacvpcv=omegacvpcv-tol ! agrege 
                         psym=(posMatElem(db,c,vp)*posMatElem(dc,vp,v)+posMatElem(dc,c,vp)*posMatElem(db,vp,v))/2.
-                         tmp=tmp+4.*T3(da,db,dc)*real(calPosMatElem(da,v,c)*psym)/omegacvpcv
+                         tmp=tmp-4.*T3(da,db,dc)*aimag(calVsig(da,v,c)*psym)&
+                              /(omegacv*omegacvpcv)
                       end if
                    end do
 !!!! virtual-electron
@@ -2215,14 +2225,16 @@ CONTAINS
                          IF ((omegacpvcv.ge.0.d0).and.(omegacpvcv.le.tol))    omegacpvcv=omegacpvcv+tol ! agrege
                          IF ((omegacpvcv.le.0.d0).and.(omegacpvcv.ge.(-tol))) omegacpvcv=omegacpvcv-tol ! agrege
                          psym=(posMatElem(db,c,cp)*posMatElem(dc,cp,v)+posMatElem(dc,c,cp)*posMatElem(db,cp,v))/2.
-                         tmp=tmp-4.*T3(da,db,dc)*real(calPosMatElem(da,v,c)*psym)/omegacpvcv
+                         tmp=tmp+4.*T3(da,db,dc)*aimag(calVsig(da,v,c)*psym)&
+                              /(omegacv*omegacpvcv)
                       end if
                    end do
 !!! 
                    psym=(derMatElem(db,dc,c,v)+derMatElem(dc,db,c,v))/2.
                    psym1=(posMatElem(db,c,v)*delta(dc,c,v)+posMatElem(dc,c,v)*delta(db,c,v))/2.
-                   tmp=tmp+4.*(T3(da,db,dc)/omegacv)*(aimag(posMatElem(da,v,c)*psym) &
-                                                     -2.*aimag(calPosMatElem(da,v,c)*psym1)/omegacv)
+                   tmp=tmp+4.*(T3(da,db,dc)/(omegacv)**2)&
+                        *(real(calVsig(da,v,c)*psym) &
+                        -2.*real(calVsig(da,v,c)*psym1)/omegacv)
                 END DO
              END DO
           END DO
@@ -2242,7 +2254,8 @@ CONTAINS
 !!!######################
   END SUBROUTINE shg2C
 !!!######################
-  
+!!!#BMSVer3.0u
+
 !!!##################
     COMPLEX FUNCTION efe(c,v,i,j)
 !!!##################
