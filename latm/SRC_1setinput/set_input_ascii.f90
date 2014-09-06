@@ -549,6 +549,15 @@ PROGRAM set_input
         end do
      end do
      !#BMSVer3.0u
+     !#BMSVer3.0d
+     !f(v)=1 and f(c)=0
+     do iv=1,nVal
+        f(iv)=1.d0
+     end do
+     do ic=nVal+1,nMax
+        f(ic)=0.d0
+     end do
+     !#BMSVer3.0u
 !!!#BMSVer3.0d
 !!! Now renormalize (scissor) the momentum matrix elements     
 !!! so the scissor correction is properly included
@@ -638,8 +647,8 @@ PROGRAM set_input
                  end if
               end IF
            END DO
-        END DO
-     END DO
+        END DO !ic=nVal+1,nMax
+     END DO !iv=1,nVal
      !#BMSVer3.0u
 !!! 
      !#BMSVer3.0d
@@ -788,13 +797,6 @@ PROGRAM set_input
      end IF
      !#BMSVer3.0u
      !#BMSVer3.0d
-     !f(v)=1 and f(c)=0
-     do iv=1,nVal
-        f(iv)=1.d0
-     end do
-     do iv=nVal+1,nMax
-        f(iv)=0.d0
-     end do
      !Eq. c-a.1nn (v^sigma_{nm});k
      do ic=1,nMax
         do iv=ic,nMax
@@ -822,10 +824,10 @@ PROGRAM set_input
            write(*,*)'********'
         end if
         !########## MIMIC A BULK RESPONSE #######d
-        calVsig=calMomMatElem !comment to check layered fromulas
+        !calVsig=calMomMatElem !comment to check layered fromulas
         ! uncomment next two lines to check layered fromulas
-        !calVsig=momMatElem !\calv^\gs -> v^\gs
-        !gdcalVsig=gdVsig   !(\calv^\gs);k -> (v^\gs);k
+        calVsig=momMatElem !\calv^\gs -> v^\gs
+        gdcalVsig=gdVsig   !(\calv^\gs);k -> (v^\gs);k
         !########## MIMIC A BULK RESPONSE #######u
      else !bulk calculation
         if ( ik .eq. 1 ) then 

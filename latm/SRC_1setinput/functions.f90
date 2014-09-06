@@ -8,6 +8,8 @@ MODULE FUNCTIONS
   USE arrays, ONLY : calMomMatElem,calDelta,calPosMatElem
   !#BMSVer3.0d
   USE arrays, ONLY : cfMatElem
+  USE arrays, ONLY : f
+  USE arrays, ONLY : vldaMatElem
   !#BMSVer3.0u
   IMPLICIT NONE
 CONTAINS
@@ -22,8 +24,8 @@ CONTAINS
     COMPLEX(DPC) :: tmp,aux1,aux2
     tmp=(0.d0,0.d0)
     DO q = 1, nMax
-       aux1=momMatElem(alpha,iv,q)*cfMatElem(q,ic)
-       aux2=cfMatElem(iv,q)*momMatElem(alpha,q,ic)
+       aux1=vldaMatElem(alpha,iv,q)*cfMatElem(q,ic)
+       aux2=cfMatElem(iv,q)*vldaMatElem(alpha,q,ic)
        tmp=tmp+(aux1+aux2)/2.d0
     end DO
     calVlda=tmp
@@ -33,7 +35,7 @@ CONTAINS
 !#BMSVer3.0u
 !#BMSVer3.0d
 !!!############################################
-  COMPLEX(DPC) FUNCTION calVscissors(alpha,iv,ic,ik)
+  COMPLEX(DPC) FUNCTION calVscissorso(alpha,iv,ic,ik)
 !!!############################################
     ! Finds \calv^\cals_{nm} (vs.vc,vs.cc,vs.vv) for the given k-value.
     ! IF iv not equal to ic:
@@ -52,7 +54,6 @@ CONTAINS
     COMPLEX(DPC) :: tmp1,tmp2,aux
     tmp1=(0.d0,0.d0)
     tmp2=(0.d0,0.d0)
-!!!!??????
     if (ic.gt.iv) then !vc case
        DO q = 1, nVal
           aux=posMatElem(alpha,iv,q)*cfMatElem(q,ic)
@@ -63,7 +64,7 @@ CONTAINS
           tmp2=tmp2+aux
        end DO
        !Notice that the vc case is coded 
-       calVscissors=(0.d0,-1.d0)*(tmp1+tmp2)/2.d0
+       calVscissorso=(0.d0,-1.d0)*(tmp1+tmp2)/2.d0
     end if
     if (ic.eq.iv) then
        if (iv.le.nVal) then !vv-case
@@ -71,16 +72,42 @@ CONTAINS
              aux=posMatElem(alpha,iv,q)*cfMatElem(q,iv)
              tmp1=tmp1+aux             
           end do
-          calVscissors=cmplx(aimag(tmp1),0.d0)
+          calVscissorso=cmplx(aimag(tmp1),0.d0)
        end if
        if (ic.gt.nVal) then !cc-case
           do q=1,nVal !sum over valence states
              aux=posMatElem(alpha,ic,q)*cfMatElem(q,ic)
              tmp1=tmp1+aux             
           end do
-          calVscissors=cmplx(-aimag(tmp1),0.d0)
+          calVscissorso=cmplx(-aimag(tmp1),0.d0)
        end if
     end if
+!!!############################################
+  end FUNCTION calVscissorso
+!############################################
+!#BMSVer3.0u
+!#BMSVer3.0d
+!!!############################################
+  COMPLEX(DPC) FUNCTION calVscissors(alpha,n,m,ik)
+!!!############################################
+    ! Finds \calv^\cals_{nm} (c-a.3bb) for the given k-value.
+    !
+    ! The value of the scissor correction (scissorFactor) is used in 
+    ! set_input_ascii.f90 instead of here, just for convenience
+    ! 
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: alpha, n, m
+    INTEGER :: q,ik
+    COMPLEX(DPC) :: tmp,aux
+    tmp=(0.d0,0.d0)
+    DO q = 1, nMax
+       if ( q .eq. n )posMatElem(alpha,n,q)=(0.d0,0.d0)
+       if ( q .eq. m )posMatElem(alpha,q,m)=(0.d0,0.d0)
+       aux=(f(q)-f(n))*posMatElem(alpha,n,q)*cfMatElem(q,m)&
+            +(f(m)-f(q))*cfMatElem(n,q)*posMatElem(alpha,q,m)
+       tmp=tmp+aux
+    end DO
+    calVscissors=(0.d0,1.d0)*tmp/2.d0
 !!!############################################
   end FUNCTION calVscissors
 !############################################

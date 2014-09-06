@@ -425,8 +425,8 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	    Line
 	    rm -f perro
 	    rm 44* 45*
-	    rm -f res/shg2C.kk* res/shg2C.sm*
-	    rm -f res/shg1C.kk* res/shg1C.sm*
+	    rm -f res/shg2C*.kk* res/shg2C*.sm*
+	    rm -f res/shg1C*.kk* res/shg1C*.sm*
 #
 	fi
 # SHG Velocity Gauge
@@ -499,8 +499,8 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	    Line
 	    rm -f perro
 	    rm 42* 43*
-	    rm -f res/shg2V.kk* res/shg2V.sm*
-	    rm -f res/shg1V.kk* res/shg1V.sm*
+	    rm -f res/shg2V*.kk* res/shg2V*.sm*
+	    rm -f res/shg1V*.kk* res/shg1V*.sm*
 #
 	fi
 #
