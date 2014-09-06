@@ -35,9 +35,9 @@ CONTAINS
 !!!############################################
   COMPLEX(DPC) FUNCTION calVscissors(alpha,iv,ic,ik)
 !!!############################################
-    ! Finds \calv^\cals_{nm} (vs.cv,vs.cc,vs.vv) for the given k-value.
+    ! Finds \calv^\cals_{nm} (vs.vc,vs.cc,vs.vv) for the given k-value.
     ! IF iv not equal to ic:
-    ! \calv^\cals_{cv} (vs.cv) is calculated
+    ! \calv^\cals_{vc} (vs.vc) is calculated
     ! IF iv=ic=conduction
     ! \calv^\cals_{cc} (vs.cc) is calculated
     ! IF iv=ic=valence
@@ -52,19 +52,21 @@ CONTAINS
     COMPLEX(DPC) :: tmp1,tmp2,aux
     tmp1=(0.d0,0.d0)
     tmp2=(0.d0,0.d0)
-    if (ic.ne.iv) then
+!!!!??????
+    if (ic.gt.iv) then !vc case
        DO q = 1, nVal
-          aux=posMatElem(alpha,ic,q)*cfMatElem(q,iv)
+          aux=posMatElem(alpha,iv,q)*cfMatElem(q,ic)
           tmp1=tmp1+aux
        end DO
        DO q = nVal+1, nMax
-          aux=cfMatElem(ic,q)*posMatElem(alpha,q,iv)
+          aux=cfMatElem(iv,q)*posMatElem(alpha,q,ic)
           tmp2=tmp2+aux
        end DO
-       calVscissors=(0.d0,1.d0)*(tmp1+tmp2)/2.d0
+       !Notice that the vc case is coded 
+       calVscissors=(0.d0,-1.d0)*(tmp1+tmp2)/2.d0
     end if
     if (ic.eq.iv) then
-       if (ic.le.nVal) then !vv-case
+       if (iv.le.nVal) then !vv-case
           do q=nVal+1,nMax !sum over conduction states
              aux=posMatElem(alpha,iv,q)*cfMatElem(q,iv)
              tmp1=tmp1+aux             

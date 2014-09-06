@@ -346,8 +346,8 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	    Line
 	    rm -f perro
 	    rm 21* 22*
-	    rm -f res/shg2L.kk* res/shg2L.sm*
-	    rm -f res/shg1L.kk* res/shg1L.sm*
+	    rm -f res/shg2L*.kk* res/shg2L*.sm*
+	    rm -f res/shg1L*.kk* res/shg1L*.sm*
 #
 	fi
 #

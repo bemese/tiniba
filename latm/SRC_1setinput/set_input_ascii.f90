@@ -79,6 +79,7 @@ PROGRAM set_input
   USE arrays, ONLY : gdcalVS
   USE arrays, ONLY : gdcalVsig
   USE arrays, ONLY : calVsig
+  USE arrays, ONLY : f
 !#BMSVer3.0u
   !!!!!!!!!!
   Use arrays, ONLY : calPosMatElem
@@ -604,13 +605,13 @@ PROGRAM set_input
                  if(vnlkss)then
                     t1=calVlda(ii,iv,ic,ik)
                     if (scissor .gt. 0.d0) then
+                       !The vc case is coded
                        t2=calVscissors(ii,iv,ic,ik)*scissor
                     else
                        t2=(0.d0,0.d0)
                     end if
                     calMomMatElem(ii,iv,ic) = t1+t2
                     calMomMatElem(ii,ic,iv) = conjg(t1+t2)
-                    !stop "under cosntruction"
                  else
                     !if vnlkss is false: v^\nl is NOT included
                     !and Eq. \ref{eni.2} is used, which was
@@ -620,6 +621,7 @@ PROGRAM set_input
                     !using new expressions c-a.3b or vs.cv
                     t1=calMomMatElem(ii,iv,ic)
                     if (scissor .gt. 0.d0) then
+                       !The vc case is coded
                        t2=calVscissors(ii,iv,ic,ik)*scissor
                     else
                        t2=(0.d0,0.d0)
@@ -786,18 +788,26 @@ PROGRAM set_input
      end IF
      !#BMSVer3.0u
      !#BMSVer3.0d
+     !f(v)=1 and f(c)=0
+     do iv=1,nVal
+        f(iv)=1.d0
+     end do
+     do iv=nVal+1,nMax
+        f(iv)=0.d0
+     end do
      !Eq. c-a.1nn (v^sigma_{nm});k
      do ic=1,nMax
         do iv=ic,nMax
            do ii=1,3
               do iii=1,3
-                 if ( ic .ne. iv ) then
+                 if ( scissor .gt. 0.d0 ) then
                     gdVsig(ii,iii,ic,iv)=gdVlda(ii,iii,ic,iv)&
-                         +(0.d0,1.d0)*scissor*derMatElem(ii,iii,ic,iv)
+                         +(0.d0,1.d0)*scissor*(f(iv)-f(ic))&
+                         *derMatElem(ii,iii,ic,iv)
                  else
                     gdVsig(ii,iii,ic,iv)=gdVlda(ii,iii,ic,iv)
                  end if
-                 gdVsig(ii,iii,iv,ic)=conjg(gdVlda(ii,iii,ic,iv))
+                 gdVsig(ii,iii,iv,ic)=conjg(gdVsig(ii,iii,ic,iv))
               end do
            end do
         end do

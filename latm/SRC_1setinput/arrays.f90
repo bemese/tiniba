@@ -32,6 +32,7 @@ MODULE arrays
   COMPLEX(DPC), ALLOCATABLE :: gdcalVS(:,:,:,:)
   COMPLEX(DPC), ALLOCATABLE :: gdcalVsig(:,:,:,:)
   COMPLEX(DPC), ALLOCATABLE :: calVsig(:,:,:)
+  REAL(DPC)   , ALLOCATABLE :: f(:)
   !#BMSVer3.0u
   !!!!!!new mayo 2008 
   COMPLEX(DPC), ALLOCATABLE :: calPosMatElem(:,:,:)
@@ -78,6 +79,12 @@ CONTAINS
     END IF
 
 !#BMSVer3.0d
+    ALLOCATE (f(nMax), STAT=istat)
+    IF (istat.NE.0) THEN
+       WRITE(6,*) 'Could not allocate f'
+       WRITE(6,*) 'Stopping'
+       STOP
+    END IF
     ALLOCATE (vldaMatElem(3,nMax,nMax), STAT=istat)
     IF (istat.NE.0) THEN
        WRITE(6,*) 'Could not allocate vldaMatElem'
@@ -318,6 +325,18 @@ CONTAINS
        END IF
     end IF
     !#BMSVer3.0d
+    DEALLOCATE (f, STAT=istat)
+    IF (istat.NE.0) THEN
+       WRITE(6,*) 'Could not deallocate f'
+       WRITE(6,*) 'Stopping'
+       STOP
+    END IF
+    DEALLOCATE (vldaMatElem, STAT=istat)
+    IF (istat.NE.0) THEN
+       WRITE(6,*) 'Could not deallocate vldaMatElem'
+       WRITE(6,*) 'Stopping'
+       STOP
+    END IF
     IF (layeredCalculation) THEN
        DEALLOCATE (cfMatElem, STAT=istat)
        IF (istat.NE.0) THEN
