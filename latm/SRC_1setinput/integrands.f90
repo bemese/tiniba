@@ -15,7 +15,7 @@ MODULE integrands
   USE arrays, ONLY: calVsig,gdcalVsig
   !#BMSVer3.0u
 !  USE arrays, ONLY: genderiv
-  USE arrays, ONLY: curMatelem
+  USE arrays, ONLY: curMatElem
   USE arrays, ONLY: calrho
 !!!--------------------------------June  2008
   USE arrays, ONLY: calPosMatElem
@@ -786,98 +786,6 @@ CONTAINS
 !!!#####################
   END SUBROUTINE eta2
 !!!#####################
-!!!#################
-  SUBROUTINE eta2_good
-!!!#################
-    IMPLICIT NONE
-    COMPLEX(DPC) :: ctmp
-    REAL(DP) :: T3(3,3,3)
-
-    T3(1:3,1:3,1:3) = reshape(spectrum_info(i_spectra)%transformation_elements(1:27), (/3,3,3/))    
-    
-    DO iv = 1, nVal
-       DO ic = nVal+1, nMax
-          ctmp = (0.d0, 0.d0)
-          DO ix=1,3
-             DO iy=1,3
-                DO iz=1,3
-                   ctmp = ctmp                                     & 
-                        +                                          &
-                        T3(ix,iy,iz) *                             & 
-                        Delta(ix,ic,iv) *                          &
-                       (posMatElem(iz,ic,iv)*posMatelem(iy,iv,ic)  &
-                        -posMatElem(iy,ic,iv)*posMatelem(iz,iv,ic))
-                END DO
-             END DO
-          END DO
-
-          IF (ic==nMax) THEN
-             WRITE(UNIT=spectrum_info(i_spectra)%integrand_filename_unit, &
-                  FMT="(E15.7)",ADVANCE="YES") AIMAG(ctmp)
-          ELSE
-             WRITE(UNIT=spectrum_info(i_spectra)%integrand_filename_unit, &
-                  FMT="(E15.7)",ADVANCE="NO") AIMAG(ctmp)
-          END IF
-       END DO
-    END DO
-104 FORMAT(E15.7)
-92 format(2i5,6e14.5)     
-79  format(5i5,76e14.5)    
-!!!#####################
-  END SUBROUTINE eta2_good
-!!!#####################
-!!!#################
-  SUBROUTINE caleta2_good_
-!!!################# calDelta
-    IMPLICIT NONE
-    REAL(DP) :: T3(3,3,3)
-    REAL(DP) :: tmp
-    T3(1:3,1:3,1:3) = reshape(spectrum_info(i_spectra)%transformation_elements(1:27), (/3,3,3/))    
-!!!!!!!!!!!!!!!!!
-    DO iv = 1, nVal
-       DO ic = nVal+1, nMax
-          tmp = 0.d0
-          DO ix=1,3
-             DO iy=1,3
-                DO iz=1,3
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!                             
-!!!!!!!!!!!!!!!!!!!!!! this is the old one before 17 Agosto Agosto 
-                     !!    tmp = tmp +  T3(ix,iy,iz)*Delta(ix,ic,iv)* &
-                     !!   aimag(posMatElem(iy,ic,iv)*calPosMatElem(iz,iv,ic))
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
-!!!!!!!!!!!! Modificated according to BMS Lunes 17 Agosto 2009 
-!!!!!!!!!!!! Modificated according to BMS Lunes 17 Agosto 2009 ec. 16
-!!!!!!!!!!!! The sum need M diferente de N then 
-
-              if (iv.ne.ic)then 
-                         tmp = tmp +  T3(ix,iy,iz)*Delta(ix,ic,iv)* & 
-                             ( &
-                               aimag(calposMatElem(iz,ic,iv)*PosMatElem(iy,iv,ic)) + &
-                               aimag(calposMatElem(iy,iv,ic)*PosMatElem(iz,ic,iv))   &
-                             )
-              end if 
-!!!!!!!!!!!! Modificated according to BMS Lunes 17 Agosto 2009 ec. 16
-!!!!!!!!!!!! Modificated according to BMS Lunes 17 Agosto 2009 
-                END DO
-             END DO
-          END DO
-          IF (ic==nMax) THEN
-             WRITE(UNIT=spectrum_info(i_spectra)%integrand_filename_unit, &
-                  FMT="(E15.7)",ADVANCE="YES")tmp
-          ELSE
-             WRITE(UNIT=spectrum_info(i_spectra)%integrand_filename_unit, &
-                  FMT="(E15.7)",ADVANCE="NO")tmp
-          END IF
-          
-       END DO
-    END DO
-104 FORMAT(E15.7)
-92  format(2i5,6e14.5)     
-    
-!!!#####################
-  END SUBROUTINE caleta2_good_
-!!!#####################
 
 !!!#################
   SUBROUTINE caleta2
@@ -924,65 +832,6 @@ CONTAINS
   END SUBROUTINE caleta2
 !!!#####################
 
-!!!#################
-  SUBROUTINE caleta2_otra
-!!!################# con calDelta
-    IMPLICIT NONE
-    REAL(DP) :: T3(3,3,3)
-    REAL(DP) :: tmp
-    T3(1:3,1:3,1:3) = reshape(spectrum_info(i_spectra)%transformation_elements(1:27), (/3,3,3/))    
-!!!!!!!!!!!!!!!!!
-    DO iv = 1, nVal
-       DO ic = nVal+1, nMax
-          tmp = 0.d0
-          DO ix=1,3
-             DO iy=1,3
-                DO iz=1,3
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!                             
-!!!!!!!!!!!!!!!!!!!!!! this is the old one before 17 Agosto Agosto 
-                     !!    tmp = tmp +  T3(ix,iy,iz)*Delta(ix,ic,iv)* &
-                     !!   aimag(posMatElem(iy,ic,iv)*calPosMatElem(iz,iv,ic))
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
-!!!!!!!!!!!! Modificated according to BMS Lunes 17 Agosto 2009 
-!!!!!!!!!!!! Modificated according to BMS Lunes 17 Agosto 2009 ec. 16
-!!!!!!!!!!!! The sum need M diferente de N then 
-!!!!!!!!!!!!
-!!!!!!!!!!!! Modificate Lunes 31 Agosto 2009 
-!!!!!!!!!!!! Delta por calDelta
-              if (iv.ne.ic)then 
-                       !!  tmp = tmp +  T3(ix,iy,iz)*calDelta(ix,ic,iv)* &      !! sin cal Delta  
-                       tmp = tmp +  T3(ix,iy,iz)*calDelta(ix,ic,iv)* &   !! con cal Delta
-                             ( &
-                               aimag(calposMatElem(iz,ic,iv)*PosMatElem(iy,iv,ic)) + &
-                               aimag(calposMatElem(iy,iv,ic)*PosMatElem(iz,ic,iv))   &
-                               !aimag(posMatElem(iz,ic,iv)*PosMatElem(iy,iv,ic)) + &
-                               !aimag(posMatElem(iy,iv,ic)*PosMatElem(iz,ic,iv))   &
-                             )
-              end if 
-!!!!!!!!!!!! Modificated according to BMS Lunes 17 Agosto 2009 ec. 16
-!!!!!!!!!!!! Modificated according to BMS Lunes 17 Agosto 2009 
-                END DO
-             END DO
-          END DO
-          IF (ic==nMax) THEN
-             WRITE(UNIT=spectrum_info(i_spectra)%integrand_filename_unit, &
-                  FMT="(E15.7)",ADVANCE="YES")tmp
-          ELSE
-             WRITE(UNIT=spectrum_info(i_spectra)%integrand_filename_unit, &
-                  FMT="(E15.7)",ADVANCE="NO")tmp
-          END IF
-          
-       END DO
-    END DO
-104 FORMAT(E15.7)
-92  format(2i5,6e14.5)     
-    
-!!!#####################
-  END SUBROUTINE caleta2_otra
-!!!#####################
-
-  
 !!!#############
   SUBROUTINE ImS
 !!!#############

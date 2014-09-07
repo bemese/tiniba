@@ -1,5 +1,6 @@
 !#BMSVer3.0d
 ! ??Linear resposne and INJECTION CURRENT MUST BE CODIFIED ANEW!!!!!
+! DONE sep/7/2014
 !#BMSVer3.0u
 !#########################################################
 ! January, 2005
@@ -435,41 +436,33 @@ PROGRAM set_input
         momMatElem(2,iv,iv)= REAL(momMatElem(2,iv,iv)) + 0.d0*(0.d0,1.d0)
         momMatElem(3,iv,iv)= REAL(momMatElem(3,iv,iv)) + 0.d0*(0.d0,1.d0)
         IF ( layeredCalculation ) then
-           calmomMatElem(1,iv,iv)= REAL(calmomMatElem(1,iv,iv)) + 0.d0*(0.d0,1.d0)
-           calmomMatElem(2,iv,iv)= REAL(calmomMatElem(2,iv,iv)) + 0.d0*(0.d0,1.d0)
-           calmomMatElem(3,iv,iv)= REAL(calmomMatElem(3,iv,iv)) + 0.d0*(0.d0,1.d0)
+           calMomMatElem(1,iv,iv)= REAL(calMomMatElem(1,iv,iv)) + 0.d0*(0.d0,1.d0)
+           calMomMatElem(2,iv,iv)= REAL(calMomMatElem(2,iv,iv)) + 0.d0*(0.d0,1.d0)
+           calMomMatElem(3,iv,iv)= REAL(calMomMatElem(3,iv,iv)) + 0.d0*(0.d0,1.d0)
         END IF
      END DO
-    
 
-     ! Calculate Delta(m,n)
-!#BMSVer3.0d
-! for -n option the contribution from v^\nl is included
-!#BMSVer3.0u
-
+     !#BMSVer3.0d
      DO iv = 1, nVal
         DO ic = nVal+1, nMax
+           ! Calculate Delta(m,n) Eq. {delta} NOT LAYERED
+           ! for -n option the contribution from v^\nl is included
+           ! recall that Delta has zero contribution from
+           ! the scissors operator
            Delta(1,ic,iv) = momMatElem(1,ic,ic)-momMatElem(1,iv,iv)
            Delta(2,ic,iv) = momMatElem(2,ic,ic)-momMatElem(2,iv,iv)
            Delta(3,ic,iv) = momMatElem(3,ic,ic)-momMatElem(3,iv,iv)
-!#BMSVer3.0d
-! Is calDelta needed???
-!#BMSVer3.0u
-           IF ( layeredCalculation ) then
-               calDelta(1,ic,iv) = calmomMatElem(1,ic,ic)-calmomMatElem(1,iv,iv)
-               calDelta(2,ic,iv) = calmomMatElem(2,ic,ic)-calmomMatElem(2,iv,iv)
-               calDelta(3,ic,iv) = calmomMatElem(3,ic,ic)-calmomMatElem(3,iv,iv)
-           END IF
         END DO
      END DO
+     !#BMSVer3.0u
 
-     IF (oldStyleScissors) THEN
-        band(1:nMax) = energys(ik,1:nMax)
+     IF (oldStyleScissors) THEN !set to false
+        band(1:nMax) = energys(ik,1:nMax) !this is not longer used
      END IF
      !#BMSVer3.0d
      ! Calculate the generalized derivative of the position matrix elements
      ! for -n option the contribution from v^\nl is included
-     ! however, neglecting \tau^{ab}_{nm}
+     ! however, neglecting \tau^{ab}_{nm}. Eq {c-na_rgendevn}
      !#BMSVer3.0u
      DO iv = 1, nMax
         DO ic = 1, nMax
@@ -637,6 +630,8 @@ PROGRAM set_input
                     end if
                     calMomMatElem(ii,iv,ic) = t1+t2
                     calMomMatElem(ii,ic,iv) = conjg(t1+t2)
+!!!above calMomMatElem is already the caligraphic velocity matrix elements, i.e.
+!!!it contains both the v^\nl (-n option) and the scissors contribution 
 !!!calMomMatElem->\calbv^{\gs,\ell}_{nm} (c-a.1)
 !!!As explianed in shg-layer-nonlocal.pdf
 !!!calMomMatElem ARE NOT SIMPLY RESCALED
@@ -649,6 +644,20 @@ PROGRAM set_input
            END DO
         END DO !ic=nVal+1,nMax
      END DO !iv=1,nVal
+     !#BMSVer3.0u
+     !#BMSVer3.0d
+     IF ( layeredCalculation ) then
+        DO iv = 1, nVal
+           DO ic = nVal+1, nMax
+              ! Calculate Delta^\ell_{nm} Eq. {caldelta}  LAYERED
+              ! for -n option the contribution from v^\nl is included
+              ! the contribution from the scissors operator is included
+              calDelta(1,ic,iv) = calMomMatElem(1,ic,ic)-calMomMatElem(1,iv,iv)
+              calDelta(2,ic,iv) = calMomMatElem(2,ic,ic)-calMomMatElem(2,iv,iv)
+              calDelta(3,ic,iv) = calMomMatElem(3,ic,ic)-calMomMatElem(3,iv,iv)
+           END DO
+        END DO
+     END IF
      !#BMSVer3.0u
 !!! 
      !#BMSVer3.0d
@@ -724,7 +733,7 @@ PROGRAM set_input
      end IF
      !#BMSVer3.0u
      !#BMSVer3.0d
-     !Eq. dgvs.cv, dgvs.cc and dgvs.vv: (\calbV^\cals);k
+     !Eq. c-a.3bnn: (\calbV^\cals);k
      IF ( layeredCalculation ) then
         if (scissor .gt. 0.d0) then
            !dgvs.cv
@@ -733,47 +742,18 @@ PROGRAM set_input
                  do ii=1,3
                     do iii=1,3
                        t1=(0.d0,0.d0)
-                       do l=1,nVal !sum over v'
-                          t2=derMatElem(ii,iii,ic,l)*cfMatElem(l,iv)&
-                               +posMatElem(ii,ic,l)*gdf(iii,l,iv)
+                       do l=1,nMax !sum over q=l
+                          t2=(f(l)-f(ic))&
+                               *( derMatElem(ii,iii,ic,l)*cfMatElem(l,iv)&
+                               +  posMatElem(ii,ic,l)*gdf(iii,l,iv) )&
+                               + (f(iv)-f(l))&
+                               *( gdf(iii,ic,l)*posMatElem(ii,l,iv)&
+                               + cfMatElem(ic,l)*derMatElem(ii,iii,l,iv) )
                           t1=t1+t2
-                       end do
-                       do l=nVal+1,nMax !sum over c'
-                          t2=gdf(iii,ic,l)*posMatElem(ii,l,iv)&
-                               +cfMatElem(ic,l)*derMatElem(ii,iii,l,iv)
-                          t1=t1+t2 !the value of t1 from sum over v' is added
                        end do
                        gdcalVS(ii,iii,ic,iv)=(0.d0,1.d0)*scissor*t1/2.d0
                        gdcalVS(ii,iii,iv,ic)=conjg(gdcalVS(ii,iii,ic,iv))
                     end do
-                 end do
-              end do
-           end do
-           !dgvs.cc
-           do ic=nVal+1,nMax
-              do ii=1,3
-                 do iii=1,3
-                    t1=(0.d0,0.d0)
-                    do iv=1,nVal !sum over v
-                       t2=derMatElem(ii,iii,ic,iv)*cfMatElem(iv,ic)&
-                            +posMatElem(ii,ic,iv)*gdf(iii,iv,ic)
-                       t1=t1+t2
-                    end do
-                    gdcalVS(ii,iii,ic,ic)=cmplx(-scissor*aimag(t1),0.d0)
-                 end do
-              end do
-           end do
-           !dgvs.vv
-           do iv=1,nVal
-              do ii=1,3
-                 do iii=1,3
-                    t1=(0.d0,0.d0)
-                    do ic=nVal+1,nMax !sum over c
-                       t2=derMatElem(ii,iii,iv,ic)*cfMatElem(ic,iv)&
-                            +posMatElem(ii,iv,ic)*gdf(iii,ic,iv)
-                       t1=t1+t2
-                    end do
-                    gdcalVS(ii,iii,iv,iv)=cmplx(scissor*aimag(t1),0.d0)
                  end do
               end do
            end do
@@ -824,10 +804,11 @@ PROGRAM set_input
            write(*,*)'********'
         end if
         !########## MIMIC A BULK RESPONSE #######d
-        !calVsig=calMomMatElem !comment to check layered fromulas
+        calVsig=calMomMatElem !comment to check layered fromulas
         ! uncomment next two lines to check layered fromulas
-        calVsig=momMatElem !\calv^\gs -> v^\gs
-        gdcalVsig=gdVsig   !(\calv^\gs);k -> (v^\gs);k
+        !calVsig=momMatElem !\calv^\gs -> v^\gs
+        !gdcalVsig=gdVsig   !(\calv^\gs);k -> (v^\gs);k
+        ! comment previous two lines for layered fromulas
         !########## MIMIC A BULK RESPONSE #######u
      else !bulk calculation
         if ( ik .eq. 1 ) then 
