@@ -284,7 +284,21 @@ source version-abinit.txt
 		echo $TMP2 > tmp2
 		MD5REMOTE=`awk '{print $1}' tmp2`
 		echo $MD5REMOTE > tmp2
-		diff tmp1 tmp2 > $case.diff
+		#BMSVer3.0d
+                # compares the two caso.in files 
+		# and if the two files only differ by
+                # ndtset nkpt3 istwfk3
+                # the files are identical as far as 
+		# a calculation of TINIBA (ABINIT) is concern
+		diff $casein $cazo/$case.in > nhoy
+		grep \<          nhoy  > nhoy1
+		grep \>          nhoy >> nhoy1
+		grep -v ndtset   nhoy1 > nhoy2
+		grep -v nkpt3    nhoy2 > nhoy3
+		grep -v istwfk3  nhoy3 > $case.diff
+		rm nhoy*
+#		diff tmp1 tmp2 > $case.diff
+		#BMSVer3.0u
 		if [ "$ontoy" == "medusa" ]
 		then
 		    if [[ "$nodepmn" == "hexa"* ]] 
@@ -420,6 +434,7 @@ source version-abinit.txt
 	    else
 		rcp -r .fnval $node:$dirnode
 	    fi
+#BMSVer3.0d
 # copy dp-vnl-case.in to each working directory
 # to be used by V^\nl_{nm} through DP code
 	    if [ "$vnlkss" == "true" ]
@@ -437,6 +452,7 @@ source version-abinit.txt
 		    rcp -r $aux $node:$dirnode
 		fi
 	    fi
+#BMSVer3.0u
 # copy the chosen layer to each working node
 	    if [ ! $Nlayers == '0' ]; then
 		if [ "$ontoy" == "medusa" ]

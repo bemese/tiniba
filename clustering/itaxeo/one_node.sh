@@ -228,15 +228,18 @@ timei=`date`
 #printf "\t$rpmns_exec $caseo'o_DS2_WFK' $options\n"
 $rpmns_exec $caseo'o_DS2_WFK' $options > logfile
 ###
+#BMSVer3.0d
 # Velocity Matrix elements of the non-local part of
 # the pseudpotentials: v^\nl_{nm}(k)=(i/hbar)<nk|[\hat V^\nl,\har r]|mk>
 # calculated with DP-code
 if [[ $vnlkss == "true" ]]
 then
+timedp=`date`
 printf "\tDP running me at one_node.sh@$node $wo spin\n"
 $dpexec -i dp-vnl-$caseo.in -k $caseo'o_DS3_KSS' > dp-vnl-log
 mv velocity.out $diro/$caseo'_'$No/vnl.d
 fi
+#BMSVer3.0u
 ###
 # moves output to files in $outdir (i.e. 'res' directory)
 if [[ $rho == "1" ]]
@@ -302,15 +305,42 @@ do
 ##
 done
 ##
-timef=`date`
-TIME1m=`date --date="$timei" +%s`
-TIME2m=`date --date="$timef" +%s`
-ELTIMEm=$[ $TIME2m - $TIME1m ]
-TMINm=$(echo "scale=4; $ELTIMEm/60" | bc)
+#BMSVer3.0d
+if [[ $vnlkss == "false" ]]
+then
+    timef=`date`
+    TIME1m=`date --date="$timei" +%s`
+    TIME2m=`date --date="$timef" +%s`
+    ELTIMEm=$[ $TIME2m - $TIME1m ]
+    TMINm=$(echo "scale=4; $ELTIMEm/60" | bc)
+fi
+if [[ $vnlkss == "true" ]]
+then
+    timef=`date`
+    TIME1m=`date --date="$timei" +%s`
+    TIME2dp=`date --date="$timedp" +%s`
+    TIME2m=`date --date="$timef" +%s`
+    ELTIMEm=$[ $TIME2dp - $TIME1m ]
+    TMINm=$(echo "scale=4; $ELTIMEm/60" | bc)
+    ELTIMEmdp=$[ $TIME2m - $TIME2dp ]
+    TMINmdp=$(echo "scale=4; $ELTIMEmdp/60" | bc)
+fi
+#BMSVer3.0u
 ##
 parent=`echo $PWD | awk -F / '{a=NF; print $(a-1)}'`
 Line
-printf " [${GREEN}`hostname`${NC}] : /data/$USER/workspace/$parent/$caseo"_"$No ended in $TMINm min \n"
+#
+#BMSVer3.0d
+if [[ $vnlkss == "false" ]]
+then
+    printf " [${GREEN}`hostname`${NC}] : /data/$USER/workspace/$parent/$caseo"_"$No ended in $TMINm min \n"
+fi
+if [[ $vnlkss == "true" ]]
+then
+    printf " [${GREEN}`hostname`${NC}] : /data/$USER/workspace/$parent/$caseo"_"$No ended in $TMINm/$TMINmdp min \n"
+fi
+#BMSVer3.0u
+#
 touch finished$No
 cp finished$No $diro/.
 rm finished$No  

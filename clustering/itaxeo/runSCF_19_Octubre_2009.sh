@@ -21,7 +21,7 @@ function Line {
 
  declare -a MACHINESmn
 # perhaps this ought to be change
- NUCLEOS=2
+ NUCLEOS=4
 #
  DIR=$PWD
  USER=$USER

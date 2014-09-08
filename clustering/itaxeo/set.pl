@@ -284,6 +284,7 @@ foreach $i (@arr) {
   print "Making $out_file\n" if $debug;
   open(OUTFILE, ">$out_file") or 
       die "Could not open $out_file: $!";
+  #BMSVer3.0d
   # variable for KSS file
   if ("$kss" eq "0"){
       print OUTFILE "ndtset 2", "\n";
@@ -291,6 +292,7 @@ foreach $i (@arr) {
   if ("$kss" eq "1"){
       print OUTFILE "ndtset 3", "\n";
   };
+  #BMSVer3.0u
   print OUTFILE $coor_system,"  ",$xcart,"\n";
   print OUTFILE $common_vars,"\n";  
   print OUTFILE $optic_vars,"\n";
