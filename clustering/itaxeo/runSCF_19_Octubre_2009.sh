@@ -20,8 +20,11 @@ function Line {
 ##
 
  declare -a MACHINESmn
-# perhaps this ought to be change
- NUCLEOS=4
+#BMSVer3.0d
+# perhaps this ought to be changed: CHANGED sep/9/2014, paris
+# reads variable NUCLEOS
+source .cores
+#BMSVer3.0u
 #
  DIR=$PWD
  USER=$USER

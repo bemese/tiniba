@@ -45,16 +45,14 @@ printf "   -b      bypass WF checkup (${red}Never use on first run${NC})\n"
 #
 function options {
 printf "${cyan}Usage${NC}:\n"
-printf "\t***\n"
-echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}run${NC} -k ${RED}Nk${NC} -N ${RED}N_Layer${NC} -x [serial-${red}1${NC} para-${red}2${NC}] ${BLUE}options${NC}:"
-
-    printf "\n                           ${RED}N_Layer${NC}=number of layers or half-slab\n"
+printf "\n                              ${RED}N_Layer${NC}=number of layers or half-slab\n"
+echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}run${NC} -k ${RED}Nk${NC} -N ${RED}N_Layer${NC} -x [serial-${red}1${NC} para-${red}2${NC}] -C ${red}cores${NC} ${BLUE}options${NC}:"
 
 runoptions
 
 printf "\t***\n"
 echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}setkp${NC} -k ${RED}Nk${NC} -g ${RED}xeon/itanium${NC} -G ${RED}xeon/quad${NC} weigths"
-echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}erase${NC}  To erase the calculation from the nodes" 
+echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}erase${NC}    To erase the calculation from the nodes" 
 echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}erasescf${NC} To erase the SCF calculation" 
 }
 ## Functions
@@ -329,7 +327,7 @@ wfcheck="false" #b
 ### reads from the input line
 ### r: => reads 'data' from '-r data'
 ### v  => if set then is true otherwise is false, i.e. -v => v case is true
-while getopts “:hr:k:N:x:wmepdclsnbvg:G:” OPTION
+while getopts “:hr:k:N:x:C:wmepdclsnbvg:G:” OPTION
 do
      case $OPTION in
          h)
@@ -347,6 +345,9 @@ do
              ;;
          x)
              serialp=$OPTARG
+             ;;
+         C)
+             cores=$OPTARG
              ;;
          w)
 	     wf="true"
@@ -395,8 +396,6 @@ do
 done
 # string with the chosen options
 moptions="$em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp $vnlkss"
-
-
 # checks that the input parameters are correct
 # first that -r has the correct value
 #
@@ -503,6 +502,9 @@ fi
 # action=run
 if [ $action = 'run' ]
 then
+#BMSVer3.0d
+echo NUCLEOS=$cores > .cores
+#BMSVer3.0u
 ## checks that the correct klist file is given
     if [ $rho = 'false' ]
 	then

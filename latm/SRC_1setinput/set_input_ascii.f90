@@ -1,6 +1,7 @@
 !#BMSVer3.0d
 ! ??Linear resposne and INJECTION CURRENT MUST BE CODIFIED ANEW!!!!!
-! DONE sep/7/2014
+! Linear response DONE sep/7/2014
+! Injection Current ????
 !#BMSVer3.0u
 !#########################################################
 ! January, 2005
