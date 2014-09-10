@@ -231,13 +231,29 @@ $rpmns_exec $caseo'o_DS2_WFK' $options > logfile
 #BMSVer3.0d
 # Velocity Matrix elements of the non-local part of
 # the pseudpotentials: v^\nl_{nm}(k)=(i/hbar)<nk|[\hat V^\nl,\har r]|mk>
-# calculated with DP-code
+# calculated with DP-code.
+# Since this part involves the sum over angular momenta and number 
+# of atoms, it could be a factor of 30 slower than the calculation
+# of the momentum matrix elements.
+# Also, the array allocation requires the stack to be set to unlimited
+# for which we use
+# > ulimit -S -s unlimited
+# where S=soft, s=stack and unlimited matches the hard-limit
+# that, if you want to see, do
+# > ulimit -H -s or -a to see all the limits
+#
 if [[ $vnlkss == "true" ]]
 then
-timedp=`date`
-printf "\tDP running me at one_node.sh@$node $wo spin\n"
-$dpexec -i dp-vnl-$caseo.in -k $caseo'o_DS3_KSS' > dp-vnl-log
-mv velocity.out $diro/$caseo'_'$No/vnl.d
+    timedp=`date`
+    Line
+    printf "\tDP running me at one_node.sh@$node $wo spin\n"
+    stackold=`ulimit -S -s`
+    ulimit -S -s unlimited
+    stacknew=`ulimit -S -s`
+    printf "\told-stack=$stackold new-stack=$stacknew for DP at one_node.sh@$node\n"
+    $dpexec -i dp-vnl-$caseo.in -k $caseo'o_DS3_KSS' > dp-vnl-log
+    mv velocity.out $diro/$caseo'_'$No/vnl.d
+    printf "\tDP finished at one_node.sh@$node\n"
 fi
 #BMSVer3.0u
 ###
