@@ -32,7 +32,6 @@ MODULE arrays
   COMPLEX(DPC), ALLOCATABLE :: gdcalVS(:,:,:,:)
   COMPLEX(DPC), ALLOCATABLE :: gdcalVsig(:,:,:,:)
   COMPLEX(DPC), ALLOCATABLE :: calVsig(:,:,:)
-  COMPLEX(DPC), ALLOCATABLE :: calVlda(:,:,:)
   REAL(DPC)   , ALLOCATABLE :: f(:)
   !#BMSVer3.0u
   !!!!!!new mayo 2008 
@@ -179,36 +178,26 @@ CONTAINS
           WRITE(6,*) 'Stopping'
           STOP
        END IF
-       if(debug)WRITE(*,*) "Allocating gdcalVsig(3,3",nMax,",",nMax,")"
-       ALLOCATE (gdcalVsig(3,3,nMax,nMax), STAT=istat)
-       IF (istat.EQ.0) THEN
-          istat=0
-          if(debug) WRITE(*,*) 'Allocated array gdcalVsig'
-       ELSE
-          WRITE(6,*) 'Could not allocate gdcalVsig'
-          WRITE(6,*) 'Stopping'
-          STOP
-       END IF
-       if(debug)WRITE(*,*) "Allocating calVsig(3",nMax,",",nMax,")"
-       ALLOCATE (calVsig(3,nMax,nMax), STAT=istat)
-       IF (istat.EQ.0) THEN
-          istat=0
-          if(debug) WRITE(*,*) 'Allocated array calVsig'
-       ELSE
-          WRITE(6,*) 'Could not allocate calVsig'
-          WRITE(6,*) 'Stopping'
-          STOP
-       END IF
-       if(debug)WRITE(*,*) "Allocating calVlda(3",nMax,",",nMax,")"
-       ALLOCATE (calVlda(3,nMax,nMax), STAT=istat)
-       IF (istat.EQ.0) THEN
-          istat=0
-          if(debug) WRITE(*,*) 'Allocated array calVlda'
-       ELSE
-          WRITE(6,*) 'Could not allocate calVlda'
-          WRITE(6,*) 'Stopping'
-          STOP
-       END IF
+    END IF
+    if(debug)WRITE(*,*) "Allocating gdcalVsig(3,3",nMax,",",nMax,")"
+    ALLOCATE (gdcalVsig(3,3,nMax,nMax), STAT=istat)
+    IF (istat.EQ.0) THEN
+       istat=0
+       if(debug) WRITE(*,*) 'Allocated array gdcalVsig'
+    ELSE
+       WRITE(6,*) 'Could not allocate gdcalVsig'
+       WRITE(6,*) 'Stopping'
+       STOP
+    END IF
+    if(debug)WRITE(*,*) "Allocating calVsig(3",nMax,",",nMax,")"
+    ALLOCATE (calVsig(3,nMax,nMax), STAT=istat)
+    IF (istat.EQ.0) THEN
+       istat=0
+       if(debug) WRITE(*,*) 'Allocated array calVsig'
+    ELSE
+       WRITE(6,*) 'Could not allocate calVsig'
+       WRITE(6,*) 'Stopping'
+       STOP
     END IF
 !#BMSVer3.0u
 !!!!!!!!!!!!!!!!!!
@@ -374,25 +363,19 @@ CONTAINS
           WRITE(6,*) 'Stopping'
           STOP
        END IF
-       DEALLOCATE (gdcalVsig, STAT=istat)
-       IF (istat.NE.0) THEN
-          WRITE(6,*) 'Could not deallocate gdcalVsig'
-          WRITE(6,*) 'Stopping'
-          STOP
-       END IF
-       DEALLOCATE (calVsig, STAT=istat)
-       IF (istat.NE.0) THEN
-          WRITE(6,*) 'Could not deallocate calVsig'
-          WRITE(6,*) 'Stopping'
-          STOP
-       END IF
-       DEALLOCATE (calVlda, STAT=istat)
-       IF (istat.NE.0) THEN
-          WRITE(6,*) 'Could not deallocate calVlda'
-          WRITE(6,*) 'Stopping'
-          STOP
-       END IF
     end IF
+    DEALLOCATE (gdcalVsig, STAT=istat)
+    IF (istat.NE.0) THEN
+       WRITE(6,*) 'Could not deallocate gdcalVsig'
+       WRITE(6,*) 'Stopping'
+       STOP
+    END IF
+    DEALLOCATE (calVsig, STAT=istat)
+    IF (istat.NE.0) THEN
+       WRITE(6,*) 'Could not deallocate calVsig'
+       WRITE(6,*) 'Stopping'
+       STOP
+    END IF
     IF (layeredCalculation) THEN
        DEALLOCATE (gdf, STAT=istat)
        IF (istat.NE.0) THEN

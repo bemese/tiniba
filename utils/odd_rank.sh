@@ -44,7 +44,7 @@ echo -e ${cyan}%%%%%%%%%%%%%%%%%%${NC}
 echo -e ${blue}The original centrosymmetric $case.xyz was rendered non-centrosymmetric ${NC}
 echo -e "${blue}then, abinit_check.sh was run with both options, so the sym.d do not have inversion ${NC}"
 echo -e "${blue}then, the coordinates are reset to the original centrosymmetric $case.xyz  ${NC}"
-echo -e "${blue}so run_all.sh can be properly run for and odd-rank tensor surface response${NC}"
+echo -e "${blue}so run_tiniba.sh can be properly run for and odd-rank tensor surface response${NC}"
 echo -e ${cyan}%%%%%%%%%%%%%%%%%%${NC}
 echo -e "${RED}run rklist.sh AGAIN${NC}"
 echo -e ${cyan}%%%%%%%%%%%%%%%%%%${NC}

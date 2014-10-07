@@ -789,7 +789,7 @@ CONTAINS
 
 !!!#################
   SUBROUTINE caleta2
-!!!################# con calDelta
+!!!################# 
     IMPLICIT NONE
     REAL(DP) :: T3(3,3,3)
     REAL(DP) :: tmp
@@ -797,17 +797,18 @@ CONTAINS
 !!!!!!!!!!!!!!!!!
     DO iv = 1, nVal
        DO ic = nVal+1, nMax
-          tmp = (0.d0,0.d0)
-!          ix=2
-!          iy=2
-!          iz=1
+          tmp = 0.d0
           DO ix=1,3
              DO iy=1,3
                 DO iz=1,3
-
                    if (iv.ne.ic)then 
                       tmp = tmp +  T3(ix,iy,iz)* &
-                           ( curMatElem(ix,ic)-curMatElem(ix,iv) )* & 
+                           ! #BMSVer3.0d, used to confirm that both methods agree
+                           !However curMatElem is much faster as it does not
+                           !requier C^\ell_{nm}
+                           ( real(calVsig(ix,ic,ic))-real(calVsig(ix,iv,iv)) )* & 
+                           !#BMSVer3.0u
+                           !( curMatElem(ix,ic)-curMatElem(ix,iv) )* & 
                            aimag( PosMatElem(iy,ic,iv)*PosMatElem(iz,iv,ic) )
                    end if
 

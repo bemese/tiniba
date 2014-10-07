@@ -485,6 +485,12 @@ TIMESTARTALLI=`date`
 			exit 1
 		    fi
 		    echo cur_data_filename= \""$cur$pfix"\", >> tmp_$pfix
+#BMSVer3.0d 
+# Used to confirm that calVsig=curMatlElem for
+# layered injection current. Uncomment if dubious
+		    echo cal_data_filename= \""$cal$pfix"\", >> tmp_$pfix
+		    echo cfmn_data_filename= \""$cfmn$pfix"\", >> tmp_$pfix
+#BMSVer3.0u
 		fi
 #
 		if [ $response == '29' ]
@@ -739,52 +745,67 @@ TIMESTARTALLI=`date`
 		Line
 	    fi
 ######
-###### if the response is  do this any other case jump 
+###### if the response is 25  do this any other case jump 
+#BMSVer3.0d
+#THIS OUGHT TO BE CHECKED, SINCE HOWSTICKSLAB IS NOT IMPLEMENTED
+#FOR THE HEXA
 	    if [ "$response" == "25" ];then
 		rm -f caleta1
 		rm -f caleta2
-		if [ -d res/25 ];then
-		    printf "\t res/25 ok\n" 
-		else 
-		    mkdir -p res/25
-		fi 
-		cp $file1  res/25/$file3
-		cp $file2  res/25/$file4
-		mv $file1  caleta1
-		mv $file2  caleta2
-		
+		cp $file1  res/$file3
+		cp $file2  res/$file4
+		Line
+		printf "\t${red}Output${NC}:res/${blue}$file3${NC}\n"
+		printf "\t${red}Output${NC}:res/${blue}$file4${NC}\n"
+		printf "\t${RED}CHECK FOR NORMALIZATION${NC}\n"
+		Line
+#For the time being we bypass this part
+		if [ "1" == "2" ]
+		then
+		    if [ -d res/25 ];then
+			printf "\t res/25 ok\n" 
+		    else 
+			mkdir -p res/25
+		    fi 
+		    cp $file1  res/25/$file3
+		    cp $file2  res/25/$file4
+		    mv $file1  caleta1
+		    mv $file2  caleta2
+		    
        ###### right now define the hostname 
        ###### 
-		HOSTIA=`hostname`
-		if [[ "$HOSTIA" == "medusa" ]]; then
-		    HOWSTICKSLAB=$TINIBA/howtickslab/howtickslab.xeon
-		fi
-		if [[ "$HOSTIA" == "itanium"* ]]; then
-		    HOWSTICKSLAB=$TINIBA/howtickslab/howtickslab.itan
-		fi
-		if [[ "$HOSTIA" == "quad"* ]]; then
-		    HOWSTICKSLAB=$TINIBA/howtickslab/howtickslab.quad
-		fi
-       ###### 
-       ###### 
-       ###### 
-		if [ -e "$HOWSTICKSLAB" ];then 
-		    printf "$HOWSTICKSLAB ${GREEN}$ok${NC}\n"
-		    $HOWSTICKSLAB caleta1 > hoy
-         # read -p "please press any kye to continue ...."
-		    $HOWSTICKSLAB caleta2 > hoy
-		    mv caleta1  res/$file3
-		    mv caleta2  res/$file4
-		    Line
-		    printf "\tThis response is multi by the wide of the slab... \n"
-		    if [ -e  "res/$file3" ];then
-			printf "\t${BLUE}res/${GREEN}$file3${NC}\n"
+		    HOSTIA=`hostname`
+		    if [[ "$HOSTIA" == "medusa" ]]; then
+			HOWSTICKSLAB=$TINIBA/howtickslab/howtickslab.xeon
 		    fi
-		    if [ -e "res/$file4" ];then
-			printf "\t${BLUE}res/${GREEN}$file4${NC}\n"
-		    fi 
-		    Line
-		fi
+		    if [[ "$HOSTIA" == "itanium"* ]]; then
+			HOWSTICKSLAB=$TINIBA/howtickslab/howtickslab.itan
+		    fi
+		    if [[ "$HOSTIA" == "quad"* ]]; then
+			HOWSTICKSLAB=$TINIBA/howtickslab/howtickslab.quad
+		    fi
+       ###### 
+       ###### 
+       ###### 
+		    if [ -e "$HOWSTICKSLAB" ];then 
+			printf "$HOWSTICKSLAB ${GREEN}$ok${NC}\n"
+			$HOWSTICKSLAB caleta1 > hoy
+         # read -p "please press any kye to continue ...."
+			$HOWSTICKSLAB caleta2 > hoy
+			mv caleta1  res/$file3
+			mv caleta2  res/$file4
+			Line
+			printf "\tThis response is multi by the wide of the slab... \n"
+			if [ -e  "res/$file3" ];then
+			    printf "\t${BLUE}res/${GREEN}$file3${NC}\n"
+			fi
+			if [ -e "res/$file4" ];then
+			    printf "\t${BLUE}res/${GREEN}$file4${NC}\n"
+			fi 
+			Line
+		    fi #bypass
+		fi #response 25
+#BMSVer3.0u
 	    fi 
 	fi		
 	rm -f chido
@@ -798,7 +819,8 @@ TIMESTARTALLI=`date`
 	fi
 	rm -f bc*
 	rm -f Symmetries.Cartesian* kpoints.reciprocal_$Nk kpoints.cartesian_$Nk tetrahedra_$Nk
-#        rm -rf tmp* endWELL*		
+#        rm -rf tmp* 
+        rm -rf endWELL*		
         rm -rf hoy*
 	rm -f energys.d* fort* fromSmear halfene*
 	rm -f input*set  tijeras spectra*

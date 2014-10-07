@@ -511,7 +511,50 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 #
 	    Line
 	printf "\t${RED}Calculating other than shg1 and shg2${NC}\n"
+#BMSVer3.0d
 	Line
+	if [ "$response" == "25" ]
+	then
+	    if [ "$vnlkss" == "false" ]
+		then
+	        #take out the  info from $caso
+		echo $caso > hoy
+		casovnl=`awk -F_ '{print $1"_"$3}' hoy`
+		if [ ! -e me_pnn_$casovnl ]
+		then
+		    printf "\tLayered Injection Current\n"
+		    printf "\tNo vnl contribution: me_pnn_$casovnl does not exists\n"
+		    printf "\trun_tiniba.sh with -l option to creat it\n"
+		    printf "\t${red}Exciting${NC} all_responses.sh\n"
+		    Line
+		    exit
+		    else
+		    printf "\tLayered Injection Current\n"
+		    printf "\tNo vnl contribution: me_pnn_$casovnl exists!\n"
+		    Line
+		fi
+	    else
+	        #take out the  info from $caso
+		echo $caso > hoy
+		casovnl=`awk -F_ '{print $1"_"$2"_"$3}' hoy`
+		if [ ! -e me_cfmn_$casovnl ]
+		then
+		    printf "\tLayered Injection Current\n"
+		    printf "\tvnl contribution: me_cfmn_$casovnl does not exists\n"
+		    printf "\trun_tiniba.sh with -c option to creat it\n"
+		    printf "\t${red}Exciting${NC} all_responses.sh\n"
+		    Line
+		    exit
+		    else
+		    printf "\tLayered Injection Current\n"
+		    printf "\tvnl contribution: me_cfmn_$casovnl exists!\n"
+		    Line
+		fi
+		Line
+	    fi
+	fi
+#	exit 1
+#BMSVer3.0u
 	echo $exec -w $lt -m $caso -s $tijera -o $option -v $Nv -c $Nc -r $response  -t \"${scases[@]}\" -n $vnlkss > mtita
 	chmod +x mtita
 	mtita

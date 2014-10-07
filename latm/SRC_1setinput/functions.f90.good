@@ -15,7 +15,7 @@ MODULE FUNCTIONS
 CONTAINS
 !#BMSVer3.0d
 !############################################
-  COMPLEX(DPC) FUNCTION calVldaf(alpha,iv,ic)
+  COMPLEX(DPC) FUNCTION calVlda(alpha,iv,ic,ik)
 !############################################
     ! Finds \calv^{\lda}_{n,m} (c-a.2) for the given k-value.
     IMPLICIT NONE
@@ -28,9 +28,9 @@ CONTAINS
        aux2=cfMatElem(iv,q)*vldaMatElem(alpha,q,ic)
        tmp=tmp+(aux1+aux2)/2.d0
     end DO
-    calVldaf=tmp
+    calVlda=tmp
 !############################################
-  end FUNCTION calVldaf
+  end FUNCTION calVlda
 !############################################
 !#BMSVer3.0u
 !#BMSVer3.0d
