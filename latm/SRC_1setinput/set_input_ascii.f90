@@ -421,66 +421,66 @@ PROGRAM set_input
         ! for option -n v^\nl is included in momMatElem
         ! and so is also included in r_{nm}
         !#BMSVer3.0u
-           ! Calculate the position matrix elements
-           DO ii=1,3
-              posMatElem(ii,iv,ic) = position(ii,iv,ic,ik)
-              posMatElem(ii,ic,iv) = conjg(posMatElem(ii,iv,ic))
-           END DO
-
-102        FORMAT(6E15.7)
-           
-           ! Write out the position matrix elements
-           IF (writeoutMEdata) THEN
-              WRITE(12,102) REAL(posMatElem(1,iv,ic)),IMAG(posMatElem(1,iv,ic)) &
-                   , REAL(posMatElem(2,iv,ic)),IMAG(posMatElem(2,iv,ic)) &
-                   , REAL(posMatElem(3,iv,ic)),IMAG(posMatElem(3,iv,ic))
-           END IF
-        END DO !ic=iv,nMax
-     END DO !iv=1,nMax
-
-     ! Check hermiticity of position matrix elements
-     CALL check_hermiticity(ik)
-     
-     ! SET THE IMAGINARY PARTS OF THE DIAGONAL COMPONENTS TO ZERO BY HAND
-     DO iv = 1, nMax
-        momMatElem(1,iv,iv)= REAL(momMatElem(1,iv,iv)) + 0.d0*(0.d0,1.d0)
-        momMatElem(2,iv,iv)= REAL(momMatElem(2,iv,iv)) + 0.d0*(0.d0,1.d0)
-        momMatElem(3,iv,iv)= REAL(momMatElem(3,iv,iv)) + 0.d0*(0.d0,1.d0)
-        IF ( layeredCalculation ) then
-           calMomMatElem(1,iv,iv)= REAL(calMomMatElem(1,iv,iv)) + 0.d0*(0.d0,1.d0)
-           calMomMatElem(2,iv,iv)= REAL(calMomMatElem(2,iv,iv)) + 0.d0*(0.d0,1.d0)
-           calMomMatElem(3,iv,iv)= REAL(calMomMatElem(3,iv,iv)) + 0.d0*(0.d0,1.d0)
-        END IF
-     END DO
-
-     !#BMSVer3.0d
-     DO iv = 1, nVal
-        DO ic = nVal+1, nMax
-           ! Calculate Delta(m,n) Eq. {delta} NOT LAYERED
-           ! for -n option the contribution from v^\nl is included
-           ! recall that Delta has zero contribution from
-           ! the scissors operator
-           Delta(1,ic,iv) = momMatElem(1,ic,ic)-momMatElem(1,iv,iv)
-           Delta(2,ic,iv) = momMatElem(2,ic,ic)-momMatElem(2,iv,iv)
-           Delta(3,ic,iv) = momMatElem(3,ic,ic)-momMatElem(3,iv,iv)
+        ! Calculate the position matrix elements
+        DO ii=1,3
+           posMatElem(ii,iv,ic) = position(ii,iv,ic,ik)
+           posMatElem(ii,ic,iv) = conjg(posMatElem(ii,iv,ic))
         END DO
-     END DO
-     !#BMSVer3.0u
-
-     IF (oldStyleScissors) THEN !set to false
-        band(1:nMax) = energys(ik,1:nMax) !this is not longer used
+        
+102     FORMAT(6E15.7)
+        
+        ! Write out the position matrix elements
+        IF (writeoutMEdata) THEN
+           WRITE(12,102) REAL(posMatElem(1,iv,ic)),IMAG(posMatElem(1,iv,ic)) &
+                , REAL(posMatElem(2,iv,ic)),IMAG(posMatElem(2,iv,ic)) &
+                , REAL(posMatElem(3,iv,ic)),IMAG(posMatElem(3,iv,ic))
+        END IF
+     END DO !ic=iv,nMax
+  END DO !iv=1,nMax
+  
+  ! Check hermiticity of position matrix elements
+  CALL check_hermiticity(ik)
+  
+  ! SET THE IMAGINARY PARTS OF THE DIAGONAL COMPONENTS TO ZERO BY HAND
+  DO iv = 1, nMax
+     momMatElem(1,iv,iv)= REAL(momMatElem(1,iv,iv)) + 0.d0*(0.d0,1.d0)
+     momMatElem(2,iv,iv)= REAL(momMatElem(2,iv,iv)) + 0.d0*(0.d0,1.d0)
+     momMatElem(3,iv,iv)= REAL(momMatElem(3,iv,iv)) + 0.d0*(0.d0,1.d0)
+     IF ( layeredCalculation ) then
+        calMomMatElem(1,iv,iv)= REAL(calMomMatElem(1,iv,iv)) + 0.d0*(0.d0,1.d0)
+        calMomMatElem(2,iv,iv)= REAL(calMomMatElem(2,iv,iv)) + 0.d0*(0.d0,1.d0)
+        calMomMatElem(3,iv,iv)= REAL(calMomMatElem(3,iv,iv)) + 0.d0*(0.d0,1.d0)
      END IF
-     !#BMSVer3.0d
-     ! Calculate the generalized derivative of the position matrix elements
-     ! for -n option the contribution from v^\nl is included
-     ! however, neglecting \tau^{ab}_{nm}. Eq {c-na_rgendevn}
-     !#BMSVer3.0u
-     DO iv = 1, nMax
-        DO ic = 1, nMax
-           DO ii=1,3
-              DO iii=1,3
-                 derMatElem(iii,ii,iv,ic) = genderiv(iii,ii,iv,ic,ik)
-              END DO
+  END DO
+  
+  !#BMSVer3.0d
+  DO iv = 1, nVal
+     DO ic = nVal+1, nMax
+        ! Calculate Delta(m,n) Eq. {delta} NOT LAYERED
+        ! for -n option the contribution from v^\nl is included
+        ! recall that Delta has zero contribution from
+        ! the scissors operator
+        Delta(1,ic,iv) = momMatElem(1,ic,ic)-momMatElem(1,iv,iv)
+        Delta(2,ic,iv) = momMatElem(2,ic,ic)-momMatElem(2,iv,iv)
+        Delta(3,ic,iv) = momMatElem(3,ic,ic)-momMatElem(3,iv,iv)
+     END DO
+  END DO
+  !#BMSVer3.0u
+  
+  IF (oldStyleScissors) THEN !set to false
+     band(1:nMax) = energys(ik,1:nMax) !this is not longer used
+  END IF
+  !#BMSVer3.0d
+  ! Calculate the generalized derivative of the position matrix elements
+  ! for -n option the contribution from v^\nl is included
+  ! however, neglecting \tau^{ab}_{nm}. Eq {c-na_rgendevn}
+  !#BMSVer3.0u
+  DO iv = 1, nMax
+     DO ic = 1, nMax
+        DO ii=1,3
+           DO iii=1,3
+              derMatElem(iii,ii,iv,ic) = genderiv(iii,ii,iv,ic,ik)
+           END DO
            END DO
            
            IF (writeoutMEdata) THEN
@@ -619,7 +619,8 @@ PROGRAM set_input
                     t1=calVldaf(ii,iv,ic)
                     if (scissor .gt. 0.d0) then
                        !The vc case is coded
-                       t2=calVscissors(ii,iv,ic,ik)*scissor
+                       !t2=calVscissors(ii,iv,ic,ik)*scissor
+                       t2=(scissor/(band(ic)-band(iv)))*t1
                     else
                        t2=(0.d0,0.d0)
                     end if
@@ -635,7 +636,8 @@ PROGRAM set_input
                     t1=calMomMatElem(ii,iv,ic) !OJO
                     if (scissor .gt. 0.d0) then
                        !The vc case is coded
-                       t2=calVscissors(ii,iv,ic,ik)*scissor
+                       !t2=calVscissors(ii,iv,ic,ik)*scissor
+                       t2=(scissor/(band(ic)-band(iv)))*t1
                     else
                        t2=(0.d0,0.d0)
                     end if
@@ -761,7 +763,7 @@ PROGRAM set_input
      end IF
      !#BMSVer3.0u
      !#BMSVer3.0d
-     !alternative expression for (\calbV^\lda_{nm});k
+     !alternative expression for (\calbV^\lda_{nm});k {ccu52}
      IF ( layeredCalculation ) then
         do ic=1,nMax
            do iv=ic,nMax
@@ -813,7 +815,7 @@ PROGRAM set_input
 !!$              end do
 !!$           end do
 !!$        end if
-     !Alternative expression for (\calbV^\cals);k scissors caligraphic velocity
+     !Alternative expression for (\calbV^\cals);k {ccu55}scissors caligraphic velocity
      IF ( layeredCalculation ) then
         if (scissor .gt. 0.d0) then
            !dgvs.cv
@@ -821,7 +823,7 @@ PROGRAM set_input
               do iv=ic,nMax
                  do ii=1,3
                     do iii=1,3
-                       if(ic.ne.ic) then
+                       if(ic.ne.iv) then
                           omeganm=band(ic)-band(iv)
                           gdcalVS(ii,iii,ic,iv)=scissor*((f(iv)-f(ic))/omeganm)&
                                *(gdcalVlda(ii,iii,ic,iv)&

@@ -92,7 +92,7 @@ CONTAINS
 !!!############################################
     ! Finds \calv^\cals_{nm} (c-a.3bb) for the given k-value.
     !
-    ! The value of the scissor correction (scissorFactor) is used in 
+    ! The value of the scissor correction (scissor) is used in 
     ! set_input_ascii.f90 instead of here, just for convenience
     ! 
     IMPLICIT NONE
