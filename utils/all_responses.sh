@@ -226,11 +226,16 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	Line
 	printf "\tvnl=$vnlkss chosen\n"
 	printf "\tmove me_pmn_$casovnl to me_pmn_$casovnl-o\n"
-	printf "\tadding me_pmn_$casovnl-o and me_vnlnm_$casovnl\n"
-	printf "\tinto  me_pmn_$casovnl so the script runs\n"
+#	printf "\tadding me_pmn_$casovnl-o and me_vnlnm_$casovnl\n"
+	printf "\tcp me_vnlnm_$casovnl to me_pmn_$casovnl\n"
+	printf "\tso the script runs\n"
 	mv me_pmn_$casovnl me_pmn_$casovnl-o
+	# Is better to calculate v^\lda_{nm}=p_{nm}+v^\nl_{nm} from DP code
+	# instead of adding v^\nl_{nm} to our p_{nm}, so the adding is NOT required 
 	# there are 6 columns: (re,im)(x,y,z)
-	$TINIBA/utils/add/s-add-2-files.sh 6 me_pmn_$casovnl-o me_vnlnm_$casovnl me_pmn_$casovnl
+	#$TINIBA/utils/add/s-add-2-files.sh 6 me_pmn_$casovnl-o me_vnlnm_$casovnl me_pmn_$casovnl
+	# then we move
+	cp me_vnlnm_$casovnl me_pmn_$casovnl
 	printf "\tThe response will now be calculated\n"
 	Line
 	#despulga
@@ -589,7 +594,7 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	    printf "\tsince vnl=$vnlkss was chosen\n"
 	    printf "\tme_pmn_$casovnl-o is moved to me_pmn_$casovnl\n"
 	    printf "\tso the files are as they were\n"
-	    mv me_pmn_$casovnl-o me_pmn_$casovnl
+	    cp me_pmn_$casovnl-o me_pmn_$casovnl
 	    Line
 	fi
 ###

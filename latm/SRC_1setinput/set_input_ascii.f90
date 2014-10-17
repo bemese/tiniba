@@ -764,18 +764,17 @@ PROGRAM set_input
      !#BMSVer3.0u
      !#BMSVer3.0d
      !alternative expression for (\calbV^\lda_{nm});k {ccu52}
+     ! (n.ne.m)
      IF ( layeredCalculation ) then
         do ic=1,nMax
-           do iv=ic,nMax
+           do iv=ic+1,nMax
               do ii=1,3
                  do iii=1,3
                     t1=(0.d0,0.d0)
                     do l=1,nMax
-                       if(l.ne.ic)then
+                       if((l.ne.ic).and.(l.ne.iv).and.(ic.ne.iv))then
                           t2=posMatElem(iii,ic,l)*calVlda(ii,l,iv)
                           t1=t1+t2
-                       end if
-                       if(l.ne.iv)then
                           t2=-calVlda(ii,ic,l)*posMatElem(iii,l,iv)
                           t1=t1+t2
                        end if
