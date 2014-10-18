@@ -24,8 +24,8 @@ CONTAINS
     COMPLEX(DPC) :: tmp,aux1,aux2
     tmp=(0.d0,0.d0)
     DO q = 1, nMax
-       aux1=vldaMatElem(alpha,iv,q)*conjg(cfMatElem(q,ic))
-       aux2=conjg(cfMatElem(iv,q))*vldaMatElem(alpha,q,ic)
+       aux1=vldaMatElem(alpha,iv,q)*cfMatElem(q,ic)
+       aux2=cfMatElem(iv,q)*vldaMatElem(alpha,q,ic)
        tmp=tmp+(aux1+aux2)/2.d0
     end DO
     calVldaf=tmp
