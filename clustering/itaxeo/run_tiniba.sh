@@ -414,13 +414,17 @@ if("$vnlkss" eq "true" && "$calvnlkss" eq "true")then
 fi
 # check that the nomber of chosen plan-waves for DP is <= npw
 npw=`grep mpw $case'_check'/$case.out | awk '{print $12}'`
-if [ "$ondas" -gt "$npw" ] 
-then
-    Line
-    printf "\tChosen PW for DP $ondas > $npw\n"
-    printf "\treduce to be <= $npw, and run again\n"
-    Line
-    exit 1
+if [ $action == 'run' ] 
+    then
+    
+    if [ "$ondas" -gt "$npw" ] 
+    then
+	Line
+	printf "\tChosen PW for DP $ondas > $npw\n"
+	printf "\treduce to be <= $npw, and run again\n"
+	Line
+	exit 1
+    fi
 fi
 # string with the chosen options
 moptions="$em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp $vnlkss $calvnlkss"
