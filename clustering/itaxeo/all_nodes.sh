@@ -48,8 +48,9 @@ then
     sccp=${13}
     lsccp=${14}
     vnlkss=${15}
-    wfcheck=${16}
-    options="$rho $em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp $vnlkss $wfcheck"
+    calvnlkss=${16}
+    wfcheck=${17}
+    options="$rho $em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp $vnlkss $calvnlkss $wfcheck"
 ## executables
     allexec=$TINIBA/clustering/itaxeo
 ## reads abinit executables from version-abinit.txt
@@ -290,14 +291,15 @@ source version-abinit.txt
                 # ndtset nkpt3 istwfk3
                 # the files are identical as far as 
 		# a calculation of TINIBA (ABINIT) is concern
-		diff $casein $cazo/$case.in > nhoy
-		grep \<          nhoy  > nhoy1
-		grep \>          nhoy >> nhoy1
-		grep -v ndtset   nhoy1 > nhoy2
-		grep -v nkpt3    nhoy2 > nhoy3
-		grep -v istwfk3  nhoy3 > $case.diff
-		rm nhoy*
-#		diff tmp1 tmp2 > $case.diff
+		# Is this needed????
+		#diff $casein $cazo/$case.in > nhoy
+		#grep \<          nhoy  > nhoy1
+		#grep \>          nhoy >> nhoy1
+		#grep -v ndtset   nhoy1 > nhoy2
+		#grep -v nkpt3    nhoy2 > nhoy3
+		#grep -v istwfk3  nhoy3 > $case.diff
+		#rm nhoy*
+		diff tmp1 tmp2 > $case.diff
 		#BMSVer3.0u
 		if [ "$ontoy" == "medusa" ]
 		then
@@ -346,7 +348,7 @@ source version-abinit.txt
 ##
 ## if -w is the only option, the shell is done and exists
 ##
-	if [[ $wfa == 'true' ]] && [[ $rho == 'false' ]] && [[ $em == 'false' ]] && [[ $pmn == 'false' ]] && [[ $rhoccp == 'false' ]] && [[ $lpmn == 'false' ]] && [[ $lpmm == 'false' ]] && [[ $sccp == 'false' ]] && [[ $lsccp == 'false' ]] && [[ $vnlkss == 'false' ]]
+	if [[ $wfa == 'true' ]] && [[ $rho == 'false' ]] && [[ $em == 'false' ]] && [[ $pmn == 'false' ]] && [[ $rhoccp == 'false' ]] && [[ $lpmn == 'false' ]] && [[ $lpmm == 'false' ]] && [[ $sccp == 'false' ]] && [[ $lsccp == 'false' ]] && [[ $vnlkss == 'false' ]] && [[ $calvnlkss == 'false' ]]
 	then
 	    Line
 	    printf "\trun_all.sh: only -w option selected => exiting\n"
@@ -411,6 +413,10 @@ source version-abinit.txt
 	    then
 		caso="$caso v^nl_mn(k)"
 	    fi
+	    if [[ $calvnlkss == 'true' ]]
+	    then
+		caso="$caso calv^nl_mn(k)"
+	    fi
 ##
 	    if [ $debug == 'true' ]
 	    then
@@ -435,9 +441,9 @@ source version-abinit.txt
 		rcp -r .fnval $node:$dirnode
 	    fi
 #BMSVer3.0d
-# copy dp-vnl-case.in to each working directory
+# copy dp-vnl-case.in and fort.69 to each working directory
 # to be used by V^\nl_{nm} through DP code
-	    if [ "$vnlkss" == "true" ]
+	    if ( "$vnlkss" == "true" || "$calvnlkss" == "true" )
 	    then
 		aux=dp-vnl-$case.in
 		if [ "$ontoy" == "medusa" ]
@@ -445,11 +451,14 @@ source version-abinit.txt
 		    if [[ "$nodepmn" == "hexa"* ]] 
 		    then
 			rcp -r $aux $node:/data/$USER/workspace/$parent/$case'_'$N/
+			rcp -r fort.69 $node:/data/$USER/workspace/$parent/$case'_'$N/
 		    else
 			rcp -r $aux /$node.data/$USER/workspace/$parent/$case'_'$N/
+			rcp -r fort.69 /$node.data/$USER/workspace/$parent/$case'_'$N/
 		    fi
 		else
 		    rcp -r $aux $node:$dirnode
+		    rcp -r fort.69 $node:$dirnode
 		fi
 	    fi
 #BMSVer3.0u
