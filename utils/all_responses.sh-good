@@ -213,7 +213,6 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 #BMSVer3.0d
     if [ "$vnlkss" == "true" ] 
     then
-	Line
 	if [ "$lt" == "total" ] 
 	then
 	    casovnl=$caso
@@ -224,28 +223,22 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	    echo $caso > hoy
 	    casovnl=`awk -F_ '{print $1"_"$3}' hoy`
 	fi
+	Line
 	printf "\tvnl=$vnlkss chosen\n"
 	printf "\tmove me_pmn_$casovnl to me_pmn_$casovnl-o\n"
-	mv me_pmn_$casovnl me_pmn_$casovnl-o
+#	printf "\tadding me_pmn_$casovnl-o and me_vnlnm_$casovnl\n"
 	printf "\tcp me_vnlnm_$casovnl to me_pmn_$casovnl\n"
-	cp me_vnlnm_$casovnl me_pmn_$casovnl
-	if [ "$lt" == "layer" ] 
-	then
-	    printf "\tmove me_cpmn_$caso to me_cpmn_$caso-o\n"
-	    mv me_cpmn_$caso me_cpmn_$caso-o
-	    printf "\tcp me_calvnlnm_$caso to me_cpmn_$caso\n"
-	    cp me_calvnlnm_$caso me_cpmn_$caso
-	fi
-	Line
 	printf "\tso the script runs\n"
+	mv me_pmn_$casovnl me_pmn_$casovnl-o
 	# Is better to calculate v^\lda_{nm}=p_{nm}+v^\nl_{nm} from DP code
 	# instead of adding v^\nl_{nm} to our p_{nm}, so the adding is NOT required 
 	# there are 6 columns: (re,im)(x,y,z)
 	#$TINIBA/utils/add/s-add-2-files.sh 6 me_pmn_$casovnl-o me_vnlnm_$casovnl me_pmn_$casovnl
 	# then we move
+	cp me_vnlnm_$casovnl me_pmn_$casovnl
 	printf "\tThe response will now be calculated\n"
 	Line
-#	despulga
+	#despulga
     fi
 #BMSVer3.0u
 ## starts the overall time
@@ -599,22 +592,9 @@ case=`echo $PWD | awk -F / '{print$NF}'`
 	then
 	    Line
 	    printf "\tsince vnl=$vnlkss was chosen\n"
-	    if [ "$lt" == "total" ] 
-	    then
-	    printf "\tme_pmn_$caso-o is moved to me_pmn_$caso\n"
-	    cp me_pmn_$caso-o me_pmn_$caso
-	    fi
-	    if [ "$lt" == "layer" ] 
-	    then
-		#take out the layer info from $caso
-		echo $caso > hoy
-		casovnl=`awk -F_ '{print $1"_"$3}' hoy`
-		printf "\tme_pmn_$casovnl-o is moved to me_pmn_$casovnl\n"
-		printf "\tme_cpmn_$caso-o is moved to me_cpmn_$caso\n"
-		cp me_pmn_$casovnl-o me_pmn_$casovnl
-		cp me_cpmn_$caso-o  me_cpmn_$caso
-	    fi
+	    printf "\tme_pmn_$casovnl-o is moved to me_pmn_$casovnl\n"
 	    printf "\tso the files are as they were\n"
+	    cp me_pmn_$casovnl-o me_pmn_$casovnl
 	    Line
 	fi
 ###

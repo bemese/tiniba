@@ -10,6 +10,7 @@ blue='\e[0;34m'
 BLUE='\e[1;34m'
 cyan='\e[0;36m'
 CYAN='\e[1;36m'
+colo='\e[1;16m'
 NC='\e[0m' # No Color
 ## Functions
 # reads TINIBA version from version-tiniba.txt
@@ -34,19 +35,20 @@ printf "\n   -w      Wave function(k)\n"
 printf "   -m      rho(z) for a set of k-points in ${red}case${NC}.klist_rho\n"
 printf "   -e      Energies E_{m}(k)\n"
 printf "   -p      Momentum Matrix Elements p_{mn}(k), includes m=n\n"
+printf "   -v      V^LDA with DP for ${red}pwvs${NC} (${colo}Never use with Spin-Orbit psp${NC})\n"
 printf "   -d      Layered ndot Matrix Elements rho_{cc'}(l;k)\n"
-printf "   -c      Layered Momentum Matrix Elements calp_{mn}(k)\n"
+printf "   -c      Layered Momentum Matrix Elements calp_{mn}(k) and calC_{mn}(k)\n"
+printf "   -V      Layered V^LDA with DP for ${red}pwvs${NC} (${colo}Never use with Spin-Orbit psp${NC})\n"
 printf "   -l      Layered Diagonal Momentum Matrix Elements calp_{mm}(k)\n"
 printf "   -s      Spin Matrix Elements S_{cc'}(k)\n"
 printf "   -n      Layered Spin Matrix Elements calS_{cc'}(k)\n"
-printf "   -v      KSS file (${red}Never use with Spin-Orbit-HGH psp${NC})\n"
-printf "   -b      bypass WF checkup (${red}Never use on first run${NC})\n"
+printf "   -b      bypass WF checkup (${colo}Never use on first run${NC})\n"
 }
 #
 function options {
 printf "${cyan}Usage${NC}:\n"
 printf "\n                              ${RED}N_Layer${NC}=number of layers or half-slab\n"
-echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}run${NC} -k ${RED}Nk${NC} -N ${RED}N_Layer${NC} -x [serial-${red}1${NC} para-${red}2${NC}] -C ${red}cores${NC} ${BLUE}options${NC}:"
+echo -e "${CYAN}run_tiniba.sh${NC} -r ${RED}run${NC} -k ${RED}Nk${NC} -N ${RED}N_Layer${NC} -x [serial-${red}1${NC} para-${red}2${NC}] -C ${red}cores${NC} -P ${red}pwvs${NC}\n\t ${BLUE}options${NC}:"
 
 runoptions
 
@@ -303,7 +305,9 @@ if [ "$#" -eq 0 ]
 	TotalLayers=0
     fi
 # displays the chosen layers
-    echo -e "${BLUE}$TotalLayers Layers: ${red}$mlay${BLUE}, $Nband bands ($Nvf-v $Nct-c)${NC}, spin=${RED}$espin${NC}, ecut=${RED}$ecut${NC} and xe/it/qu weigths=${RED}$mensaje${NC}"
+    npw=`grep mpw $case'_check'/$case.out | awk '{print $12}'`
+    printf "\t${BLUE}$TotalLayers Layers: ${red}$mlay${BLUE}, $Nband bands ($Nvf-v $Nct-c)${NC}, spin=${RED}$espin${NC}, ecut=${RED}$ecut${NC} and xe/it/qu weigths=${RED}$mensaje${NC}\n"
+    printf "\t${RED} number of plane waves = $npw ${NC}\n"
     Line
 # displays the options
     options
@@ -323,11 +327,12 @@ lpmm="false"  #l
 sccp="false"  #s
 lsccp="false" #n
 vnlkss="false" #v
+calvnlkss="false" #V
 wfcheck="false" #b
 ### reads from the input line
 ### r: => reads 'data' from '-r data'
 ### v  => if set then is true otherwise is false, i.e. -v => v case is true
-while getopts “:hr:k:N:x:C:wmepdclsnbvg:G:” OPTION
+while getopts “:hr:k:N:x:C:P:wmepdclsnbvVg:G:” OPTION
 do
      case $OPTION in
          h)
@@ -348,6 +353,9 @@ do
              ;;
          C)
              cores=$OPTARG
+             ;;
+         P)
+             ondas=$OPTARG
              ;;
          w)
 	     wf="true"
@@ -385,6 +393,9 @@ do
          v)
              vnlkss="true"
              ;;
+         V)
+             calvnlkss="true"
+             ;;
          b)
              wfcheck="true"
              ;;
@@ -394,8 +405,25 @@ do
              ;;
      esac
 done
+# check that -v and -V are not given simultaneously
+if("$vnlkss" eq "true" && "$calvnlkss" eq "true")then
+    Line
+    printf "\tDon't give -v and -V simultaneously\n" 
+    Line
+    exit 1
+fi
+# check that the nomber of chosen plan-waves for DP is <= npw
+npw=`grep mpw $case'_check'/$case.out | awk '{print $12}'`
+if [ "$ondas" -gt "$npw" ] 
+then
+    Line
+    printf "\tChosen PW for DP $ondas > $npw\n"
+    printf "\treduce to be <= $npw, and run again\n"
+    Line
+    exit 1
+fi
 # string with the chosen options
-moptions="$em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp $vnlkss"
+moptions="$em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp $vnlkss $calvnlkss"
 # checks that the input parameters are correct
 # first that -r has the correct value
 #
@@ -408,7 +436,7 @@ then
 fi
 #BMSVer3.0d
 # checks that if a layerer response is chosen, then N neq 0
-if [[ "$rhoccp" == "true"  || "$lpmn" == "true" || "$lpmm" == "true" || "$lsccp" == "true" ]]
+if [[ "$rhoccp" == "true"  || "$lpmn" == "true" || "$lpmm" == "true" || "$lsccp" == "true" || "$calvnlkss" == "true" ]]
 then
     if [ "$layers" == "0" ]
     then
@@ -509,7 +537,7 @@ echo NUCLEOS=$cores > .cores
     if [ $rho = 'false' ]
 	then
 	if [[ $em = 'true' ]] || [[ $pmn = 'true' ]] || [[ $rhoccp = 'true' ]] || [[ $lpmn = 'true' ]] || [[ $lpmm = 'true' ]] || [[ $sccp = 'true' ]] || [[ $lsccp = 'true' ]] || [[ $\
-vnlkss = 'true' ]]  
+vnlkss = 'true' ]] || [[ $calvnlkss ]]  
 	then
 	    if [ $Nk == "rho" ]
 	    then
@@ -530,7 +558,7 @@ vnlkss = 'true' ]]
 	exit 1
     fi    
 ## checks that the options are given
-    if [[ $wf = 'false' ]] && [[ $rho = 'false' ]] && [[ $em = 'false' ]] && [[ $pmn = 'false' ]] && [[ $rhoccp = 'false' ]] && [[ $lpmn = 'false' ]] && [[ $lpmm = 'false' ]] && [[ $sccp = 'false' ]] && [[ $lsccp = 'false' ]] && [[ $vnlkss = 'false' ]]   
+    if [[ $wf = 'false' ]] && [[ $rho = 'false' ]] && [[ $em = 'false' ]] && [[ $pmn = 'false' ]] && [[ $rhoccp = 'false' ]] && [[ $lpmn = 'false' ]] && [[ $lpmm = 'false' ]] && [[ $sccp = 'false' ]] && [[ $lsccp = 'false' ]] && [[ $vnlkss = 'false' ]] && [[ $calvnlkss = 'false' ]]   
     then
 	Line
 	printf "\t${red} To run, give at least one of the following option:${NC}\n"
@@ -624,7 +652,7 @@ fi
 touch .info_run
 fecha=`date`
 echo $fecha >> .info_run
-echo "$0 -r $action -k $Nk -N $layers -x $serialp wf(-w)=$wf rho(m)=$rho em(-e)=$em pmn(-p)=$pmn rhomn(-d)=$rhoccp lpmn(-c)=$lpmn lpmm(-l)=$lpmm sccp(-s)=$sccp lsccp(-n)=$lsccp vnlkss(-v)=$vnlkss wfcheck(-b)=$wfcheck" >> .info_run
+echo "$0 -r $action -k $Nk -N $layers -x $serialp wf(-w)=$wf rho(m)=$rho em(-e)=$em pmn(-p)=$pmn rhomn(-d)=$rhoccp lpmn(-c)=$lpmn lpmm(-l)=$lpmm sccp(-s)=$sccp lsccp(-n)=$lsccp vnlkss(-v)=$vnlkss calvnlkss(-V)=$calvnlkss wfcheck(-b)=$wfcheck" >> .info_run
 # this mimics a goto
 #    goto='yes'
     goto='no'
@@ -719,23 +747,31 @@ then
 #
     $where/arrange_machines_quad.pl $case.klist_$Nkl $numberOfNodes_pmn $weigth1 $weigth2
 #
-    if("$vnlkss" eq "true")then
-	vnl=1
+    if("$vnlkss" eq "true" || "$calvnlkss" eq "true")then
+	if("$vnlkss" eq "true")then
+	    echo 1 > fort.69
+	    printf "\t${blue}Bulk: v^lda=p+v^nl will be calculated using KSS and DP${NC}\n"
+	fi
+	if("$calvnlkss" eq "true")then
+	    echo 2 > fort.69
+	    printf "\t${blue}Surface: calv^lda=calp+calv^nl will be calculated using KSS and DP${NC}\n"
+	fi
 	Line
-	printf "\t${blue}v^nl will be calculated using KSS and DP${NC}\n"
+	printf "\t${blue}with $npw plane waves${NC}\n"
 	printf "\t${red}The input file dp-vnl-$case.in is created automatically${NC}\n"
 	Line
 # creating the DP input file
 	echo nbands $Nband > aux1
+	echo npwwfn $ondas > aux3
 	aux2='$TINIBA/vnonlocal/dp-vnl'
-	echo "cat $aux2 aux1 > dp-vnl-$case.in" > aux
+	echo "cat $aux2 aux1 aux3 > dp-vnl-$case.in" > aux
 	chmod +x aux
 	aux
 	rm aux*
 #	exit 1
-    else
-	vnl=0
     fi
+#The case.in files are constructed
+    vnl=1 #KSS is always generated
     $where/set.pl $case.klist_$Nkl $numberOfNodes_pmn $Nlayer $vnl
 #
     if [ -d JOBS ]
@@ -759,11 +795,11 @@ then
     rm -f endpoint.txt
     rm -f klist_length.txt
 # run all-nodes.sh
-    $where/$cual 1 $Nk $Nlayer $serialp $last_name $wf $rho $em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp $vnlkss $wfcheck
+    $where/$cual 1 $Nk $Nlayer $serialp $last_name $wf $rho $em $pmn $rhoccp $lpmn $lpmm $sccp $lsccp $vnlkss $calvnlkss $wfcheck
 #
 # if -w is the only option, the shell is done and exits
 #
-    if [[ $wf == 'true' ]] && [[ $rho == 'false' ]] && [[ $em == 'false' ]] && [[ $pmn == 'false' ]] && [[ $rhoccp == 'false' ]] && [[ $lpmn == 'false' ]] && [[ $lpmm == 'false' ]] && [[ $sccp == 'false' ]] && [[ $lsccp == 'false' ]] && [[ $vnlkss == 'false' ]]
+    if [[ $wf == 'true' ]] && [[ $rho == 'false' ]] && [[ $em == 'false' ]] && [[ $pmn == 'false' ]] && [[ $rhoccp == 'false' ]] && [[ $lpmn == 'false' ]] && [[ $lpmm == 'false' ]] && [[ $sccp == 'false' ]] && [[ $lsccp == 'false' ]] && [[ $vnlkss == 'false' ]] && [[ $calvnlkss == 'false' ]]
     then
 	Line
 	printf "\tall_nodes.sh: ${RED}Wave Function Calculated${NC}\n"
@@ -891,6 +927,32 @@ then
     mv vnl.d me_vnlnm_$Nkl$last_name
     ls  me_vnlnm_$Nkl$last_name
 fi
+if [ $calvnlkss == 'true' ]
+then
+    if [ $layers == 'half-slab' ]
+    then
+	mv vnl.d me_calvnlnm_$Nkl'_half-slab'$last_name
+    else
+	whichlayers=`less .lista_layers`
+	if [ "$whichlayers" == "all" ]
+	    then
+	    nn=0
+	    while [ $nn -lt $Nlayer ]
+	      do
+	      nn=`expr $nn + 1`
+	      mv vnl.d me_calvnlnm_$Nkl'_'$nn$last_name
+	    done
+	else
+	    nn=0
+	    for lname in ${whichlayers[@]}
+	      do
+	      nn=`expr $nn + 1`
+	      mv vnl.d me_calvnlnm_$Nkl'_'$lname$last_name
+	    done
+	fi
+    fi
+    ls  me_calvnlnm_$Nkl*
+fi
 ## rename spinmn.d file
 if [ $sccp == 'true' ]
 then
@@ -933,7 +995,7 @@ then
     if [ $layers == 'half-slab' ]
     then
 	mv cpmnd_$Nkl'_1' me_cpmn_$Nkl'_half-slab'$last_name 
-    mv cfmnd_$Nkl'_1' me_cfmn_$Nkl'_half-slab'$last_name 
+	mv cfmnd_$Nkl'_1' me_cfmn_$Nkl'_half-slab'$last_name 
     else
 	whichlayers=`less .lista_layers`
 	if [ "$whichlayers" == "all" ]
@@ -951,7 +1013,7 @@ then
 	      do
 	      nn=`expr $nn + 1`
 	      mv cpmnd_$Nkl'_'$nn  me_cpmn_$Nkl'_'$lname$last_name
-          mv cfmnd_$Nkl'_'$nn  me_cfmn_$Nkl'_'$lname$last_name
+              mv cfmnd_$Nkl'_'$nn  me_cfmn_$Nkl'_'$lname$last_name
 	    done
 	fi
     fi
@@ -1036,4 +1098,8 @@ gracias
 Line
 rm -f all_nodes* como_* concat* hoy siTie* spin_info*
 rm -f error fnval
+if [[ $vnlkss == "true" ]] || [[ $calvnlkss == "true" ]]
+then
+rm fort.69
+fi
 #	rm -f .peso* ifcentro*

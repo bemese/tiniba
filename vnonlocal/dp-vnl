@@ -37,7 +37,8 @@ omegai 2.0   #any value
 omegae 5.5   #any value
 domega 0.025 #any value
 broad  0.1   #any value
-matsh  1     #any value
+#matsh  1    #any value, but not needed if npwwfn is given, to speed
+             #up the calculation
 ####### end of don't change below ########################
 ###### nbands and novkb must be modified accordingly ####
 # this must be the same as in the TINIBA-part of the calculation

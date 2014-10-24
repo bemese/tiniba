@@ -357,6 +357,15 @@ PROGRAM set_input
               END IF
            END IF
 !#BMSVer3.0d
+           IF ( layeredCalculation ) then
+              !provicional to check vnl and scissors
+              calDelta(:,iv,ic)=calMomMatElem(:,iv,ic)
+              IF (ic.NE.iv) THEN
+              calDelta(:,ic,iv)=conjg(calDelta(:,iv,ic))
+              end IF
+           end IF
+!#BMSVer3.0u
+!#BMSVer3.0d
 !Uncomment the following line to check that calVsig=curMatElem for layered
 !injection corrent and comment the next line 
            IF ( layeredCalculation.or.layeredInjectionCurrent ) then
@@ -616,7 +625,8 @@ PROGRAM set_input
                  !if vnlkss is true: v^\nl is included
                  !and Eq. \ref{c-a.2} is calculated 
                  if(vnlkss)then
-                    t1=calVldaf(ii,iv,ic)
+                    t1=calMomMatElem(ii,iv,ic) !OJO
+!                    t1=calVldaf(ii,iv,ic)
                     if (scissor .gt. 0.d0) then
                        !The vc case is coded
                        !t2=calVscissors(ii,iv,ic,ik)*scissor
@@ -658,24 +668,24 @@ PROGRAM set_input
         END DO !ic=nVal+1,nMax
      END DO !iv=1,nVal
      !#BMSVer3.0u
-     !#BMSVer3.0d
-     !This seem not to be needed any more
-     IF ( layeredCalculation ) then
-        DO iv = 1, nVal
-           DO ic = nVal+1, nMax
-              ! Calculate Delta^\ell_{nm} Eq. {caldelta}  LAYERED
-              ! for -n option the contribution from v^\nl is included
-              ! the contribution from the scissors operator is included
-              calDelta(1,ic,iv) = calMomMatElem(1,ic,ic)-calMomMatElem(1,iv,iv)
-              calDelta(2,ic,iv) = calMomMatElem(2,ic,ic)-calMomMatElem(2,iv,iv)
-              calDelta(3,ic,iv) = calMomMatElem(3,ic,ic)-calMomMatElem(3,iv,iv)
-           END DO
-        END DO
-     END IF
-     !#BMSVer3.0u
+!!$     !#BMSVer3.0d
+!!$     !This seem not to be needed any more
+!!$     IF ( layeredCalculation ) then
+!!$        DO iv = 1, nVal
+!!$           DO ic = nVal+1, nMax
+!!$              ! Calculate Delta^\ell_{nm} Eq. {caldelta}  LAYERED
+!!$              ! for -n option the contribution from v^\nl is included
+!!$              ! the contribution from the scissors operator is included
+!!$              calDelta(1,ic,iv) = calMomMatElem(1,ic,ic)-calMomMatElem(1,iv,iv)
+!!$              calDelta(2,ic,iv) = calMomMatElem(2,ic,ic)-calMomMatElem(2,iv,iv)
+!!$              calDelta(3,ic,iv) = calMomMatElem(3,ic,ic)-calMomMatElem(3,iv,iv)
+!!$           END DO
+!!$        END DO
+!!$     END IF
+!!$     !#BMSVer3.0u
 !!! 
      !#BMSVer3.0d
-     ! calculation of c-a.3c diagonal terms
+     ! calculation of c-a.3c Diagonal Terms
      do ic=1,nMax
         do ii=1,3
            do iii=1,3
@@ -755,7 +765,11 @@ PROGRAM set_input
         do ic=1,nMax
            do iv=ic,nMax
               do ii=1,3
-                 calVlda(ii,ic,iv) = calVldaf(ii,ic,iv)
+                 !below is valid only for ala-bms
+                 !calVlda(ii,ic,iv) = calVldaf(ii,ic,iv)
+                 !below is valid only for ala-nicolas
+!                 calVlda(ii,ic,iv) = calMomMatElem(ii,ic,iv)!has scissors, shouldn't
+                 calVlda(ii,ic,iv) = calDelta(ii,ic,iv)!has no scissors
                  calVlda(ii,iv,ic) = conjg(calVlda(ii,ic,iv))
               end do
            end do
@@ -781,6 +795,10 @@ PROGRAM set_input
                     end do
                     gdcalVlda(ii,iii,ic,iv)=(0.d0,1.d0)*(posMatElem(iii,ic,iv)&
                          *(calVlda(ii,iv,iv)-calVlda(ii,ic,ic))+t1)
+                    if(ii.eq.iii)then
+                       gdcalVlda(ii,iii,ic,iv)=gdcalVlda(ii,iii,ic,iv)&
+                            -(0.d0,1.d0)*cfMatElem(ic,iv)
+                    end if
                     gdcalVlda(ii,iii,iv,ic)=conjg(gdcalVlda(ii,iii,ic,iv))
                  end do
               end do

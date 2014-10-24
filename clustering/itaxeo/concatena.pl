@@ -64,6 +64,7 @@ print PL <<ENDOFFILE;
 \$sccp=\$ARGV[5];
 \$lsccp=\$ARGV[6];
 \$vnlkss=\$ARGV[7];
+\$calvnlkss=\$ARGV[8];
 \$count = 0;
 \@arr = (1 .. $N);
 \@arrl = (1 .. $Nlayer);
@@ -139,7 +140,7 @@ if (\$pmn eq "true")
    close( OUTF );
 }
 ####### vnl
-if (\$vnlkss eq "true") 
+if (\$vnlkss eq "true" || \$calvnlkss eq "true") 
 {
       print "\tvnlmn Files\\n";
 ## Loop for vnl

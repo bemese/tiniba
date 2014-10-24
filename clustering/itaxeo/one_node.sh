@@ -53,6 +53,10 @@ function option {
     then
 	caso="$caso v^nl_nm(k)"
     fi
+    if [[ $calvnlkss == 'true' ]]
+    then
+	caso="$caso calv^nl_nm(k)"
+    fi
 }
 ##
 ## Line
@@ -83,8 +87,9 @@ lpmm=${16}
 sccp=${17}
 lsccp=${18}
 vnlkss=${19}
-void=${20}
-dpexec=${21}
+calvnlkss=${20}
+void=${21}
+dpexec=${22}
 ##
 # rho=1 => rho(z)
 # rho=2 no rho(z)
@@ -242,7 +247,7 @@ $rpmns_exec $caseo'o_DS2_WFK' $options > logfile
 # that, if you want to see, do
 # > ulimit -H -s or -a to see all the limits
 #
-if [[ $vnlkss == "true" ]]
+if [[ $vnlkss == "true" ]] || [[ $calvnlkss == "true" ]]
 then
     timedp=`date`
     Line
@@ -251,6 +256,14 @@ then
     ulimit -S -s unlimited
     stacknew=`ulimit -S -s`
     printf "\told-stack=$stackold new-stack=$stacknew for DP at one_node.sh@$node\n"
+    if ( "$vnlkss" == "true" )
+    then
+	printf "\tBulk\n"
+    fi
+    if("$calvnlkss" == "true" )
+    then
+	printf "\tSurface\n"
+    fi
     $dpexec -i dp-vnl-$caseo.in -k $caseo'o_DS3_KSS' > dp-vnl-log
     mv velocity.out $diro/$caseo'_'$No/vnl.d
     printf "\tDP finished at one_node.sh@$node\n"
@@ -322,7 +335,7 @@ do
 done
 ##
 #BMSVer3.0d
-if [[ $vnlkss == "false" ]]
+if [[ $vnlkss == "false" ]] || [[ $calvnlkss == "false" ]]
 then
     timef=`date`
     TIME1m=`date --date="$timei" +%s`
@@ -330,7 +343,7 @@ then
     ELTIMEm=$[ $TIME2m - $TIME1m ]
     TMINm=$(echo "scale=4; $ELTIMEm/60" | bc)
 fi
-if [[ $vnlkss == "true" ]]
+if [[ $vnlkss == "true" ]] || [[ $calvnlkss == "true" ]]
 then
     timef=`date`
     TIME1m=`date --date="$timei" +%s`
@@ -347,11 +360,11 @@ parent=`echo $PWD | awk -F / '{a=NF; print $(a-1)}'`
 Line
 #
 #BMSVer3.0d
-if [[ $vnlkss == "false" ]]
+if [[ $vnlkss == "false" ]] && [[ $calvnlkss == "false" ]]
 then
     printf " [${GREEN}`hostname`${NC}] : /data/$USER/workspace/$parent/$caseo"_"$No ended in $TMINm min \n"
 fi
-if [[ $vnlkss == "true" ]]
+if [[ $vnlkss == "true" ]] || [[ $calvnlkss == "true" ]]
 then
     printf " [${GREEN}`hostname`${NC}] : /data/$USER/workspace/$parent/$caseo"_"$No ended in $TMINm/$TMINmdp min \n"
 fi

@@ -1974,6 +1974,7 @@ CONTAINS
           DO da=1,3
              DO db=1,3
                 DO dc=1,3
+!!! this is for interband 1w contributions
                    do l=1,nMax
                       if((l.ne.v).and.(l.ne.c))then
                          omegacl=band(c)-band(l)
@@ -1990,8 +1991,7 @@ CONTAINS
                               -aimag(calVsig(da,v,l)*psym2)/(omegacv*omegacvlv)) 
                       end if
                    end do
-
-!!! 
+!!! this is for intraband 1w contributions
                    psym1=( posMatElem(db,c,v)*gdcalVsig(da,dc,v,c) &
                           +posMatElem(dc,c,v)*gdcalVsig(da,db,v,c) )/2.
                    psym2=( posMatElem(db,c,v)*delta(dc,c,v) &
@@ -2055,6 +2055,7 @@ CONTAINS
           DO da=1,3
              DO db=1,3
                 DO dc=1,3
+!!! this is for interband 2w contributions
 !!!  virtual-hole 
                    do vp=1,nVal
                       if((vp.ne.v).and.(vp.ne.c))then
@@ -2079,7 +2080,7 @@ CONTAINS
                               /(omegacv*omegacpvcv)
                       end if
                    end do
-!!! 
+!!! this is for intraband 2w contributions 
                    psym=(derMatElem(db,dc,c,v)+derMatElem(dc,db,c,v))/2.
                    psym1=(posMatElem(db,c,v)*delta(dc,c,v)+posMatElem(dc,c,v)*delta(db,c,v))/2.
                    tmp=tmp+4.*(T3(da,db,dc)/(omegacv)**2)&
