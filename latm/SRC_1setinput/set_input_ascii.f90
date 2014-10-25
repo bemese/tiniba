@@ -629,8 +629,8 @@ PROGRAM set_input
 !                    t1=calVldaf(ii,iv,ic)
                     if (scissor .gt. 0.d0) then
                        !The vc case is coded
-                       !t2=calVscissors(ii,iv,ic,ik)*scissor
-                       t2=(scissor/(band(ic)-band(iv)))*t1
+                       t2=calVscissors(ii,iv,ic,ik)*scissor
+                       !t2=(scissor/(band(ic)-band(iv)))*t1
                     else
                        t2=(0.d0,0.d0)
                     end if
@@ -797,7 +797,7 @@ PROGRAM set_input
                          *(calVlda(ii,iv,iv)-calVlda(ii,ic,ic))+t1)
                     if(ii.eq.iii)then
                        gdcalVlda(ii,iii,ic,iv)=gdcalVlda(ii,iii,ic,iv)&
-                            -(0.d0,1.d0)*cfMatElem(ic,iv)
+                            +cfMatElem(ic,iv)
                     end if
                     gdcalVlda(ii,iii,iv,ic)=conjg(gdcalVlda(ii,iii,ic,iv))
                  end do
@@ -808,31 +808,6 @@ PROGRAM set_input
      !#BMSVer3.0u
      !#BMSVer3.0d
      !Eq. c-a.3bnn: (\calbV^\cals);k
-!!$     IF ( layeredCalculation ) then
-!!$        if (scissor .gt. 0.d0) then
-!!$           !dgvs.cv
-!!$           do ic=1,nMax
-!!$              do iv=ic,nMax
-!!$                 do ii=1,3
-!!$                    do iii=1,3
-!!$                       t1=(0.d0,0.d0)
-!!$                       do l=1,nMax !sum over q=l
-!!$                          t2=(f(l)-f(ic))&
-!!$                               *( derMatElem(ii,iii,ic,l)*cfMatElem(l,iv)&
-!!$                               +  posMatElem(ii,ic,l)*gdf(iii,l,iv) )&
-!!$                               + (f(iv)-f(l))&
-!!$                               *( gdf(iii,ic,l)*posMatElem(ii,l,iv)&
-!!$                               + cfMatElem(ic,l)*derMatElem(ii,iii,l,iv) )
-!!$                          t1=t1+t2
-!!$                       end do
-!!$                       gdcalVS(ii,iii,ic,iv)=(0.d0,1.d0)*scissor*t1/2.d0
-!!$                       gdcalVS(ii,iii,iv,ic)=conjg(gdcalVS(ii,iii,ic,iv))
-!!$                    end do
-!!$                 end do
-!!$              end do
-!!$           end do
-!!$        end if
-     !Alternative expression for (\calbV^\cals);k {ccu55}scissors caligraphic velocity
      IF ( layeredCalculation ) then
         if (scissor .gt. 0.d0) then
            !dgvs.cv
@@ -840,19 +815,45 @@ PROGRAM set_input
               do iv=ic,nMax
                  do ii=1,3
                     do iii=1,3
-                       if(ic.ne.iv) then
-                          omeganm=band(ic)-band(iv)
-                          gdcalVS(ii,iii,ic,iv)=scissor*((f(iv)-f(ic))/omeganm)&
-                               *(gdcalVlda(ii,iii,ic,iv)&
-                               -((vldaMatElem(iii,ic,ic)-vldaMatElem(iii,iv,iv))/omeganm)&
-                               *calVlda(ii,ic,iv)) 
-                          gdcalVS(ii,iii,iv,ic)=conjg(gdcalVS(ii,iii,ic,iv))
-                       end if
+                       t1=(0.d0,0.d0)
+                       do l=1,nMax !sum over q=l
+                          t2=(f(l)-f(ic))&
+                               *( derMatElem(ii,iii,ic,l)*cfMatElem(l,iv)&
+                               +  posMatElem(ii,ic,l)*gdf(iii,l,iv) )&
+                               + (f(iv)-f(l))&
+                               *( gdf(iii,ic,l)*posMatElem(ii,l,iv)&
+                               + cfMatElem(ic,l)*derMatElem(ii,iii,l,iv) )
+                          t1=t1+t2
+                       end do
+                       gdcalVS(ii,iii,ic,iv)=(0.d0,1.d0)*scissor*t1/2.d0
+                       gdcalVS(ii,iii,iv,ic)=conjg(gdcalVS(ii,iii,ic,iv))
                     end do
                  end do
               end do
            end do
         end if
+     end IF
+     !Alternative expression for (\calbV^\cals);k {ccu55}scissors caligraphic velocity
+     IF ( layeredCalculation ) then
+!!$        if (scissor .gt. 0.d0) then
+!!$           !dgvs.cv
+!!$           do ic=1,nMax
+!!$              do iv=ic,nMax
+!!$                 do ii=1,3
+!!$                    do iii=1,3
+!!$                       if(ic.ne.iv) then
+!!$                          omeganm=band(ic)-band(iv)
+!!$                          gdcalVS(ii,iii,ic,iv)=scissor*((f(iv)-f(ic))/omeganm)&
+!!$                               *(gdcalVlda(ii,iii,ic,iv)&
+!!$                               -((vldaMatElem(iii,ic,ic)-vldaMatElem(iii,iv,iv))/omeganm)&
+!!$                               *calVlda(ii,ic,iv)) 
+!!$                          gdcalVS(ii,iii,iv,ic)=conjg(gdcalVS(ii,iii,ic,iv))
+!!$                       end if
+!!$                    end do
+!!$                 end do
+!!$              end do
+!!$           end do
+!!$        end if
         !Eq. c-a.1
         do ic=1,nMax
            do iv=ic,nMax
