@@ -358,11 +358,10 @@ PROGRAM set_input
            END IF
 !#BMSVer3.0d
            IF ( layeredCalculation ) then
-              !contains v^\nl if option -n is chosen
-              !Does NOT contain scissors, as it must.
-              calVlda(:,iv,ic)=calMomMatElem(:,iv,ic)
+              !provicional to check vnl and scissors
+              calDelta(:,iv,ic)=calMomMatElem(:,iv,ic)
               IF (ic.NE.iv) THEN
-              calVlda(:,ic,iv)=conjg(calVlda(:,iv,ic))
+              calDelta(:,ic,iv)=conjg(calDelta(:,iv,ic))
               end IF
            end IF
 !#BMSVer3.0u
@@ -765,17 +764,20 @@ PROGRAM set_input
      !#BMSVer3.0u
      !#BMSVer3.0d
      !Generates {\cal V}^\lda_{nm} so they are available and is faster
-!!$     IF ( layeredCalculation ) then
-!!$        do ic=1,nMax
-!!$           do iv=ic,nMax
-!!$              do ii=1,3
-!!$                 !below is valid only for ala-bms
-!!$                 !and doesn't work, dunno why!
-!!$                 !calVlda(ii,ic,iv) = calVldaf(ii,ic,iv)
-!!$              end do
-!!$           end do
-!!$        end do
-!!$     end IF
+     IF ( layeredCalculation ) then
+        do ic=1,nMax
+           do iv=ic,nMax
+              do ii=1,3
+                 !below is valid only for ala-bms
+                 !and doesn't work, dunno why!
+                 !calVlda(ii,ic,iv) = calVldaf(ii,ic,iv)
+                 !below is valid only for ala-nicolas
+                 calVlda(ii,ic,iv) = calDelta(ii,ic,iv)!has no scissors
+                 calVlda(ii,iv,ic) = conjg(calVlda(ii,ic,iv))
+              end do
+           end do
+        end do
+     end IF
      !#BMSVer3.0u
      !#BMSVer3.0d
      !alternative expression for (\calbV^\lda_{nm});k {ccu52}
