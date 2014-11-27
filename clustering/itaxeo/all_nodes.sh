@@ -120,7 +120,7 @@ source version-abinit.txt
 	    mkdir -f $dirscf
 	fi
 #
-	wffile=$case'o_DS1_WFK'
+	wffile=$case'o_DS1_DEN'
 	time=`date`
 #
 ####### SCF cycle: begin
@@ -217,7 +217,7 @@ source version-abinit.txt
 ### BEGIN TO COPY 
 	printf "\t${BLUE}checking whether the $case.in files have changed or not\n${NC}"
 	Line
-	wffilei=$case'i_DS1_WFK'
+	wffilei=$case'o_DS1_DEN'
 	Ncpu=`wc .machines_pmn | awk '{print $1}'`
 	N=0
 	for node in `cat .machines_pmn`

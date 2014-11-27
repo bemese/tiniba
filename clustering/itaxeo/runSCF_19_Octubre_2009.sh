@@ -32,7 +32,7 @@ source .cores
  CASO=`basename $PWD`
  PARENT=`basename $BASEDIR`
  DIRSCF=$CASO'_scf'
- WFSCF=$CASO'o_DS1_WFK'
+ WFSCF=$CASO'o_DS1_DEN'
 ## reads abinit executables from version-abinit.txt
 source version-abinit.txt
 # ab_exec_quad=/homeib/prog/QUAD/abinit-7.0.5/abinit/bin/abinit
@@ -40,7 +40,7 @@ source version-abinit.txt
 ##
  INPUT1=$1
  MYOLDPWD=$PWD
- WFSCFLOCAL=$CASO'o_DS1_WFK'
+ WFSCFLOCAL=$CASO'o_DS1_DEN'
 ##------SOURCE------------
 ##------SOURCE------------
 ##------SOURCE------------

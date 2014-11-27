@@ -287,10 +287,10 @@ foreach $i (@arr) {
   #BMSVer3.0d
   # variable for KSS file
   if ("$kss" eq "0"){
-      print OUTFILE "ndtset 2", "\n";
+      print OUTFILE "ndtset 1", "\n";
   };
   if ("$kss" eq "1"){
-      print OUTFILE "ndtset 3", "\n";
+      print OUTFILE "ndtset 2", "\n";
   };
   #BMSVer3.0u
   print OUTFILE $coor_system,"  ",$xcart,"\n";
@@ -299,13 +299,13 @@ foreach $i (@arr) {
 
   if ( ( -e "startpoint.txt") && ( -e "endpoint.txt") && ( -e "klist_length.txt") )  
   {
-      print OUTFILE "nkpt2     $klist_length[$i] \n";
-      print OUTFILE "istwfk2   $klist_length[$i]\*1\n";
+      print OUTFILE "nkpt     $klist_length[$i] \n";
+      print OUTFILE "istwfk   $klist_length[$i]\*1\n";
 # variable for KSS file
-      if ("$kss" eq "1"){
-	  print OUTFILE "nkpt3     $klist_length[$i] \n";
-	  print OUTFILE "istwfk3   $klist_length[$i]\*1\n";
-      };
+#      if ("$kss" eq "1"){
+#	  print OUTFILE "nkpt3     $klist_length[$i] \n";
+#	  print OUTFILE "istwfk3   $klist_length[$i]\*1\n";
+#      };
       print OUTFILE "kpt      ";
   
       for (0 .. $klist_length[$i]-1) {

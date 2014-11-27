@@ -175,7 +175,7 @@ if [ -e $caseo.diff ]
 then
     diff_rows=`wc -l $caseo.diff | awk '{print $1}'`
 fi
-if [[ $diff_rows -ne '0' || ! -e $caseo'o_DS2_WFK' ]]
+if [[ $diff_rows -ne '0' || ! -e $caseo'o_DS1_WFK' ]]
 then
     if [ $diff_rows -ne '0' ]
     then
@@ -230,8 +230,8 @@ printf "\trunning me of: $caso for layer(s): $mlay at one_node.sh@$node $wo spin
 # start time
 timei=`date`
 # Matrix elements a la tiniba
-#printf "\t$rpmns_exec $caseo'o_DS2_WFK' $options\n"
-$rpmns_exec $caseo'o_DS2_WFK' $options > logfile
+#printf "\t$rpmns_exec $caseo'o_DS1_WFK' $options\n"
+$rpmns_exec $caseo'o_DS1_WFK' $options > logfile
 ###
 #BMSVer3.0d
 # Velocity Matrix elements of the non-local part of
@@ -264,7 +264,7 @@ then
     then
 	printf "\tSurface\n"
     fi
-    $dpexec -i dp-vnl-$caseo.in -k $caseo'o_DS3_KSS' > dp-vnl-log
+    $dpexec -i dp-vnl-$caseo.in -k $caseo'o_DS2_KSS' > dp-vnl-log
     mv velocity.out $diro/$caseo'_'$No/vnl.d
     printf "\tDP finished at one_node.sh@$node\n"
 fi

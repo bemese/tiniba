@@ -20,8 +20,8 @@
  PARENT=`basename $BASEDIR`
 #----------------------------
  DIRSCF=$CASO'_scf'
- WFSCFLOCAL=$CASO'o_DS1_WFK'
- WFSCFREMOTE=$CASO'i_DS1_WFK'
+ WFSCFLOCAL=$CASO'o_DS1_DEN'
+ WFSCFREMOTE=$CASO'o_DS1_DEN'
  MEMPWD=$PWD
  NOBLOCKS=4 ## value by default
         
