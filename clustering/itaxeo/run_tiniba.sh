@@ -806,8 +806,8 @@ then
     if [[ $wf == 'true' ]] && [[ $rho == 'false' ]] && [[ $em == 'false' ]] && [[ $pmn == 'false' ]] && [[ $rhoccp == 'false' ]] && [[ $lpmn == 'false' ]] && [[ $lpmm == 'false' ]] && [[ $sccp == 'false' ]] && [[ $lsccp == 'false' ]] && [[ $vnlkss == 'false' ]] && [[ $calvnlkss == 'false' ]]
     then
 	Line
-	printf "\tall_nodes.sh: ${RED}Wave Function Calculated${NC}\n"
-	printf "\tall_nodes.sh: ${blue}and copied to all working directories${NC}\n"
+	printf "\trun_tiniba.sh: ${RED}GS Density Calculated${NC}\n"
+	printf "\trun_tiniba.sh: ${blue}and copied to all working directories${NC}\n"
 ## generates total time below
 	TIMEENDALL=`date`
 	Line
